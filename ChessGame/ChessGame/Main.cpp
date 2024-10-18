@@ -1,42 +1,69 @@
 ﻿#include <SFML/Graphics.hpp>
+#include<bits/stdc++.h>
 
-int main() {
-    const int boardSize = 8; // Kích thước bàn cờ (8x8)
-    const int cellSize = 80;  // Kích thước mỗi ô (80x80 pixel)
-
-    // Tạo cửa sổ
-    sf::RenderWindow window(sf::VideoMode(boardSize * cellSize, boardSize * cellSize), "ChessBoard");
-
-    // Vòng lặp chính
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
+class Stockfish {
+public:
+    Stockfish(const std::string& path) {
+        // Khởi động Stockfish
+        process = _popen(path.c_str(), "w");
+        if (!process) {
+            throw std::runtime_error("Unable to start Stockfish.");
         }
+    }
 
-        window.clear(); // Xóa màn hình
+    ~Stockfish() {
+        // Đóng quy trình Stockfish
+        _pclose(process);
+    }
 
-        // Vẽ bàn cờ
-        for (int row = 0; row < boardSize; ++row) {
-            for (int col = 0; col < boardSize; ++col) {
-                sf::RectangleShape cell(sf::Vector2f(cellSize, cellSize));
+    std::string sendCommand(const std::string& command) {
+        // Gửi lệnh đến Stockfish
+        fprintf(process, "%s\n", command.c_str());
+        fflush(process);
 
-                // Đặt màu cho ô
-                if ((row + col) % 2 == 0) {
-                    cell.setFillColor(sf::Color::White); // Ô trắng
-                }
-                else {
-                    cell.setFillColor(sf::Color::Black); // Ô đen
-                }
-
-                // Đặt vị trí cho ô
-                cell.setPosition(col * cellSize, row * cellSize);
-                window.draw(cell); // Vẽ ô
+        // Nhận phản hồi từ Stockfish
+        char buffer[128];
+        std::string result;
+        while (fgets(buffer, sizeof(buffer), process)) {
+            result += buffer;
+            // Dừng khi nhận được lệnh 'uciok'
+            if (result.find("uciok") != std::string::npos) {
+                break;
             }
         }
+        return result;
+    }
 
-        window.display(); // Hiển thị cửa sổ
+private:
+    FILE* process;
+};
+
+int main() {
+    // Khởi động Stockfish
+    std::string stockfishPath = "stockfish.exe"; // Thay đổi đường dẫn tới stockfish.exe
+
+    try {
+        Stockfish stockfish(stockfishPath);
+        std::string response = stockfish.sendCommand("uci");
+
+        // Hiển thị phản hồi
+        std::cout << "Stockfish response:\n" << response << std::endl;
+
+        // Khởi động cửa sổ SFML
+        sf::RenderWindow window(sf::VideoMode(800, 600), "Stockfish Test");
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed)
+                    window.close();
+            }
+
+            window.clear();
+            window.display();
+        }
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
     }
 
     return 0;

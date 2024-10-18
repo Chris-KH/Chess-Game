@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\SFML\SFML\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\SFML\SFML\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\SFML\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\SFML\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
