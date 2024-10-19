@@ -15,11 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="..\src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\StockFish.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <None Include="..\..\..\stockfish\AUTHORS">
       <Filter>Source Files</Filter>
     </None>
@@ -43,5 +47,10 @@
     <Text Include="..\..\..\stockfish\Top CPU Contributors.txt">
       <Filter>Source Files</Filter>
     </Text>
+=======
+    <ClInclude Include="..\lib\StockFish.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+>>>>>>> 25ffb31419f3fe54292820190650c40ebb340619
   </ItemGroup>
 </Project>
