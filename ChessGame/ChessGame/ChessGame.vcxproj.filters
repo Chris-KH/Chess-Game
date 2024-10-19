@@ -21,36 +21,16 @@
     <ClCompile Include="..\src\StockFish.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-    <None Include="..\..\..\stockfish\AUTHORS">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\..\..\stockfish\CITATION.cff">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\..\..\stockfish\CONTRIBUTING.md">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\..\..\stockfish\README.md">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\..\..\stockfish\stockfish-windows-x86-64-avx512.exe">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\..\stockfish\Copying.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="..\..\..\stockfish\Top CPU Contributors.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-=======
     <ClInclude Include="..\lib\StockFish.h">
       <Filter>Header Files</Filter>
     </ClInclude>
->>>>>>> 25ffb31419f3fe54292820190650c40ebb340619
+    <ClInclude Include="..\lib\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

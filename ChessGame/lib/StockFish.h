@@ -12,6 +12,7 @@ using namespace sf;
 
 class Stockfish {
 public:
+    Stockfish();
     Stockfish(const string& path);
 
     ~Stockfish();
@@ -22,5 +23,5 @@ public:
     void setSkillLevel(int level);
 
 private:
-    FILE* process = nullptr;
+    FILE* process;
 };
