@@ -19,4 +19,29 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\stockfish\AUTHORS">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\..\stockfish\CITATION.cff">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\..\stockfish\CONTRIBUTING.md">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\..\stockfish\README.md">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\..\..\stockfish\stockfish-windows-x86-64-avx512.exe">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\stockfish\Copying.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="..\..\..\stockfish\Top CPU Contributors.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
