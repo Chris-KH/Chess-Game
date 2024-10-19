@@ -17,6 +17,9 @@ public:
     ~Stockfish();
 
     string sendCommand(const string& command);
+    void setPosition(const std::string& fen);
+    string calculateBestMove(int timeLimit);
+    void setSkillLevel(int level);
 
 private:
     FILE* process = nullptr;
