@@ -26,7 +26,7 @@ int main() {
         cout << "Stockfish response:\n" << response << endl;
 
         // Khởi động cửa sổ SFML
-        RenderWindow window(VideoMode(800, 600), "Stockfish Test");
+        RenderWindow window(VideoMode(1080, 1080), "Stockfish Test");
         while (window.isOpen()) {
             sf::Event event;
             while (window.pollEvent(event)) {

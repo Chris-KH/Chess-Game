@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Game.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
     <ClCompile Include="..\src\StockFish.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\lib\Game.h" />
     <ClInclude Include="..\lib\StockFish.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

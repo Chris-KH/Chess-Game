@@ -1,5 +1,9 @@
 ﻿#include "../lib/StockFish.h"
 
+Stockfish::Stockfish() {
+    process = nullptr;
+}
+
 Stockfish::Stockfish(const string& path) {
     // Start stockfish
     process = _popen(path.c_str(), "w");
