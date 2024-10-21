@@ -11,7 +11,7 @@ using namespace std;
 using namespace sf;
 
 //Header include
-#include "../lib/StockFish.h"
+#include "../lib/Game.h"
 
 
 int main() {
