@@ -44,7 +44,7 @@ void Stockfish::setPosition(const std::string& fen) {
 
 string Stockfish::calculateBestMove(int timeLimit) {
     sendCommand("go movetime " + std::to_string(timeLimit));
-    return sendCommand("stop"); 
+    return sendCommand("stop");
 }
 
 void Stockfish::setSkillLevel(int level) {

@@ -26,7 +26,19 @@ int main() {
         cout << "Stockfish response:\n" << response << endl;
 
         // Khởi động cửa sổ SFML
-        RenderWindow window(VideoMode(1080, 1080), "Stockfish Test");
+        RenderWindow window(VideoMode(800, 800), "Display Chess Board");
+
+        sf::Texture chessboard_image;
+        if (!chessboard_image.loadFromFile("../assets/Chess Board/ChessBoard1.png")) {
+            cerr << "Cannot load image" << endl;
+            return 0;
+        }
+
+        sf::Sprite chessboard;
+        chessboard.setTexture(chessboard_image);
+        chessboard.setPosition(0, 0);
+        chessboard.setScale(0.5, 0.5);
+
         while (window.isOpen()) {
             sf::Event event;
             while (window.pollEvent(event)) {
@@ -35,6 +47,7 @@ int main() {
             }
 
             window.clear();
+            window.draw(chessboard);
             window.display();
         }
     }
