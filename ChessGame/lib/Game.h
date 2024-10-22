@@ -7,11 +7,7 @@ private:
 	Stockfish stockfish;
 public:
 	Game();
-	Game(bool againstAI, Stockfish& stockfish, int skillLevel = 0) {
-		this->againstAI = true;
-		this->stockfish = stockfish;
-		this->stockfish.setSkillLevel(skillLevel);
-	}
+	Game(bool againstAI, Stockfish& stockfish, int skillLevel = 0);
 
 	void startGame();
 	void playAgainstAI();
