@@ -13,7 +13,12 @@ using namespace sf;
 //Header include
 #include "../lib/Game.h"
 
+const int NUM_BOARD = 3;
+int boardId;
+Texture boardImage[3];
+
 void loadImage(Texture& text, string path);
+void switchBoard(Sprite& board);
 
 int main() {
     // Khởi động Stockfish
@@ -29,15 +34,15 @@ int main() {
         // Khởi động cửa sổ SFML
         RenderWindow window(VideoMode(800, 800), "Display Chess Board");
 
-        Texture boardImage1, boardImage2;
-        loadImage(boardImage1, "../assets/Chess Board/ChessBoard1.png");
-        loadImage(boardImage2, "../assets/Chess Board/ChessBoard2.png");
+        boardId = 0;
+        loadImage(boardImage[0], "../assets/Chess Board/ChessBoard1.png");
+        loadImage(boardImage[1], "../assets/Chess Board/ChessBoard2.png");
+        loadImage(boardImage[2], "../assets/Chess Board/ChessBoard3.png");
 
-        bool setBoard1 = true;
         Sprite board;
-        board.setTexture(boardImage1);
+        board.setTexture(boardImage[0]);
 
-        Vector2u textureSize = boardImage1.getSize();
+        Vector2u textureSize = boardImage[0].getSize();
 
         View view;
         view.setSize(textureSize.x, textureSize.y);
@@ -56,14 +61,7 @@ int main() {
                     window.setView(view);
                 }
                 else if (event.type == Event::KeyPressed) {
-                    if (setBoard1) {
-                        setBoard1 = false;
-                        board.setTexture(boardImage2);
-                    }
-                    else {
-                        setBoard1 = true;
-                        board.setTexture(boardImage1);
-                    }
+                    switchBoard(board);
                 }
             }
 
@@ -84,4 +82,9 @@ void loadImage(Texture& texture, string path) {
         cerr << "Khong tim thay " << path;
         exit(1);
     }
+}
+
+void switchBoard(Sprite& board) {
+    boardId = (boardId + 1) % NUM_BOARD;
+    board.setTexture(boardImage[boardId]);
 }
