@@ -19,9 +19,8 @@ int main() {
     string stockfishPath = "stockfish.exe"; // Thay đổi đường dẫn tới stockfish.exe
 
     try {
-        //Stockfish stockfish(stockfishPath);
+        Stockfish stockfish(stockfishPath);
         
-
         // Khởi động cửa sổ SFML
         RenderWindow window(VideoMode(800, 800), "Display Chess Board");
 

@@ -22,10 +22,7 @@ public:
     ~Stockfish();
     
     void startNewGame();
-
-    // Thiết lập vị trí bàn cờ từ FEN hoặc từ lịch sử các nước đi
     void setPosition(const string& fen);
-
     void setPositionFromMoves(const string& initialPosition, const vector<string>& moves);
 
     // Lấy nước đi tốt nhất
@@ -54,21 +51,13 @@ public:
 
 private:
     FILE* process = nullptr;
-    vector<string> movesHistory; // Lưu lịch sử các nước đi
-    thread readThread;  // Thread để đọc phản hồi của Stockfish
-    mutex commandMutex; // Để bảo vệ các lệnh được gửi tới Stockfish
-    condition_variable bestMoveCondition; // Để chờ nước đi tốt nhất
-    string bestMove;
-    bool running = true;
+    vector<string> movesHistory; 
 
     void sendCommand(const std::string& command);
-    void readLoop();
 
     void waitForReady();
 
-    // Đọc phản hồi từ Stockfish
     string readResponse();
 
-    // Đọc phân tích từ Stockfish
     string readAnalysis();
 };
