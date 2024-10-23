@@ -10,11 +10,13 @@ Stockfish::Stockfish(const string& path) {
     if (!process) {
         throw std::runtime_error("Unable to start Stockfish.");
     }
+    sendCommand("uci");
+    waitForReady();
 }
 
 Stockfish::~Stockfish() {
     //Close stockfish
-    _pclose(process);
+    quit();
 }
 
 string Stockfish::sendCommand(const string& command) {
@@ -52,4 +54,22 @@ void Stockfish::setSkillLevel(int level) {
         throw std::invalid_argument("Skill level must be between 0 and 20.");
     }
     sendCommand("setoption name Skill Level value " + to_string(level));
+}
+
+void Stockfish::newGame() {
+    sendCommand("ucinewgame");
+    movesHistory.clear();
+    waitForReady();
+}
+
+void Stockfish::waitForReady() {
+    sendCommand("isready");
+}
+
+void Stockfish::quit() {
+    if (process) {
+        sendCommand("quit");
+        _pclose(process);
+        process = nullptr;
+    }
 }

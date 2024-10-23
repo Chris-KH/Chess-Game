@@ -21,7 +21,12 @@ public:
     void setPosition(const std::string& fen);
     string calculateBestMove(int timeLimit);
     void setSkillLevel(int level);
+    void newGame();
+    void waitForReady();
+
+    void quit();
 
 private:
     FILE* process;
+    vector<string> movesHistory;
 };
