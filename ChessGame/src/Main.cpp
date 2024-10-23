@@ -13,6 +13,7 @@ using namespace sf;
 //Header include
 #include "../lib/Game.h"
 
+void loadImage(Texture& text, string path);
 
 int main() {
     // Khởi động Stockfish
@@ -28,18 +29,17 @@ int main() {
         // Khởi động cửa sổ SFML
         RenderWindow window(VideoMode(800, 800), "Display Chess Board");
 
-        Texture board_image;
-        if (!board_image.loadFromFile("../assets/Chess Board/ChessBoard1.png")) {
-            cerr << "Cannot load image" << endl;
-            return 0;
-        }
+        Texture boardImage1, boardImage2;
+        loadImage(boardImage1, "../assets/Chess Board/ChessBoard1.png");
+        loadImage(boardImage2, "../assets/Chess Board/ChessBoard2.png");
 
+        bool setBoard1 = true;
         Sprite board;
-        board.setTexture(board_image);
+        board.setTexture(boardImage1);
 
-        Vector2u textureSize = board_image.getSize();
+        Vector2u textureSize = boardImage1.getSize();
 
-        View view(FloatRect(0, 0, 800, 800));
+        View view;
         view.setSize(textureSize.x, textureSize.y);
         view.setCenter(textureSize.x / 2, textureSize.y / 2);
         window.setView(view);
@@ -55,6 +55,16 @@ int main() {
                     view.setCenter(textureSize.x / 2, textureSize.y / 2);
                     window.setView(view);
                 }
+                else if (event.type == Event::KeyPressed) {
+                    if (setBoard1) {
+                        setBoard1 = false;
+                        board.setTexture(boardImage2);
+                    }
+                    else {
+                        setBoard1 = true;
+                        board.setTexture(boardImage1);
+                    }
+                }
             }
 
             window.clear();
@@ -67,4 +77,11 @@ int main() {
     }
 
     return 0;
+}
+
+void loadImage(Texture& texture, string path) {
+    if (!texture.loadFromFile(path)) {
+        cerr << "Khong tim thay " << path;
+        exit(1);
+    }
 }
