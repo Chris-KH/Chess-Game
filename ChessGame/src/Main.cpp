@@ -28,26 +28,37 @@ int main() {
         // Khởi động cửa sổ SFML
         RenderWindow window(VideoMode(800, 800), "Display Chess Board");
 
-        sf::Texture chessboard_image;
-        if (!chessboard_image.loadFromFile("../assets/Chess Board/ChessBoard1.png")) {
+        Texture board_image;
+        if (!board_image.loadFromFile("../assets/Chess Board/ChessBoard1.png")) {
             cerr << "Cannot load image" << endl;
             return 0;
         }
 
-        sf::Sprite chessboard;
-        chessboard.setTexture(chessboard_image);
-        chessboard.setPosition(0, 0);
-        chessboard.setScale(0.5, 0.5);
+        Sprite board;
+        board.setTexture(board_image);
+
+        Vector2u textureSize = board_image.getSize();
+
+        View view(FloatRect(0, 0, 800, 800));
+        view.setSize(textureSize.x, textureSize.y);
+        view.setCenter(textureSize.x / 2, textureSize.y / 2);
+        window.setView(view);
 
         while (window.isOpen()) {
-            sf::Event event;
+            Event event;
             while (window.pollEvent(event)) {
                 if (event.type == Event::Closed)
                     window.close();
+                else if (event.type == Event::Resized) {
+                    float r = static_cast<float>(event.size.width) / static_cast<float>(event.size.height);
+                    view.setSize(textureSize.x * r, textureSize.y);
+                    view.setCenter(textureSize.x / 2, textureSize.y / 2);
+                    window.setView(view);
+                }
             }
 
             window.clear();
-            window.draw(chessboard);
+            window.draw(board);
             window.display();
         }
     }
