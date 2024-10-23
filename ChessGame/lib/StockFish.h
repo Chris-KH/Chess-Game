@@ -6,6 +6,10 @@
 #include <SFML/Network.hpp>
 #include <SFML/OpenGL.hpp>
 #include <bits/stdc++.h>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <stdexcept>
 
 using namespace std;
 using namespace sf;
@@ -16,17 +20,44 @@ public:
     Stockfish(const string& path);
 
     ~Stockfish();
+    
+    void startNewGame();
+    void setPosition(const string& fen);
+    void setPositionFromMoves(const string& initialPosition, const vector<string>& moves);
 
-    string sendCommand(const string& command);
-    void setPosition(const std::string& fen);
-    string calculateBestMove(int timeLimit);
+    // Lấy nước đi tốt nhất
+    string getBestMove(int timeLimit = 1000);
+
+    // Phân tích nước đi với độ sâu hoặc thời gian giới hạn
+    string analyzeWithLimits(int depth = 20, int timeLimit = 1000);
+
+    // Đặt mức độ chơi của động cơ (cấp độ từ 0 đến 20)
     void setSkillLevel(int level);
-    void newGame();
-    void waitForReady();
 
+    // Thiết lập thời gian cho trận đấu
+    void setTimeControl(int whiteTime, int blackTime);
+
+    // Lùi lại một nước đi
+    void undoLastMove();
+
+    // Phân tích sau trận đấu
+    string postGameAnalysis();
+
+    // Thiết lập tùy chọn động cơ (Engine Options)
+    void setEngineOption(const string& name, const string& value);
+
+    // Thoát Stockfish
     void quit();
 
 private:
-    FILE* process;
-    vector<string> movesHistory;
+    FILE* process = nullptr;
+    vector<string> movesHistory; 
+
+    void sendCommand(const std::string& command);
+
+    void waitForReady();
+
+    string readResponse();
+
+    string readAnalysis();
 };

@@ -26,11 +26,7 @@ int main() {
 
     try {
         Stockfish stockfish(stockfishPath);
-        string response = stockfish.sendCommand("uci");
-
-        // Hiển thị phản hồi
-        cout << "Stockfish response:\n" << response << endl;
-
+        
         // Khởi động cửa sổ SFML
         RenderWindow window(VideoMode(800, 800), "Display Chess Board");
 
@@ -44,7 +40,7 @@ int main() {
 
         Vector2u textureSize = boardImage[0].getSize();
 
-        View view;
+        View view(FloatRect(0, 0, 800, 800));
         view.setSize(textureSize.x, textureSize.y);
         view.setCenter(textureSize.x / 2, textureSize.y / 2);
         window.setView(view);

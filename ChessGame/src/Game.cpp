@@ -6,8 +6,8 @@ Game::Game() {
 
 Game::Game(bool againstAI, Stockfish& stockfish, int skillLevel) {
 	this->againstAI = true;
-	this->stockfish = stockfish;
-	this->stockfish.setSkillLevel(skillLevel);
+	//this->stockfish = stockfish;
+	//this->stockfish.setSkillLevel(skillLevel);
 }
 
 void Game::startGame() {
