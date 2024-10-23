@@ -13,12 +13,15 @@ using namespace sf;
 //Header include
 #include "../lib/Game.h"
 
-const int NUM_BOARD = 3;
-int boardId;
-Texture boardImage[3];
+const int NUM_CHESS_BOARD = 3;
+int chessBoardId;
+Texture chessBoardImage[3];
+Sprite chessBoardSprite;
+Vector2u chessBoardSize;
 
-void loadImage(Texture& text, string path);
-void switchBoard(Sprite& board);
+void loadImage(Texture& texture, string path);
+void switchBoard(void);
+void chessBoardInit(void);
 
 int main() {
     // Khởi động Stockfish
@@ -29,20 +32,12 @@ int main() {
         
         // Khởi động cửa sổ SFML
         RenderWindow window(VideoMode(800, 800), "Display Chess Board");
-
-        boardId = 0;
-        loadImage(boardImage[0], "../assets/Chess Board/ChessBoard1.png");
-        loadImage(boardImage[1], "../assets/Chess Board/ChessBoard2.png");
-        loadImage(boardImage[2], "../assets/Chess Board/ChessBoard3.png");
-
-        Sprite board;
-        board.setTexture(boardImage[0]);
-
-        Vector2u textureSize = boardImage[0].getSize();
+        
+        chessBoardInit();
 
         View view(FloatRect(0, 0, 800, 800));
-        view.setSize(textureSize.x, textureSize.y);
-        view.setCenter(textureSize.x / 2, textureSize.y / 2);
+        view.setSize(chessBoardSize.x, chessBoardSize.y);
+        view.setCenter(chessBoardSize.x / 2, chessBoardSize.y / 2);
         window.setView(view);
 
         while (window.isOpen()) {
@@ -52,17 +47,17 @@ int main() {
                     window.close();
                 else if (event.type == Event::Resized) {
                     float r = static_cast<float>(event.size.width) / static_cast<float>(event.size.height);
-                    view.setSize(textureSize.x * r, textureSize.y);
-                    view.setCenter(textureSize.x / 2, textureSize.y / 2);
+                    view.setSize(chessBoardSize.x * r, chessBoardSize.y);
+                    view.setCenter(chessBoardSize.x / 2, chessBoardSize.y / 2);
                     window.setView(view);
                 }
                 else if (event.type == Event::KeyPressed) {
-                    switchBoard(board);
+                    switchBoard();
                 }
             }
 
             window.clear();
-            window.draw(board);
+            window.draw(chessBoardSprite);
             window.display();
         }
     }
@@ -75,12 +70,22 @@ int main() {
 
 void loadImage(Texture& texture, string path) {
     if (!texture.loadFromFile(path)) {
-        cerr << "Khong tim thay " << path;
+        cerr << "Khong tim thay " << path << "!" << endl << endl;
         exit(1);
     }
 }
 
-void switchBoard(Sprite& board) {
-    boardId = (boardId + 1) % NUM_BOARD;
-    board.setTexture(boardImage[boardId]);
+void switchBoard(void) {
+    chessBoardId = (chessBoardId + 1) % NUM_CHESS_BOARD;
+    chessBoardSprite.setTexture(chessBoardImage[chessBoardId]);
+}
+
+void chessBoardInit(void) {
+    chessBoardId = 0;
+    loadImage(chessBoardImage[0], "../assets/Chess Board/ChessBoard1.png");
+    loadImage(chessBoardImage[1], "../assets/Chess Board/ChessBoard2.png");
+    loadImage(chessBoardImage[2], "../assets/Chess Board/ChessBoard3.png");
+
+    chessBoardSize = chessBoardImage[0].getSize();
+    chessBoardSprite.setTexture(chessBoardImage[0]);
 }
