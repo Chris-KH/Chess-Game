@@ -31,9 +31,6 @@ public:
     // Lấy nước đi tốt nhất
     string getBestMove(int timeLimit = 1000);
 
-    // Lấy danh sách các nước đi hợp lệ (Stockfish không trực tiếp hỗ trợ, nên dùng cách khác)
-    vector<string> getLegalMoves(const std::string& fen);
-
     // Phân tích nước đi với độ sâu hoặc thời gian giới hạn
     string analyzeWithLimits(int depth = 20, int timeLimit = 1000);
 
@@ -57,7 +54,7 @@ public:
 
 private:
     FILE* process = nullptr;
-    vector<std::string> movesHistory; // Lưu lịch sử các nước đi
+    vector<string> movesHistory; // Lưu lịch sử các nước đi
     thread readThread;  // Thread để đọc phản hồi của Stockfish
     mutex commandMutex; // Để bảo vệ các lệnh được gửi tới Stockfish
     condition_variable bestMoveCondition; // Để chờ nước đi tốt nhất

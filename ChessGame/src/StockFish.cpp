@@ -109,13 +109,6 @@ string  Stockfish::getBestMove(int timeLimit) {
     return move;
 }
 
-// Lấy danh sách các nước đi hợp lệ (Stockfish không trực tiếp hỗ trợ, nên dùng cách khác)
-vector<string>  Stockfish::getLegalMoves(const string& fen) {
-    setPosition(fen);
-    sendCommand("d");  // Stockfish sẽ in ra bảng cờ hiện tại và các nước đi hợp lệ
-    return {};         // Không thể lấy trực tiếp danh sách nước đi hợp lệ từ phản hồi, cần phân tích thêm
-}
-
 // Phân tích nước đi với độ sâu hoặc thời gian giới hạn
 string  Stockfish::analyzeWithLimits(int depth, int timeLimit) {
     sendCommand("go depth " + to_string(depth) + " movetime " + to_string(timeLimit));

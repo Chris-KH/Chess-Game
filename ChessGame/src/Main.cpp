@@ -13,33 +13,30 @@ using namespace sf;
 //Header include
 #include "../lib/Game.h"
 
-void loadImage(Texture& text, string path);
 
 int main() {
     // Khởi động Stockfish
     string stockfishPath = "stockfish.exe"; // Thay đổi đường dẫn tới stockfish.exe
 
     try {
-        Stockfish stockfish(stockfishPath);
-        string response = stockfish.sendCommand("uci");
-
-        // Hiển thị phản hồi
-        cout << "Stockfish response:\n" << response << endl;
+        //Stockfish stockfish(stockfishPath);
+        
 
         // Khởi động cửa sổ SFML
         RenderWindow window(VideoMode(800, 800), "Display Chess Board");
 
-        Texture boardImage1, boardImage2;
-        loadImage(boardImage1, "../assets/Chess Board/ChessBoard1.png");
-        loadImage(boardImage2, "../assets/Chess Board/ChessBoard2.png");
+        Texture board_image;
+        if (!board_image.loadFromFile("../assets/Chess Board/ChessBoard1.png")) {
+            cerr << "Cannot load image" << endl;
+            return 0;
+        }
 
-        bool setBoard1 = true;
         Sprite board;
-        board.setTexture(boardImage1);
+        board.setTexture(board_image);
 
-        Vector2u textureSize = boardImage1.getSize();
+        Vector2u textureSize = board_image.getSize();
 
-        View view;
+        View view(FloatRect(0, 0, 800, 800));
         view.setSize(textureSize.x, textureSize.y);
         view.setCenter(textureSize.x / 2, textureSize.y / 2);
         window.setView(view);
@@ -55,16 +52,6 @@ int main() {
                     view.setCenter(textureSize.x / 2, textureSize.y / 2);
                     window.setView(view);
                 }
-                else if (event.type == Event::KeyPressed) {
-                    if (setBoard1) {
-                        setBoard1 = false;
-                        board.setTexture(boardImage2);
-                    }
-                    else {
-                        setBoard1 = true;
-                        board.setTexture(boardImage1);
-                    }
-                }
             }
 
             window.clear();
@@ -77,11 +64,4 @@ int main() {
     }
 
     return 0;
-}
-
-void loadImage(Texture& texture, string path) {
-    if (!texture.loadFromFile(path)) {
-        cerr << "Khong tim thay " << path;
-        exit(1);
-    }
 }
