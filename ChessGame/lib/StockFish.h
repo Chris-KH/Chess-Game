@@ -15,49 +15,29 @@ using namespace std;
 using namespace sf;
 
 class Stockfish {
+private:
+    HANDLE hStdinRead, hStdinWrite, hStdoutRead, hStdoutWrite;
+    PROCESS_INFORMATION piProcInfo;
+    SECURITY_ATTRIBUTES saAttr;
+
+    vector<string> moveHistory;
 public:
     Stockfish();
-    Stockfish(const string& path);
-
     ~Stockfish();
-    
-    void startNewGame();
-    void setPosition(const string& fen);
-    void setPositionFromMoves(const string& initialPosition, const vector<string>& moves);
 
-    // Lấy nước đi tốt nhất
-    string getBestMove(int timeLimit = 1000);
-
-    // Phân tích nước đi với độ sâu hoặc thời gian giới hạn
-    string analyzeWithLimits(int depth = 20, int timeLimit = 1000);
-
-    // Đặt mức độ chơi của động cơ (cấp độ từ 0 đến 20)
+    void sendCommand(const string& command);
+    string getResponse();
+    string calculateBestMove();
+    string calculateBestMove(int timeLimit);
     void setSkillLevel(int level);
+    void newGame();
+    void setBoardState(const string& fen);
+    void setTime(int whiteTime, int blackTime);
+    void makeMove(const string& move);
+    string getMoveHistory() const;
+    void undoMove();
+    string calculateBestMoveWithDepth(int depth);
+    string calculateBestMoveWithDepth(int depth, int timeLimit);
+    void setHashSize(int size);
 
-    // Thiết lập thời gian cho trận đấu
-    void setTimeControl(int whiteTime, int blackTime);
-
-    // Lùi lại một nước đi
-    void undoLastMove();
-
-    // Phân tích sau trận đấu
-    string postGameAnalysis();
-
-    // Thiết lập tùy chọn động cơ (Engine Options)
-    void setEngineOption(const string& name, const string& value);
-
-    // Thoát Stockfish
-    void quit();
-
-private:
-    FILE* process = nullptr;
-    vector<string> movesHistory; 
-
-    void sendCommand(const std::string& command);
-
-    void waitForReady();
-
-    string readResponse();
-
-    string readAnalysis();
 };

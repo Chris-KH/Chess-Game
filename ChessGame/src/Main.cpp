@@ -16,10 +16,11 @@ using namespace sf;
 
 int main() {
     // Khởi động Stockfish
-    string stockfishPath = "stockfish.exe"; // Thay đổi đường dẫn tới stockfish.exe
-
+    
     try {
-        Stockfish stockfish(stockfishPath);
+        Stockfish stockfish;
+        stockfish.sendCommand("isready\n");
+        stockfish.getResponse();
         
         // Khởi động cửa sổ SFML
         RenderWindow window(VideoMode(800, 800), "Display Chess Board");
