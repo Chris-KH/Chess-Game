@@ -22,11 +22,13 @@
     <ClCompile Include="..\src\ChessBoard.cpp" />
     <ClCompile Include="..\src\Game.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
+    <ClCompile Include="..\src\Pieces.cpp" />
     <ClCompile Include="..\src\StockFish.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\ChessBoard.h" />
     <ClInclude Include="..\lib\Game.h" />
+    <ClInclude Include="..\lib\Pieces.h" />
     <ClInclude Include="..\lib\StockFish.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
