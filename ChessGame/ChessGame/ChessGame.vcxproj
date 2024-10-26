@@ -19,16 +19,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Bishop.cpp" />
     <ClCompile Include="..\src\ChessBoard.cpp" />
     <ClCompile Include="..\src\Game.cpp" />
+    <ClCompile Include="..\src\King.cpp" />
+    <ClCompile Include="..\src\Knight.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
+    <ClCompile Include="..\src\Pawn.cpp" />
     <ClCompile Include="..\src\Pieces.cpp" />
+    <ClCompile Include="..\src\Queen.cpp" />
+    <ClCompile Include="..\src\Rook.cpp" />
     <ClCompile Include="..\src\StockFish.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\lib\Bishop.h" />
     <ClInclude Include="..\lib\ChessBoard.h" />
     <ClInclude Include="..\lib\Game.h" />
+    <ClInclude Include="..\lib\King.h" />
+    <ClInclude Include="..\lib\Knight.h" />
+    <ClInclude Include="..\lib\Pawn.h" />
     <ClInclude Include="..\lib\Pieces.h" />
+    <ClInclude Include="..\lib\Queen.h" />
+    <ClInclude Include="..\lib\Rook.h" />
     <ClInclude Include="..\lib\StockFish.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

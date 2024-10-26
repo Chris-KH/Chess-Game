@@ -17,7 +17,7 @@ private:
     Texture boardTexture; // Texture của bàn cờ
     Sprite boardSprite;   // Sprite để vẽ bàn cờ
     vector<shared_ptr<Pieces>> pieces; // Danh sách quân cờ
-    vector<std::string> boardFiles; // Danh sách đường dẫn bàn cờ
+    vector<string> boardFiles; // Danh sách đường dẫn bàn cờ
     int currentBoardIndex; // Chỉ số bàn cờ hiện tại
 
     float squareSize; // Kích thước mỗi ô

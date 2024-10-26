@@ -13,6 +13,12 @@ using namespace sf;
 //Header include
 #include "../lib/Game.h"
 #include "../lib/ChessBoard.h"
+#include "../lib/Pawn.h"
+#include "../lib/King.h"
+#include "../lib/Queen.h"
+#include "../lib/Rook.h"
+#include "../lib/Knight.h"
+#include "../lib/Bishop.h"
 
 int main() {
     // Khởi động Stockfish
