@@ -9,19 +9,19 @@ ChessBoard::ChessBoard(RenderWindow* win, const vector<string>& boardPaths, int 
 
     // Tải phông chữ
     if (!font.loadFromFile("C:\\Windows\\Fonts\\arial.ttf")) { // Thay bằng đường dẫn font có sẵn
-        throw std::runtime_error("Unable to load font");
+        throw runtime_error("Unable to load font");
     }
 
-    border.setSize(sf::Vector2f(800 + 20, 800 + 20)); // Kích thước rìa
-    border.setFillColor(sf::Color::White); // Màu rìa
+    border.setSize(Vector2f(800 + 20, 800 + 20)); // Kích thước rìa
+    border.setFillColor(Color::White); // Màu rìa
     border.setPosition(-10, -10); // Vị trí của rìa
 
     // Thiết lập các nhãn cho hàng
     for (int i = 0; i < 8; ++i) {
         rowLabels[i].setFont(font);
-        rowLabels[i].setString(std::to_string(8 - i)); // Số từ 8 đến 1
+        rowLabels[i].setString(to_string(8 - i)); // Số từ 8 đến 1
         rowLabels[i].setCharacterSize(30); // Kích thước chữ
-        rowLabels[i].setFillColor(sf::Color::Black); // Màu chữ
+        rowLabels[i].setFillColor(Color::Black); // Màu chữ
         rowLabels[i].setPosition(0, i * squareSize + 10); // Vị trí bên trái (thêm khoảng cách)
     }
 
@@ -30,7 +30,7 @@ ChessBoard::ChessBoard(RenderWindow* win, const vector<string>& boardPaths, int 
         colLabels[i].setFont(font);
         colLabels[i].setString(static_cast<char>('A' + i)); // Chữ cái từ A đến H
         colLabels[i].setCharacterSize(30); // Kích thước chữ
-        colLabels[i].setFillColor(sf::Color::Black); // Màu chữ
+        colLabels[i].setFillColor(Color::Black); // Màu chữ
         colLabels[i].setPosition(i * squareSize + 10, 810); // Vị trí phía dưới (thêm khoảng cách)
     }
 }
@@ -57,7 +57,7 @@ void ChessBoard::updateBoardScale() {
     float scaleY = targetHeight / static_cast<float>(boardSize.y);
 
     // Chọn tỉ lệ nhỏ hơn để giữ nguyên tỉ lệ của hình ảnh
-    float scale = std::min(scaleX, scaleY);
+    float scale = min(scaleX, scaleY);
 
     boardSprite.setScale(scale, scale); // Áp dụng tỉ lệ
 
