@@ -3,8 +3,6 @@
 
 class Pawn : public Pieces {
 public:
-    Pawn(bool isWhite) : Pieces(isWhite ? "../assets/Cartoon Theme/white-pawn.png" : "../assets/Cartoon Theme/black-pawn.png") {
-        loadTexture(type);
-    }
+    Pawn(bool isWhite);
     string getType() const override { return "Pawn"; }
 };

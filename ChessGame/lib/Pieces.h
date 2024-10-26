@@ -12,14 +12,20 @@ using namespace sf;
 
 class Pieces {
 protected:
-    Texture texture; // Texture cho quân cờ
+    //Texture texture; // Texture cho quân cờ
     Sprite sprite;   // Sprite để vẽ quân cờ
     string type;    // Loại quân cờ (vd: "Pawn", "Rook", "Knight", ...)
 
+    size_t currentTextureIndex;
+    vector<Texture> textures;
+    bool isWhite;
 public:
-    Pieces(const string& type) : type(type) {}
+    Pieces();
+    //Pieces(const bool& isWhite);
+    Pieces(bool isWhite);
 
-    bool loadTexture(const string& filePath);
+    bool loadTexture(const vector<string>& texturePaths);
+    void changeTexture(size_t index);
     void scaleToFitSquare(float squareSize);
     void setPosition(int col, int row, float squareSize);
     void draw(RenderWindow& window);

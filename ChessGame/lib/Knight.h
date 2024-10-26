@@ -3,8 +3,6 @@
 
 class Knight : public Pieces {
 public:
-    Knight(bool isWhite) : Pieces(isWhite ? "../assets/Cartoon Theme/white-knight.png" : "../assets/Cartoon Theme/black-knight.png") {
-        loadTexture(type);
-    }
+    Knight(bool isWhite);
     string getType() const override { return "Knight"; }
 };

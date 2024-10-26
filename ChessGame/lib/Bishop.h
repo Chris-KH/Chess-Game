@@ -3,8 +3,6 @@
 
 class Bishop : public Pieces {
 public:
-    Bishop(bool isWhite) : Pieces(isWhite ? "../assets/Cartoon Theme/white-bishop.png" : "../assets/Cartoon Theme/black-bishop.png") {
-        loadTexture(type);
-    }
+    Bishop(bool isWhite);
     string getType() const override { return "Bishop"; }
 };

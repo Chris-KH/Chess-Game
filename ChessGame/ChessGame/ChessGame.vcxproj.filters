@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Pieces">
+      <UniqueIdentifier>{d44a13b4-a472-42b9-81ab-f7806d63041d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Pieces">
+      <UniqueIdentifier>{4d02d560-208b-45c4-bd60-9b751afde3a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Main.cpp">
@@ -31,22 +37,22 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Bishop.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="..\src\King.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Knight.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Pawn.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Queen.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Rook.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Pieces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,22 +69,22 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\lib\Bishop.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="..\lib\King.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="..\lib\Knight.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="..\lib\Pawn.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="..\lib\Queen.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="..\lib\Rook.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

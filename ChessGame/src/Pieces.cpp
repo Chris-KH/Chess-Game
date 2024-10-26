@@ -1,11 +1,42 @@
 ﻿#include"../lib/Pieces.h"
 
-bool Pieces::loadTexture(const string& filePath) {
-    if (!texture.loadFromFile(filePath)) {
-        return false; 
+Pieces::Pieces() {
+    this->currentTextureIndex = 0;
+    this->type = "";
+    this->isWhite = true;
+}
+
+
+//Pieces::Pieces(const bool& isWhite) {
+//    this->currentTextureIndex = 0;
+//    this->type = "";
+//    this->isWhite = isWhite;
+//}
+
+Pieces::Pieces(bool isWhite) {
+    this->currentTextureIndex = 0;
+    this->isWhite = isWhite;
+}
+
+bool Pieces::loadTexture(const vector<string>& texturePaths) {
+    for (const auto& path : texturePaths) {
+        Texture texture;
+        if (!texture.loadFromFile(path)) {
+            throw runtime_error("Unable to load piece texture from: " + path);
+        }
+        textures.push_back(move(texture)); // Thêm vào vector
     }
-    sprite.setTexture(texture);
+
+    // Đặt texture đầu tiên cho sprite
+    sprite.setTexture(textures[currentTextureIndex]);
     return true;
+}
+
+void Pieces::changeTexture(size_t index) {
+    if (index < textures.size()) {
+        currentTextureIndex = index;
+        sprite.setTexture(textures[currentTextureIndex]);
+    }
 }
 
 void Pieces::scaleToFitSquare(float squareSize) {
