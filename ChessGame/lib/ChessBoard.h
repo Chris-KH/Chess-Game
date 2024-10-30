@@ -26,7 +26,8 @@ private:
     vector<string> boardFiles; // Danh sách đường dẫn bàn cờ
     int currentBoardIndex; // Chỉ số bàn cờ hiện tại
 
-    float cellSize = 800; // Kích thước mỗi ô
+    float cellSize = 100; // Kích thước mỗi ô
+
     Font font; // Phông chữ để vẽ chữ và số
     Text rowLabels[8]; // Mảng chứa các chữ số cho hàng
     Text colLabels[8]; // Mảng chứa các chữ cái cho cột

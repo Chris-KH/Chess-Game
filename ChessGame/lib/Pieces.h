@@ -6,10 +6,11 @@
 #include <SFML/Network.hpp>
 #include <SFML/OpenGL.hpp>
 #include <bits/stdc++.h>
-#include "Movement.h"
 
 using namespace std;
 using namespace sf;
+
+#include "Movement.h"
 
 class Pieces {
 protected:
