@@ -52,6 +52,7 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     this->addPiece(make_shared<Pawn>(true), 6, 6);
     this->addPiece(make_shared<Pawn>(true), 7, 6);
 
+
     // Thiết lập phông chữ
     //if (!font.loadFromFile("C:\\Windows\\Fonts\\arial.ttf")) { // Thay bằng đường dẫn font có sẵn
     //    throw runtime_error("Unable to load font");
@@ -190,3 +191,24 @@ void ChessBoard::draw() {
     //    window->draw(colLabels[i]);
     //}
 }
+
+
+// Highline possible move
+//void ChessBoard::showPossibleMoves(int col, int row) {
+//    if (pieces[row][col]) {
+//        auto moves = pieces[row][col]->getPossibleMoves(pieces);
+//        for (auto& move : moves) {
+//            int moveRow = move.first;
+//            int moveCol = move.second;
+//            // Tô sáng các ô có thể di chuyển
+//            highlightSquare(moveCol, moveRow);
+//        }
+//    }
+//}
+//
+//void ChessBoard::highlightSquare(int col, int row) {
+//    sf::RectangleShape highlight(sf::Vector2f(cellSize, cellSize));
+//    highlight.setFillColor(sf::Color(0, 255, 0, 128)); // Màu tô sáng
+//    highlight.setPosition(col * cellSize, row * cellSize);
+//    window.draw(highlight);
+//}

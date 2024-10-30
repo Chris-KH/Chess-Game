@@ -7,7 +7,6 @@ Pieces::Pieces() {
     this->drag = false;
 }
 
-
 //Pieces::Pieces(const bool& isWhite) {
 //    this->currentTextureIndex = 0;
 //    this->type = "";
@@ -50,6 +49,8 @@ void Pieces::scaleToFitCell(float cellSize) {
 }
 
 void Pieces::setPosition(int col, int row, float cellSize) {
+    this->col = col;
+    this->row = row;
     scaleToFitCell(cellSize);
     sprite.setPosition(
         65 + col * cellSize + (cellSize - sprite.getGlobalBounds().width) / 2,

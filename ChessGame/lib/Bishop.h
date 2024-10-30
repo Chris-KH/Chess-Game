@@ -4,5 +4,6 @@
 class Bishop : public Pieces {
 public:
     Bishop(bool isWhite);
-    string getType() const override { return "Bishop"; }
+    string getType() const override;
+    vector<pair<int, int>> getPossibleMoves(const vector<vector<pair<bool, bool>>>& board);
 };

@@ -10,3 +10,11 @@ Pawn::Pawn(bool isWhite) : Pieces(isWhite) {
 
 	loadTexture(texturePaths);
 }
+
+string Pawn::getType() const {
+	return this->type;
+}
+
+vector<pair<int, int>> Pawn::getPossibleMoves(const vector<vector<pair<bool, bool>>>& board) {
+	return {};
+}

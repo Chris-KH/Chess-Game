@@ -26,6 +26,9 @@ private:
     vector<string> boardFiles; // Danh sách đường dẫn bàn cờ
     int currentBoardIndex; // Chỉ số bàn cờ hiện tại
 
+    vector<vector<pair<bool, bool>>> board; // first: false if this position is empty, otherwise true
+                                            // second: true if white color, false if black
+
     float cellSize = 100; // Kích thước mỗi ô
 
     Font font; // Phông chữ để vẽ chữ và số
@@ -44,4 +47,8 @@ public:
 
     void update(const sf::Event& ev);
     void draw();
+
+    //Highline possible move
+    //void showPossibleMoves(int col, int row);
+    //void highlightSquare(int col, int row);
 };

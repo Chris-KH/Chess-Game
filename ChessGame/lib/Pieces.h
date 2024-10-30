@@ -26,6 +26,9 @@ protected:
     // Movement
     Movement movement;
     bool drag;
+
+    // Current position
+    int col = 0, row = 0;
 public:
     Pieces();
     //Pieces(const bool& isWhite);
@@ -46,5 +49,8 @@ public:
 
     // Release a piece
     void toNearestCell(const sf::Vector2f& point);
+
+    //Possible move
+    virtual vector<pair<int, int>> getPossibleMoves(const vector<vector<pair<bool, bool>>>& board) = 0;
 };
 

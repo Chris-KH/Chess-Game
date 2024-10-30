@@ -4,5 +4,6 @@
 class Rook : public Pieces {
 public:
     Rook(bool isWhite);
-    string getType() const override { return "Rook"; }
+    string getType() const override;
+    vector<pair<int, int>> getPossibleMoves(const vector<vector<pair<bool, bool>>>& board);
 };
