@@ -53,9 +53,9 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     this->addPiece(make_shared<Pawn>(true), 7, 6);
 
     // Thiết lập phông chữ
-    if (!font.loadFromFile("C:\\Windows\\Fonts\\arial.ttf")) { // Thay bằng đường dẫn font có sẵn
-        throw runtime_error("Unable to load font");
-    }
+    //if (!font.loadFromFile("C:\\Windows\\Fonts\\arial.ttf")) { // Thay bằng đường dẫn font có sẵn
+    //    throw runtime_error("Unable to load font");
+    //}
 }
 
 void ChessBoard::addPiece(shared_ptr<Pieces> piece, int col, int row) {
@@ -181,12 +181,12 @@ void ChessBoard::draw() {
     }
 
     // Vẽ nhãn hàng
-    for (int i = 0; i < 8; ++i) {
+    /*for (int i = 0; i < 8; ++i) {
         window->draw(rowLabels[i]);
-    }
+    }*/
 
     // Vẽ nhãn cột
-    for (int i = 0; i < 8; ++i) {
-        window->draw(colLabels[i]);
-    }
+    //for (int i = 0; i < 8; ++i) {
+    //    window->draw(colLabels[i]);
+    //}
 }
