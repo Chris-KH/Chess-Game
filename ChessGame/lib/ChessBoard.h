@@ -9,7 +9,13 @@
 
 using namespace sf;
 
-#include"../lib/Pieces.h"
+#include"Pieces.h"
+#include "Pawn.h"
+#include "King.h"
+#include "Queen.h"
+#include "Rook.h"
+#include "Knight.h"
+#include "Bishop.h"
 
 class ChessBoard {
 private:
@@ -20,19 +26,21 @@ private:
     vector<string> boardFiles; // Danh sách đường dẫn bàn cờ
     int currentBoardIndex; // Chỉ số bàn cờ hiện tại
 
-    float squareSize; // Kích thước mỗi ô
+    float cellSize = 800; // Kích thước mỗi ô
     Font font; // Phông chữ để vẽ chữ và số
     Text rowLabels[8]; // Mảng chứa các chữ số cho hàng
     Text colLabels[8]; // Mảng chứa các chữ cái cho cột
     RectangleShape border;
 public:
     // Constructor
-    ChessBoard(RenderWindow* win, const vector<string>& boardPaths, int currentBoardIndex = 0);
+    ChessBoard(RenderWindow* win, int currentBoardIndex = 0);
 
-    // Load ảnh bàn cờ từ file
+    // Update các kiểu
     bool loadBoardTexture(const string& filePath);
     void updateBoardScale();
     bool changeBoard(int newIndex);
     void addPiece(std::shared_ptr<Pieces> piece, int col, int row);
+
+    void update(const sf::Event& ev);
     void draw();
 };
