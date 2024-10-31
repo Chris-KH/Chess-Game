@@ -192,7 +192,6 @@ void ChessBoard::update(const sf::Event& event) {
 }
 
 void ChessBoard::draw() {
-    window->draw(border);
     window->draw(boardSprite);
     //Draw pieces
     for (const auto& tile : highlightTiles) {

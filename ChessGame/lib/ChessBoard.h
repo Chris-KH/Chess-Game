@@ -32,7 +32,6 @@ private:
     Font font; // Phông chữ để vẽ chữ và số
     Text rowLabels[8]; // Mảng chứa các chữ số cho hàng
     Text colLabels[8]; // Mảng chứa các chữ cái cho cột
-    RectangleShape border;
 
     Pieces* selectedPiece = nullptr;
     std::vector<sf::RectangleShape> highlightTiles; // Danh sách ô cần tô màu
