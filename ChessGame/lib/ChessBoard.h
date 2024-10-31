@@ -22,12 +22,10 @@ private:
     RenderWindow* window; // Cửa sổ SFML
     Texture boardTexture; // Texture của bàn cờ
     Sprite boardSprite;   // Sprite để vẽ bàn cờ
-    vector<shared_ptr<Pieces>> pieces; // Danh sách quân cờ
     vector<string> boardFiles; // Danh sách đường dẫn bàn cờ
     int currentBoardIndex; // Chỉ số bàn cờ hiện tại
 
-    vector<vector<pair<bool, bool>>> board; // first: false if this position is empty, otherwise true
-                                            // second: true if white color, false if black
+    vector<vector<unique_ptr<Pieces>>> board;
 
     float cellSize = 100; // Kích thước mỗi ô
 
@@ -43,7 +41,7 @@ public:
     bool loadBoardTexture(const string& filePath);
     void updateBoardScale();
     bool changeBoard(int newIndex);
-    void addPiece(std::shared_ptr<Pieces> piece, int col, int row);
+    void addPiece(unique_ptr<Pieces> piece, int col, int row);
 
     void update(const sf::Event& ev);
     void draw();
