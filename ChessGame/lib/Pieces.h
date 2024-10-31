@@ -35,6 +35,8 @@ public:
     Pieces(bool isWhite);
 
     bool getColor() const;
+    int getCol() const;
+    int getRow() const;
 
     bool loadTexture(const vector<string>& texturePaths);
     void changeTexture(size_t index);

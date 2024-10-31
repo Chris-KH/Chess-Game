@@ -16,13 +16,31 @@ string Bishop::getType() const {
 }
 
 vector<pair<int, int>> Bishop::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
-	vector<pair<int, int>> moves;
-	// Duyệt theo 4 đường chéo
-	for (int i = 1; i < 8; ++i) {
-		if (row + i < 8 && col + i < 8 && (!board[row + i][col + i] || board[row + i][col + i].get()->getColor() != isWhite)) moves.emplace_back(row + i, col + i); // Chéo phải dưới
-		if (row + i < 8 && col - i >= 0 && (!board[row + i][col - i] || board[row + i][col - i].get()->getColor() != isWhite)) moves.emplace_back(row + i, col - i); // Chéo trái dưới
-		if (row - i >= 0 && col + i < 8 && (!board[row - i][col + i] || board[row - i][col + i].get()->getColor() != isWhite)) moves.emplace_back(row - i, col + i); // Chéo phải trên
-		if (row - i >= 0 && col - i >= 0 && (!board[row - i][col - i] || board[row - i][col - i].get()->getColor() != isWhite)) moves.emplace_back(row - i, col - i); // Chéo trái trên
-	}
+    vector<pair<int, int>> moves;
+    int directions[4][2] = { {1, 1}, {1, -1}, {-1, 1}, {-1, -1} }; // Duyệt 4 hướng chéo
+
+    for (auto& dir : directions) {
+        int newRow = row;
+        int newCol = col;
+
+        while (true) {
+            newRow += dir[0];
+            newCol += dir[1];
+
+            if (newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) break;
+
+            if (!board[newRow][newCol]) {
+                moves.emplace_back(newRow, newCol);
+            }
+            else if (board[newRow][newCol]->getColor() != isWhite) {
+                moves.emplace_back(newRow, newCol);
+                break;
+            }
+            else {
+                break;
+            }
+        }
+    }
+    return moves;
 	return moves;
 }

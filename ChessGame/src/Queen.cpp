@@ -17,17 +17,30 @@ string Queen::getType() const {
 
 vector<pair<int, int>> Queen::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
     vector<pair<int, int>> moves;
+    int directions[8][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1} };
 
-    // Duyệt các hướng giống như quân xe và quân tượng
-    for (int i = 1; i < 8; ++i) {
-        if (row + i < 8 && (!board[row + i][col] || board[row + i][col].get()->getColor() != isWhite)) moves.emplace_back(row + i, col); // Đi xuống
-        if (row - i >= 0 && (!board[row - i][col] || board[row - i][col].get()->getColor() != isWhite)) moves.emplace_back(row - i, col); // Đi lên
-        if (col + i < 8 && (!board[row][col + i] || board[row][col + i].get()->getColor() != isWhite)) moves.emplace_back(row, col + i); // Đi phải
-        if (col - i >= 0 && (!board[row][col - i] || board[row][col - i].get()->getColor() != isWhite)) moves.emplace_back(row, col - i); // Đi trái
-        if (row + i < 8 && col + i < 8 && (!board[row + i][col + i] || board[row + i][col + i].get()->getColor() != isWhite)) moves.emplace_back(row + i, col + i); // Chéo phải dưới
-        if (row - i >= 0 && col + i < 8 && (!board[row - i][col + i] || board[row - i][col + i].get()->getColor() != isWhite)) moves.emplace_back(row - i, col + i); // Chéo phải trên
-        if (row + i < 8 && col - i >= 0 && (!board[row + i][col - i] || board[row + i][col - i].get()->getColor() != isWhite)) moves.emplace_back(row + i, col - i); // Chéo trái dưới
-        if (row - i >= 0 && col - i >= 0 && (!board[row - i][col - i] || board[row - i][col - i].get()->getColor() != isWhite)) moves.emplace_back(row - i, col - i); // Chéo trái trên
+    for (auto& dir : directions) {
+        int newRow = row;
+        int newCol = col;
+
+        while (true) {
+            newRow += dir[0];
+            newCol += dir[1];
+
+            if (newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) break;
+
+            if (!board[newRow][newCol]) {
+                moves.emplace_back(newRow, newCol);
+            }
+            else if (board[newRow][newCol]->getColor() != isWhite) {
+                moves.emplace_back(newRow, newCol);
+                break;
+            }
+            else {
+                break;
+            }
+        }
     }
+    return moves;
     return moves;
 }

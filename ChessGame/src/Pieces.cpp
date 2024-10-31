@@ -23,6 +23,14 @@ bool Pieces::getColor() const {
     return this->isWhite;
 }
 
+int Pieces::getCol() const {
+    return this->col;
+}
+
+int Pieces::getRow() const {
+    return this->row;
+}
+
 bool Pieces::loadTexture(const vector<string>& texturePaths) {
     for (const auto& path : texturePaths) {
         Texture texture;

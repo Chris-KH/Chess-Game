@@ -25,6 +25,8 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
         row.resize(8); // Mỗi hàng sẽ có 8 cột
     }
 
+    this->addPiece(make_unique<Queen>(true), 4, 4); // Hậu trắng
+
     // Tạo quân cờ
     this->addPiece(make_unique<Rook>(true), 0, 7); // Xe trắng
     this->addPiece(make_unique<Knight>(true), 1, 7); // Mã trắng
@@ -236,14 +238,19 @@ void ChessBoard::handleMouseClick(int mouseX, int mouseY) {
 
                 // Nếu ô chứa quân địch, tô màu đỏ; nếu không, tô màu xanh
                 if (board[targetRow][targetCol] && board[targetRow][targetCol]->getColor() != selectedPiece->getColor()) {
-                    highlightTile.setFillColor(sf::Color(255, 0, 0, 100)); // Màu đỏ
+                    highlightTile.setFillColor(sf::Color(255, 99, 71, 100)); // Màu đỏ
                 }
                 else {
-                    highlightTile.setFillColor(sf::Color(0, 255, 0, 100)); // Màu xanh
+                    highlightTile.setFillColor(sf::Color(144, 238, 144, 100)); // Màu xanh
                 }
 
                 highlightTiles.push_back(highlightTile); // Thêm ô tô màu vào danh sách
             }
+            // Tô cả ô đang đứng
+            sf::RectangleShape highlightTile(sf::Vector2f(100, 100)); // Kích thước ô là 100x100
+            highlightTile.setPosition(65 + selectedPiece->getCol() * 100, 65 + selectedPiece->getRow() * 100); // Đặt vị trí ô tô màu với viền
+            highlightTile.setFillColor(sf::Color(100, 255, 100, 128)); // Màu xanh
+            highlightTiles.push_back(highlightTile);
         }
     }
 }

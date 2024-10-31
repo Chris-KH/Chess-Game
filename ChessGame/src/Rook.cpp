@@ -16,14 +16,35 @@ string Rook::getType() const {
 }
 
 vector<pair<int, int>> Rook::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
-	vector<pair<int, int>> moves;
+    vector<pair<int, int>> moves;
+    int directions[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} }; // Duyệt các hướng lên, xuống, trái, phải
 
-	// Di chuyển dọc và ngang
-	for (int i = 1; i < 8; ++i) {
-		if (row + i < 8 && (!board[row + i][col] || board[row + i][col].get()->getColor() != isWhite)) moves.emplace_back(row + i, col); // Đi xuống
-		if (row - i >= 0 && (!board[row - i][col] || board[row - i][col].get()->getColor() != isWhite)) moves.emplace_back(row - i, col); // Đi lên
-		if (col + i < 8 && (!board[row][col + i] || board[row][col + i].get()->getColor() != isWhite)) moves.emplace_back(row, col + i); // Đi phải
-		if (col - i >= 0 && (!board[row][col - i] || board[row][col - i].get()->getColor() != isWhite)) moves.emplace_back(row, col - i); // Đi trái
-	}
+    for (auto& dir : directions) {
+        int newRow = row;
+        int newCol = col;
+
+        while (true) {
+            newRow += dir[0];
+            newCol += dir[1];
+
+            // Kiểm tra xem ô có nằm trong bàn cờ không
+            if (newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) break;
+
+            // Nếu ô trống, thêm vào danh sách
+            if (!board[newRow][newCol]) {
+                moves.emplace_back(newRow, newCol);
+            }
+            // Nếu ô chứa quân địch, thêm vào rồi dừng
+            else if (board[newRow][newCol]->getColor() != isWhite) {
+                moves.emplace_back(newRow, newCol);
+                break;
+            }
+            // Nếu ô chứa quân cùng màu, dừng lại
+            else {
+                break;
+            }
+        }
+    }
+    return moves;
 	return moves;
 }
