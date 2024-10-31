@@ -7,7 +7,9 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     this->boardFiles = {
             "../assets/Chess Board/ChessBoard1.png",
             "../assets/Chess Board/ChessBoard2.png",
-            "../assets/Chess Board/ChessBoard3.png"
+            "../assets/Chess Board/ChessBoard3.png",
+            "../assets/Chess Board/ChessBoard4.png",
+            "../assets/Chess Board/ChessBoard5.png"
     };
     this->currentBoardIndex = currentBoardIndex;
 
@@ -51,6 +53,8 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     this->addPiece(make_shared<Pawn>(true), 5, 6);
     this->addPiece(make_shared<Pawn>(true), 6, 6);
     this->addPiece(make_shared<Pawn>(true), 7, 6);
+
+
 
 
     // Thiết lập phông chữ
