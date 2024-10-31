@@ -146,6 +146,12 @@ void ChessBoard::update(const sf::Event& event) {
             if (!p) continue;
             sf::Vector2f mousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
 
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                int mouseX = event.mouseButton.x;
+                int mouseY = event.mouseButton.y;
+                this->handleMouseClick(mouseX, mouseY); // Xử lý click
+            }
+
             if (event.mouseButton.button == sf::Mouse::Button::Left) {
                 // Nếu nhấn chuột trái
                 if (event.type == sf::Event::MouseButtonPressed) {
@@ -186,31 +192,58 @@ void ChessBoard::update(const sf::Event& event) {
 void ChessBoard::draw() {
     window->draw(border);
     window->draw(boardSprite);
+    //Draw pieces
+    for (const auto& tile : highlightTiles) {
+        window->draw(tile);
+    }
+
     for (auto& pieces : board) {
         for (auto& piece : pieces) {
             if (!piece) continue;
             piece->draw(*window);
         }
     }
+
+    
 }
 
-
 // Highline possible move
-//void ChessBoard::showPossibleMoves(int col, int row) {
-//    if (pieces[row][col]) {
-//        auto moves = pieces[row][col]->getPossibleMoves(pieces);
-//        for (auto& move : moves) {
-//            int moveRow = move.first;
-//            int moveCol = move.second;
-//            // Tô sáng các ô có thể di chuyển
-//            highlightSquare(moveCol, moveRow);
-//        }
-//    }
-//}
-//
-//void ChessBoard::highlightSquare(int col, int row) {
-//    sf::RectangleShape highlight(sf::Vector2f(cellSize, cellSize));
-//    highlight.setFillColor(sf::Color(0, 255, 0, 128)); // Màu tô sáng
-//    highlight.setPosition(col * cellSize, row * cellSize);
-//    window.draw(highlight);
-//}
+void ChessBoard::handleMouseClick(int mouseX, int mouseY) {
+    int col = (mouseX - 65) / 100; // Kích thước ô là 100, trừ viền 65px
+    int row = (mouseY - 65) / 100; // Kích thước ô là 100, trừ viền 65px
+
+    if (col >= 0 && col < 8 && row >= 0 && row < 8) {
+        Pieces* clickedPiece = board[row][col].get(); // Lấy quân cờ ở ô đã click
+
+        // Nếu có quân cờ tại ô click
+        if (clickedPiece) {
+            // Đặt quân cờ được chọn là clickedPiece
+            selectedPiece = clickedPiece;
+
+            // Xóa ô tô màu cũ
+            highlightTiles.clear();
+
+            // Lấy danh sách các nước đi có thể
+            auto possibleMoves = selectedPiece->getPossibleMoves(board);
+
+            // Tô màu các ô theo danh sách
+            for (auto& move : possibleMoves) {
+                int targetRow = move.first;
+                int targetCol = move.second;
+
+                sf::RectangleShape highlightTile(sf::Vector2f(100, 100)); // Kích thước ô là 100x100
+                highlightTile.setPosition(65 + targetCol * 100, 65 + targetRow * 100); // Đặt vị trí ô tô màu với viền
+
+                // Nếu ô chứa quân địch, tô màu đỏ; nếu không, tô màu xanh
+                if (board[targetRow][targetCol] && board[targetRow][targetCol]->getColor() != selectedPiece->getColor()) {
+                    highlightTile.setFillColor(sf::Color(255, 0, 0, 100)); // Màu đỏ
+                }
+                else {
+                    highlightTile.setFillColor(sf::Color(0, 255, 0, 100)); // Màu xanh
+                }
+
+                highlightTiles.push_back(highlightTile); // Thêm ô tô màu vào danh sách
+            }
+        }
+    }
+}

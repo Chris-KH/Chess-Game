@@ -33,6 +33,10 @@ private:
     Text rowLabels[8]; // Mảng chứa các chữ số cho hàng
     Text colLabels[8]; // Mảng chứa các chữ cái cho cột
     RectangleShape border;
+
+    Pieces* selectedPiece = nullptr;
+    std::vector<sf::RectangleShape> highlightTiles; // Danh sách ô cần tô màu
+
 public:
     // Constructor
     ChessBoard(RenderWindow* win, int currentBoardIndex = 0);
@@ -47,6 +51,5 @@ public:
     void draw();
 
     //Highline possible move
-    //void showPossibleMoves(int col, int row);
-    //void highlightSquare(int col, int row);
+    void handleMouseClick(int mouseX, int mouseY);
 };

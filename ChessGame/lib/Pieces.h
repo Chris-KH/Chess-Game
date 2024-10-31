@@ -53,6 +53,6 @@ public:
     void toNearestCell(const sf::Vector2f& point);
 
     //Possible move
-    virtual vector<pair<int, int>> getPossibleMoves(const vector<vector<pair<bool, bool>>>& board) = 0;
+    virtual vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) = 0;
 };
 
