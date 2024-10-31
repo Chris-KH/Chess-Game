@@ -15,25 +15,25 @@ string Pawn::getType() const {
 	return this->type;
 }
 
-vector<pair<int, int>> Pawn::getPossibleMoves(const vector<vector<pair<bool, bool>>>& board) {
+vector<pair<int, int>> Pawn::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
     vector<std::pair<int, int>> moves;
     int direction = (isWhite) ? -1 : 1;
 
     // Nước đi thẳng
-    if (row + direction >= 0 && row + direction < 8 && !board[row + direction][col].first) {
+    if (row + direction >= 0 && row + direction < 8 && !board[row + direction][col]) {
         moves.emplace_back(row + direction, col);
         // Nước đi hai ô khi chưa di chuyển
         if ((isWhite && row == 6) || (!isWhite && row == 1)) {
-            if (!board[row + 2 * direction][col].first) {
+            if (!board[row + 2 * direction][col]) {
                 moves.emplace_back(row + 2 * direction, col);
             }
         }
     }
     // Nước đi chéo để ăn quân
-    if (col - 1 >= 0 && row + direction >= 0 && row + direction < 8 && board[row + direction][col - 1].first && board[row + direction][col - 1].second != isWhite) {
+    if (col - 1 >= 0 && row + direction >= 0 && row + direction < 8 && board[row + direction][col - 1] && board[row + direction][col - 1].get()->getColor() != isWhite) {
         moves.emplace_back(row + direction, col - 1);
     }
-    if (col + 1 < 8 && row + direction >= 0 && row + direction < 8 && board[row + direction][col + 1].first && board[row + direction][col + 1].second != isWhite) {
+    if (col + 1 < 8 && row + direction >= 0 && row + direction < 8 && board[row + direction][col + 1] && board[row + direction][col + 1].get()->getColor() != isWhite) {
         moves.emplace_back(row + direction, col + 1);
     }
     return moves;

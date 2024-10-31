@@ -34,6 +34,8 @@ public:
     //Pieces(const bool& isWhite);
     Pieces(bool isWhite);
 
+    bool getColor() const;
+
     bool loadTexture(const vector<string>& texturePaths);
     void changeTexture(size_t index);
     void scaleToFitCell(float squareSize);

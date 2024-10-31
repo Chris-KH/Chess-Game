@@ -15,7 +15,7 @@ string King::getType() const {
 	return this->type;
 }
 
-vector<pair<int, int>> King::getPossibleMoves(const vector<vector<pair<bool, bool>>>& board) {
+vector<pair<int, int>> King::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
 	vector<pair<int, int>> moves;
 	int kingMoves[8][2] = { {1, 1}, {-1, -1}, {1, -1}, {1, 0}, {0, 1}, {-1, 0}, {0, -1}, {-1, 1} };
 	// Duyệt theo 4 hướng ngang và dọc
@@ -23,7 +23,7 @@ vector<pair<int, int>> King::getPossibleMoves(const vector<vector<pair<bool, boo
 		int newRow = row + move[0];
 		int newCol = col + move[1];
 		if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
-			if (!board[newRow][newCol].first || board[newRow][newCol].second != isWhite) {
+			if (!board[newRow][newCol] || board[newRow][newCol].get()->getColor() != isWhite) {
 				moves.emplace_back(newRow, newCol);
 			}
 		}

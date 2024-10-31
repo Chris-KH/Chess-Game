@@ -15,15 +15,15 @@ string Rook::getType() const {
 	return this->type;
 }
 
-vector<pair<int, int>> Rook::getPossibleMoves(const vector<vector<pair<bool, bool>>>& board) {
+vector<pair<int, int>> Rook::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
 	vector<pair<int, int>> moves;
 
 	// Di chuyển dọc và ngang
 	for (int i = 1; i < 8; ++i) {
-		if (row + i < 8 && (!board[row + i][col].first || board[row + i][col].second != isWhite)) moves.emplace_back(row + i, col); // Đi xuống
-		if (row - i >= 0 && (!board[row - i][col].first || board[row - i][col].second != isWhite)) moves.emplace_back(row - i, col); // Đi lên
-		if (col + i < 8 && (!board[row][col + i].first || board[row][col + i].second != isWhite)) moves.emplace_back(row, col + i); // Đi phải
-		if (col - i >= 0 && (!board[row][col - i].first || board[row][col - i].second != isWhite)) moves.emplace_back(row, col - i); // Đi trái
+		if (row + i < 8 && (!board[row + i][col] || board[row + i][col].get()->getColor() != isWhite)) moves.emplace_back(row + i, col); // Đi xuống
+		if (row - i >= 0 && (!board[row - i][col] || board[row - i][col].get()->getColor() != isWhite)) moves.emplace_back(row - i, col); // Đi lên
+		if (col + i < 8 && (!board[row][col + i] || board[row][col + i].get()->getColor() != isWhite)) moves.emplace_back(row, col + i); // Đi phải
+		if (col - i >= 0 && (!board[row][col - i] || board[row][col - i].get()->getColor() != isWhite)) moves.emplace_back(row, col - i); // Đi trái
 	}
 	return moves;
 }

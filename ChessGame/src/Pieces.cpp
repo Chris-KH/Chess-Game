@@ -19,6 +19,10 @@ Pieces::Pieces(bool isWhite) {
     this->drag = false;
 }
 
+bool Pieces::getColor() const {
+    return this->isWhite;
+}
+
 bool Pieces::loadTexture(const vector<string>& texturePaths) {
     for (const auto& path : texturePaths) {
         Texture texture;
