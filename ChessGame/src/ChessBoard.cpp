@@ -124,6 +124,16 @@ bool ChessBoard::changeBoard(int newIndex) {
     return false;
 }
 
+void ChessBoard::changePieces(int newIndex) {
+    for (auto& pieces : board) {
+        for (auto& piece : pieces) {
+            if (!piece) continue;
+            piece->changeTexture(newIndex);
+            piece->setPosition(piece->getCol(), piece->getRow(), cellSize);
+        }
+    }
+}
+
 void ChessBoard::update(const sf::Event& event) {
     /*
         Update các sự kiện xảy ra trên bàn cờ
@@ -140,6 +150,27 @@ void ChessBoard::update(const sf::Event& event) {
         else if (event.key.code == sf::Keyboard::Num3) {
             this->changeBoard(2); // Thay đổi sang bàn cờ 3
         }
+        else if (event.key.code == sf::Keyboard::Num4) {
+            this->changeBoard(3); // Thay đổi sang bàn cờ 4
+        }
+        else if (event.key.code == sf::Keyboard::Num5) {
+            this->changeBoard(4); // Thay đổi sang bàn cờ 5
+        }
+        else if (event.key.code == sf::Keyboard::Num6) {
+            this->changePieces(0); 
+        }
+        else if (event.key.code == sf::Keyboard::Num7) {
+            this->changePieces(1); 
+        }
+        else if (event.key.code == sf::Keyboard::Num8) {
+            this->changePieces(2); 
+        }
+    }
+
+    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+        int mouseX = event.mouseButton.x;
+        int mouseY = event.mouseButton.y;
+        this->handleMouseClick(mouseX, mouseY); // Xử lý click
     }
 
     // Thao tác kéo thả các quân cờ
@@ -147,12 +178,6 @@ void ChessBoard::update(const sf::Event& event) {
         for (auto& p : pieces) {
             if (!p) continue;
             sf::Vector2f mousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-
-            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-                int mouseX = event.mouseButton.x;
-                int mouseY = event.mouseButton.y;
-                this->handleMouseClick(mouseX, mouseY); // Xử lý click
-            }
 
             if (event.mouseButton.button == sf::Mouse::Button::Left) {
                 // Nếu nhấn chuột trái

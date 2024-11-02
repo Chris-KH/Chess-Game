@@ -44,6 +44,7 @@ public:
     bool loadBoardTexture(const string& filePath);
     void updateBoardScale();
     bool changeBoard(int newIndex);
+    void changePieces(int newIndex);
     void addPiece(unique_ptr<Pieces> piece, int col, int row);
 
     void update(const sf::Event& ev);

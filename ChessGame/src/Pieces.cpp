@@ -47,15 +47,18 @@ bool Pieces::loadTexture(const vector<string>& texturePaths) {
 
 void Pieces::changeTexture(size_t index) {
     if (index < textures.size()) {
-        currentTextureIndex = index;
-        sprite.setTexture(textures[currentTextureIndex]);
+        this->currentTextureIndex = index;
+        Sprite newSprite;
+        newSprite.setTexture(textures[currentTextureIndex]);
+        this->sprite = newSprite;
     }
 }
 
 void Pieces::scaleToFitCell(float cellSize) {
     this->movement.setCellSize((int)cellSize);
-    float scaleX = cellSize / sprite.getGlobalBounds().width;
-    float scaleY = cellSize / sprite.getGlobalBounds().height;
+    Vector2u textureSize = textures[currentTextureIndex].getSize();
+    float scaleX = cellSize / textureSize.x;
+    float scaleY = cellSize / textureSize.y;
     float scale = std::min(scaleX, scaleY); // Đảm bảo tỷ lệ đồng nhất
     sprite.setScale(scale, scale);
 }
