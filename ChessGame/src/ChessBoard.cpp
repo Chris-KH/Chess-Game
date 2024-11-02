@@ -152,10 +152,19 @@ void ChessBoard::update(const sf::Event& event) {
             changeBoard(2); // Thay đổi sang bàn cờ 3
         }
         else if (event.key.code == sf::Keyboard::Num4) {
-            changeBoard(3); // Thay đổi sang bàn cờ 3
+            this->changeBoard(3); // Thay đổi sang bàn cờ 4
         }
         else if (event.key.code == sf::Keyboard::Num5) {
-            changeBoard(4); // Thay đổi sang bàn cờ 3
+            this->changeBoard(4); // Thay đổi sang bàn cờ 5
+        }
+        else if (event.key.code == sf::Keyboard::Num6) {
+            this->changePieces(0); 
+        }
+        else if (event.key.code == sf::Keyboard::Num7) {
+            this->changePieces(1); 
+        }
+        else if (event.key.code == sf::Keyboard::Num8) {
+            this->changePieces(2); 
         }
     }
     // Nhấn chuột trái
