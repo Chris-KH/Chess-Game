@@ -186,6 +186,7 @@ void ChessBoard::update(const sf::Event& event) {
                     // Chuột đang ở trên quân cờ
                     // thì cập nhật lại là quân cờ p đang bị kéo đi
                     if (p->contain(mousePos)) {
+                        cout << 'a' << '\n';
                         p->setDrag(true);
                     }
                 }
@@ -229,8 +230,6 @@ void ChessBoard::draw() {
             piece->draw(*window);
         }
     }
-
-    
 }
 
 // Highline possible move

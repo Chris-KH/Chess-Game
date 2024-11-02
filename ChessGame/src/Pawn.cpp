@@ -36,5 +36,6 @@ vector<pair<int, int>> Pawn::getPossibleMoves(const vector<vector<unique_ptr<Pie
     if (col + 1 < 8 && row + direction >= 0 && row + direction < 8 && board[row + direction][col + 1] && board[row + direction][col + 1].get()->getColor() != isWhite) {
         moves.emplace_back(row + direction, col + 1);
     }
+    this->possibleMoves = moves;
     return moves;
 }

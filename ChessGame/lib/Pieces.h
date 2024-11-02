@@ -24,6 +24,8 @@ protected:
     bool isWhite;
     
     // Movement
+    Vector2f initialPosition; // Vị trí ban đầu của quân cờ
+    vector<pair<int, int>> possibleMoves;
     Movement movement;
     bool drag;
 
@@ -46,6 +48,7 @@ public:
     virtual string getType() const = 0;
 
     // Drag a piece
+    void setInitialPosition(const sf::Vector2f& position);
     bool getDrag(void);
     void setDrag(bool state);
     bool contain(const sf::Vector2f& point);
@@ -53,6 +56,7 @@ public:
 
     // Release a piece
     void toNearestCell(const sf::Vector2f& point);
+
 
     //Possible move
     virtual vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) = 0;

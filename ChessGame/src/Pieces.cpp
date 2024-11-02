@@ -81,12 +81,18 @@ string Pieces::getType() const {
     return type;
 }
 
+void Pieces::setInitialPosition(const sf::Vector2f& position) {
+    this->initialPosition = position;
+}
+
 // Drag a piece
 bool Pieces::getDrag(void) {
     return this->drag;
 }
 
 void Pieces::setDrag(bool state) {
+    // Lưu vị trí ban đầu
+    this->setInitialPosition(this->sprite.getPosition()); 
     this->drag = state;
 }
 
@@ -116,14 +122,19 @@ void Pieces::toNearestCell(const sf::Vector2f& point) {
 
     // Lấy ra tọa độ tâm của các ô gần điểm point
     vector<sf::Vector2f> cell = {
-        this->movement.cordCentre(r - 1, c - 1),
-        this->movement.cordCentre(r - 1, c),
-        this->movement.cordCentre(r, c - 1),
-        this->movement.cordCentre(r, c)
+            this->movement.cordCentre(r - 1, c - 1), // top-left
+            this->movement.cordCentre(r - 1, c),     // top
+            this->movement.cordCentre(r - 1, c + 1), // top-right
+            this->movement.cordCentre(r, c - 1),     // left
+            this->movement.cordCentre(r, c),         // center
+            this->movement.cordCentre(r, c + 1),     // right
+            this->movement.cordCentre(r + 1, c - 1), // bottom-left
+            this->movement.cordCentre(r + 1, c),     // bottom
+            this->movement.cordCentre(r + 1, c + 1)  // bottom-right
     };
 
     int mn = -1;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 8; i++) {
         if (cell[i] == this->movement.UNDEFINED_POINT) {
             continue;
         }
@@ -132,7 +143,25 @@ void Pieces::toNearestCell(const sf::Vector2f& point) {
         }
     }
 
-    cell[mn].x -= this->sprite.getGlobalBounds().width / 2;
-    cell[mn].y -= this->sprite.getGlobalBounds().height / 2;
-    this->sprite.setPosition(cell[mn]);
+    // Chuyển tọa độ ô về chỉ số row và col
+    int nearestRow = this->movement.getRow(cell[mn].x);
+    int nearestCol = this->movement.getCol(cell[mn].y);
+
+    // Kiểm tra xem ô gần nhất có nằm trong possibleMoves không
+    bool isValidMove = false;
+    for (const auto& move : possibleMoves) {
+        if (move.first == nearestRow && move.second == nearestCol) {
+            isValidMove = true;
+            break;
+        }
+    }
+
+    // Nếu là nước đi hợp lệ, di chuyển đến ô đó, nếu không thì trả về vị trí ban đầu
+    if (isValidMove) {
+        cell[mn].x -= this->sprite.getGlobalBounds().width / 2;
+        cell[mn].y -= this->sprite.getGlobalBounds().height / 2;
+        this->sprite.setPosition(cell[mn]);
+    } else {
+        this->sprite.setPosition(initialPosition); // Quay lại vị trí ban đầu nếu không hợp lệ
+    }
 }

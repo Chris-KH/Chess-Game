@@ -45,6 +45,6 @@ vector<pair<int, int>> Rook::getPossibleMoves(const vector<vector<unique_ptr<Pie
             }
         }
     }
-    return moves;
+    this->possibleMoves = moves;
 	return moves;
 }
