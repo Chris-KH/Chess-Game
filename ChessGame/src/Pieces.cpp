@@ -66,9 +66,7 @@ void Pieces::scaleToFitCell(float cellSize) {
 void Pieces::setPosition(int col, int row, float cellSize) {
     this->col = col;
     this->row = row;
-    if (cellSize != movement.getCellSize()) {
-        scaleToFitCell(cellSize);
-    }
+    scaleToFitCell(cellSize);
     sprite.setPosition(
         65 + col * cellSize + (cellSize - sprite.getGlobalBounds().width) / 2,
         65 + row * cellSize + (cellSize - sprite.getGlobalBounds().height) / 2
