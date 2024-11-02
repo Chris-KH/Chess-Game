@@ -105,7 +105,7 @@ void ChessBoard::updateBoardScale() {
     boardSprite.setScale(scale, scale); // Áp dụng tỉ lệ
 
     // Cập nhật kích thước ô
-    cellSize = (boardSize.x * scale) / 8; // Kích thước ô dựa trên tỉ lệ
+    cellSize = 100; // Kích thước ô dựa trên tỉ lệ
 }
 
 bool ChessBoard::changeBoard(int newIndex) {
