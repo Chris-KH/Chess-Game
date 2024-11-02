@@ -25,8 +25,6 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
         row.resize(8); // Mỗi hàng sẽ có 8 cột
     }
 
-    addPiece(make_unique<Queen>(true), 4, 4); // Hậu trắng
-
     // Tạo quân cờ
     addPiece(make_unique<Rook>(true), 0, 7); // Xe trắng
     addPiece(make_unique<Knight>(true), 1, 7); // Mã trắng
