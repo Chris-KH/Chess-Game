@@ -55,7 +55,7 @@ public:
     void moveTo(const sf::Vector2f& point);
 
     // Release a piece
-    void toNearestCell(const sf::Vector2f& point);
+    void toNearestCell(const sf::Vector2f& point, vector<vector<unique_ptr<Pieces>>>& board);
 
 
     //Possible move

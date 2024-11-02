@@ -23,6 +23,7 @@ public:
 	// Call for value
 	int getCellSize(void);
 	int getBoardSize(void);
+	float getBorderThickness();
 
 	// Calculation
 	int getRow(float x);

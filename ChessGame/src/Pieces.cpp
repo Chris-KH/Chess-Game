@@ -109,45 +109,19 @@ void Pieces::moveTo(const sf::Vector2f& point) {
     this->sprite.setPosition(destination);
 }
 
-void Pieces::toNearestCell(const sf::Vector2f& point) {
-    /*
-        Đặt quân cờ vào trong ô gần point nhất
-    */
-    float cellSize = this->movement.getCellSize();
-    float boardSize = this->movement.getBoardSize();
-    
-    // Lấy ra chỉ số hàng và cột của point
-    int r = this->movement.getRow(point.x);
-    int c = this->movement.getCol(point.y);
+void Pieces::toNearestCell(const sf::Vector2f& point, vector<vector<unique_ptr<Pieces>>>& board) {
+    // Xác định chỉ số hàng và cột dựa trên tọa độ `point`
+    int nearestRow = static_cast<int>((point.y - this->movement.getBorderThickness()) / this->movement.getCellSize());
+    int nearestCol = static_cast<int>((point.x - this->movement.getBorderThickness()) / this->movement.getCellSize());
 
-    // Lấy ra tọa độ tâm của các ô gần điểm point
-    vector<sf::Vector2f> cell = {
-            this->movement.cordCentre(r - 1, c - 1), // top-left
-            this->movement.cordCentre(r - 1, c),     // top
-            this->movement.cordCentre(r - 1, c + 1), // top-right
-            this->movement.cordCentre(r, c - 1),     // left
-            this->movement.cordCentre(r, c),         // center
-            this->movement.cordCentre(r, c + 1),     // right
-            this->movement.cordCentre(r + 1, c - 1), // bottom-left
-            this->movement.cordCentre(r + 1, c),     // bottom
-            this->movement.cordCentre(r + 1, c + 1)  // bottom-right
-    };
-
-    int mn = -1;
-    for (int i = 0; i < 8; i++) {
-        if (cell[i] == this->movement.UNDEFINED_POINT) {
-            continue;
-        }
-        if (mn == -1 || this->movement.dist(point, cell[mn] ) > this->movement.dist(point, cell[i])) {
-            mn = i;
-        }
+    // Kiểm tra nếu ô nằm trong phạm vi của bàn cờ
+    if (nearestRow < 0 || nearestRow >= board.size() || nearestCol < 0 || nearestCol >= board[0].size()) {
+        // Nếu ngoài biên, di chuyển quân cờ về vị trí ban đầu
+        this->sprite.setPosition(initialPosition);
+        return;
     }
 
-    // Chuyển tọa độ ô về chỉ số row và col
-    int nearestRow = this->movement.getRow(cell[mn].x);
-    int nearestCol = this->movement.getCol(cell[mn].y);
-
-    // Kiểm tra xem ô gần nhất có nằm trong possibleMoves không
+    // Xác định xem ô có nằm trong các nước đi hợp lệ không
     bool isValidMove = false;
     for (const auto& move : possibleMoves) {
         if (move.first == nearestRow && move.second == nearestCol) {
@@ -156,12 +130,26 @@ void Pieces::toNearestCell(const sf::Vector2f& point) {
         }
     }
 
-    // Nếu là nước đi hợp lệ, di chuyển đến ô đó, nếu không thì trả về vị trí ban đầu
     if (isValidMove) {
-        cell[mn].x -= this->sprite.getGlobalBounds().width / 2;
-        cell[mn].y -= this->sprite.getGlobalBounds().height / 2;
-        this->sprite.setPosition(cell[mn]);
+
+        // Nếu có quân địch, xóa nó
+        if (board[nearestRow][nearestCol] && board[nearestRow][nearestCol]->getColor() != this->getColor()) {
+            board[nearestRow][nearestCol].reset();
+        }
+
+        // Di chuyển quân cờ đến ô mới và cập nhật `board`
+        sf::Vector2f newPosition(
+            this->movement.getBorderThickness() + nearestCol * this->movement.getCellSize(),
+            this->movement.getBorderThickness() + nearestRow * this->movement.getCellSize()
+        );
+        this->sprite.setPosition(newPosition);
+        
+        cout << nearestRow << nearestCol << '\n';
+        //board[nearestRow][nearestCol] = std::move(board[this->row][this->col]); // Cập nhật vị trí mới
+        //board[this->row][this->col].reset(); // Xóa vị trí cũ
+
     } else {
-        this->sprite.setPosition(initialPosition); // Quay lại vị trí ban đầu nếu không hợp lệ
+        // Nếu nước đi không hợp lệ, quân cờ trở lại vị trí ban đầu
+        this->sprite.setPosition(initialPosition);
     }
 }

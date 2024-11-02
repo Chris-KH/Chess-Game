@@ -36,6 +36,10 @@ int Movement::getCol(float y) {
 	return c;
 }
 
+float Movement::getBorderThickness() {
+	return 65.0f;
+}
+
 float Movement::dist(const sf::Vector2f& x, const sf::Vector2f& y) {
 	return sqrt((x.x - y.x) * (x.x - y.x) + (x.y - y.y) * (x.y - y.y));
 }

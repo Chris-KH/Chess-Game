@@ -186,7 +186,6 @@ void ChessBoard::update(const sf::Event& event) {
                     // Chuột đang ở trên quân cờ
                     // thì cập nhật lại là quân cờ p đang bị kéo đi
                     if (p->contain(mousePos)) {
-                        cout << 'a' << '\n';
                         p->setDrag(true);
                     }
                 }
@@ -197,7 +196,7 @@ void ChessBoard::update(const sf::Event& event) {
                     // Nếu trước đó đang nắm quân cờ này
                     // thì ta sẽ thả quân cờ vào ô gần với con chuột nhất
                     if (p->getDrag()) {
-                        p->toNearestCell(mousePos);
+                        p->toNearestCell(mousePos, this->board);
                     }
 
                     // Cập nhật lại là quân cờ không bị kéo đi
