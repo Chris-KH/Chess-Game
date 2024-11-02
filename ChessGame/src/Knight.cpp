@@ -28,5 +28,6 @@ vector<pair<int, int>> Knight::getPossibleMoves(const vector<vector<unique_ptr<P
             }
         }
     }
+    this->possibleMoves = moves;
     return moves;
 }

@@ -34,7 +34,11 @@ private:
     Text colLabels[8]; // Mảng chứa các chữ cái cho cột
 
     Pieces* selectedPiece = nullptr;
+    Pieces* pieceFollowingMouse = nullptr;
     std::vector<sf::RectangleShape> highlightTiles; // Danh sách ô cần tô màu
+
+    // Player turn
+    bool whiteTurn;
 
 public:
     // Constructor
@@ -44,11 +48,18 @@ public:
     bool loadBoardTexture(const string& filePath);
     void updateBoardScale();
     bool changeBoard(int newIndex);
+    void changePieces(int newIndex);
     void addPiece(unique_ptr<Pieces> piece, int col, int row);
 
     void update(const sf::Event& ev);
     void draw();
 
-    //Highline possible move
-    void handleMouseClick(int mouseX, int mouseY);
+    // Handle mouse click
+    void handleMousePress(int mouseX, int mouseY);
+    void handleMouseRelease(int mouseX, int mouseY);
+    void highlightPossibleMove(Pieces* clickedPiece);
+
+    // Player turn
+    bool isWhiteTurn(void) { return this->whiteTurn; }
+    void alterTurn(void); // Đổi lượt
 };

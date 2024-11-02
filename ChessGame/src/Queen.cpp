@@ -41,6 +41,6 @@ vector<pair<int, int>> Queen::getPossibleMoves(const vector<vector<unique_ptr<Pi
             }
         }
     }
-    return moves;
+    this->possibleMoves = moves;
     return moves;
 }

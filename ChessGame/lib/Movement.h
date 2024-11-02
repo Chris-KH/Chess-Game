@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
@@ -11,18 +11,19 @@ class Movement {
 private:
 	int cellSize;
 	int boardSize;
-	sf::Vector2f cords[8][8];
+	sf::Vector2f cords[8][8]; // cords[row][col] lấy ra tọa độ góc trái trên của ô hàng row, cột col
 public:
 	// Constant
 	const sf::Vector2f UNDEFINED_POINT = sf::Vector2f(1e9, 1e9);
 
 	// Initialization
-	Movement(int cellSize = 100);
+	Movement(int cellSize = 0);
 	void setCellSize(int cellSize);
 
 	// Call for value
 	int getCellSize(void);
 	int getBoardSize(void);
+	float getBorderThickness();
 
 	// Calculation
 	int getRow(float x);

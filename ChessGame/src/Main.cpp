@@ -31,10 +31,8 @@ int main() {
                 if (event.type == sf::Event::Closed) {
                     window.close();
                 }
-
                 // Update bàn cờ
                 chessBoard.update(event);
-                
             }
 
             window.clear();

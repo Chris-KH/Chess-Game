@@ -3,19 +3,19 @@
 // Thiết lập các thứ
 ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     // Khởi tạo
-    this->window = win;
-    this->boardFiles = {
+    window = win;
+    boardFiles = {
             "../assets/Chess Board/ChessBoard1.png",
             "../assets/Chess Board/ChessBoard2.png",
             "../assets/Chess Board/ChessBoard3.png",
             "../assets/Chess Board/ChessBoard4.png",
             "../assets/Chess Board/ChessBoard5.png"
     };
-    this->currentBoardIndex = currentBoardIndex;
+    currentBoardIndex = currentBoardIndex;
 
     // Thiết lập bàn cờ
     loadBoardTexture(boardFiles[currentBoardIndex]); // Tải bàn cờ đầu tiên
-    this->cellSize = 100;
+    cellSize = 100;
 
     // Tạo bàn cờ
     board.clear();
@@ -25,46 +25,47 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
         row.resize(8); // Mỗi hàng sẽ có 8 cột
     }
 
-    this->addPiece(make_unique<Queen>(true), 4, 4); // Hậu trắng
+    addPiece(make_unique<Queen>(true), 4, 4); // Hậu trắng
 
     // Tạo quân cờ
-    this->addPiece(make_unique<Rook>(true), 0, 7); // Xe trắng
-    this->addPiece(make_unique<Knight>(true), 1, 7); // Mã trắng
-    this->addPiece(make_unique<Bishop>(true), 2, 7); // Tượng trắng
-    this->addPiece(make_unique<Queen>(true), 3, 7); // Hậu trắng
-    this->addPiece(make_unique<King>(true), 4, 7); // Vua trắng
-    this->addPiece(make_unique<Bishop>(true), 5, 7); // Tượng trắng
-    this->addPiece(make_unique<Knight>(true), 6, 7); // Mã trắng
-    this->addPiece(make_unique<Rook>(true), 7, 7); // Xe trắng
+    addPiece(make_unique<Rook>(true), 0, 7); // Xe trắng
+    addPiece(make_unique<Knight>(true), 1, 7); // Mã trắng
+    addPiece(make_unique<Bishop>(true), 2, 7); // Tượng trắng
+    addPiece(make_unique<Queen>(true), 3, 7); // Hậu trắng
+    addPiece(make_unique<King>(true), 4, 7); // Vua trắng
+    addPiece(make_unique<Bishop>(true), 5, 7); // Tượng trắng
+    addPiece(make_unique<Knight>(true), 6, 7); // Mã trắng
+    addPiece(make_unique<Rook>(true), 7, 7); // Xe trắng
                   
-    this->addPiece(make_unique<Rook>(false), 0, 0); // Xe đen
-    this->addPiece(make_unique<Knight>(false), 1, 0); // Mã đen
-    this->addPiece(make_unique<Bishop>(false), 2, 0); // Tượng đen
-    this->addPiece(make_unique<Queen>(false), 3, 0); // Hậu đen
-    this->addPiece(make_unique<King>(false), 4, 0); // Vua đen
-    this->addPiece(make_unique<Bishop>(false), 5, 0); // Tượng đen
-    this->addPiece(make_unique<Knight>(false), 6, 0); // Mã đen
-    this->addPiece(make_unique<Rook>(false), 7, 0); // Xe đen
+    addPiece(make_unique<Rook>(false), 0, 0); // Xe đen
+    addPiece(make_unique<Knight>(false), 1, 0); // Mã đen
+    addPiece(make_unique<Bishop>(false), 2, 0); // Tượng đen
+    addPiece(make_unique<Queen>(false), 3, 0); // Hậu đen
+    addPiece(make_unique<King>(false), 4, 0); // Vua đen
+    addPiece(make_unique<Bishop>(false), 5, 0); // Tượng đen
+    addPiece(make_unique<Knight>(false), 6, 0); // Mã đen
+    addPiece(make_unique<Rook>(false), 7, 0); // Xe đen
                    
-    this->addPiece(make_unique<Pawn>(false), 0, 1);
-    this->addPiece(make_unique<Pawn>(false), 1, 1);
-    this->addPiece(make_unique<Pawn>(false), 2, 1);
-    this->addPiece(make_unique<Pawn>(false), 3, 1);
-    this->addPiece(make_unique<Pawn>(false), 4, 1);
-    this->addPiece(make_unique<Pawn>(false), 5, 1);
-    this->addPiece(make_unique<Pawn>(false), 6, 1);
-    this->addPiece(make_unique<Pawn>(false), 7, 1);
+    addPiece(make_unique<Pawn>(false), 0, 1);
+    addPiece(make_unique<Pawn>(false), 1, 1);
+    addPiece(make_unique<Pawn>(false), 2, 1);
+    addPiece(make_unique<Pawn>(false), 3, 1);
+    addPiece(make_unique<Pawn>(false), 4, 1);
+    addPiece(make_unique<Pawn>(false), 5, 1);
+    addPiece(make_unique<Pawn>(false), 6, 1);
+    addPiece(make_unique<Pawn>(false), 7, 1);
              
-    this->addPiece(make_unique<Pawn>(true), 0, 6);
-    this->addPiece(make_unique<Pawn>(true), 1, 6);
-    this->addPiece(make_unique<Pawn>(true), 2, 6);
-    this->addPiece(make_unique<Pawn>(true), 3, 6);
-    this->addPiece(make_unique<Pawn>(true), 4, 6);
-    this->addPiece(make_unique<Pawn>(true), 5, 6);
-    this->addPiece(make_unique<Pawn>(true), 6, 6);
-    this->addPiece(make_unique<Pawn>(true), 7, 6);
+    addPiece(make_unique<Pawn>(true), 0, 6);
+    addPiece(make_unique<Pawn>(true), 1, 6);
+    addPiece(make_unique<Pawn>(true), 2, 6);
+    addPiece(make_unique<Pawn>(true), 3, 6);
+    addPiece(make_unique<Pawn>(true), 4, 6);
+    addPiece(make_unique<Pawn>(true), 5, 6);
+    addPiece(make_unique<Pawn>(true), 6, 6);
+    addPiece(make_unique<Pawn>(true), 7, 6);
 
-
+    // Player turn
+    whiteTurn = true;
 }
 
 void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
@@ -124,70 +125,56 @@ bool ChessBoard::changeBoard(int newIndex) {
     return false;
 }
 
+void ChessBoard::changePieces(int newIndex) {
+    for (auto& pieces : board) {
+        for (auto& piece : pieces) {
+            if (!piece) continue;
+            piece->changeTexture(newIndex);
+            piece->setPosition(piece->getCol(), piece->getRow(), cellSize);
+        }
+    }
+}
+
 void ChessBoard::update(const sf::Event& event) {
     /*
         Update các sự kiện xảy ra trên bàn cờ
     */
 
-    // Nhấn phím 1, 2, 3 để thay đổi bàn cờ
+    // Nhấn số [1..5] để thay đổi bàn cờ
     if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Num1) {
-            this->changeBoard(0); // Thay đổi sang bàn cờ 1
+            changeBoard(0); // Thay đổi sang bàn cờ 1
         }
         else if (event.key.code == sf::Keyboard::Num2) {
-            this->changeBoard(1); // Thay đổi sang bàn cờ 2
+            changeBoard(1); // Thay đổi sang bàn cờ 2
         }
         else if (event.key.code == sf::Keyboard::Num3) {
-            this->changeBoard(2); // Thay đổi sang bàn cờ 3
+            changeBoard(2); // Thay đổi sang bàn cờ 3
+        }
+        else if (event.key.code == sf::Keyboard::Num4) {
+            changeBoard(3); // Thay đổi sang bàn cờ 3
+        }
+        else if (event.key.code == sf::Keyboard::Num5) {
+            changeBoard(4); // Thay đổi sang bàn cờ 3
         }
     }
+    // Nhấn chuột trái
+    else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+        int mouseX = event.mouseButton.x;
+        int mouseY = event.mouseButton.y;
+        handleMousePress(mouseX, mouseY);
+    }
+    // Nếu thả chuột trái
+    else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+        int mouseX = event.mouseButton.x;
+        int mouseY = event.mouseButton.y;
+        handleMouseRelease(mouseX, mouseY);
+    }
+    else {
+    }
 
-    // Thao tác kéo thả các quân cờ
-    for (auto& pieces : board) {
-        for (auto& p : pieces) {
-            if (!p) continue;
-            sf::Vector2f mousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-
-            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-                int mouseX = event.mouseButton.x;
-                int mouseY = event.mouseButton.y;
-                this->handleMouseClick(mouseX, mouseY); // Xử lý click
-            }
-
-            if (event.mouseButton.button == sf::Mouse::Button::Left) {
-                // Nếu nhấn chuột trái
-                if (event.type == sf::Event::MouseButtonPressed) {
-
-                    // Chuột đang ở trên quân cờ
-                    // thì cập nhật lại là quân cờ p đang bị kéo đi
-                    if (p->contain(mousePos)) {
-                        p->setDrag(true);
-                    }
-                }
-
-                // Nếu thả chuột
-                else if (event.type == sf::Event::MouseButtonReleased) {
-
-                    // Nếu trước đó đang nắm quân cờ này
-                    // thì ta sẽ thả quân cờ vào ô gần với con chuột nhất
-                    if (p->getDrag()) {
-                        p->toNearestCell(mousePos);
-                    }
-
-                    // Cập nhật lại là quân cờ không bị kéo đi
-                    p->setDrag(false);
-                }
-            }
-
-            if (event.type == sf::Event::MouseMoved) {
-
-                // Nếu ta di chuyển con chuột trong khi đang nắm quân cờ p 
-                // thì ta quân cờ p sẽ đi theo con chuột
-                if (p->getDrag()) {
-                    p->moveTo(mousePos);
-                }
-            }
-        }
+    if (pieceFollowingMouse != nullptr) {
+        pieceFollowingMouse->followMouse(sf::Mouse::getPosition(*window));
     }
 }
 
@@ -204,52 +191,123 @@ void ChessBoard::draw() {
             piece->draw(*window);
         }
     }
-
-    
 }
 
-// Highline possible move
-void ChessBoard::handleMouseClick(int mouseX, int mouseY) {
-    int col = (mouseX - 65) / 100; // Kích thước ô là 100, trừ viền 65px
+// Handle mouse operators
+void ChessBoard::handleMousePress(int mouseX, int mouseY) {
     int row = (mouseY - 65) / 100; // Kích thước ô là 100, trừ viền 65px
+    int col = (mouseX - 65) / 100; // Kích thước ô là 100, trừ viền 65px
 
-    if (col >= 0 && col < 8 && row >= 0 && row < 8) {
-        Pieces* clickedPiece = board[row][col].get(); // Lấy quân cờ ở ô đã click
+    // Nếu ô được chọn nằm ngoài bàn cờ thì ta không làm gì
+    if (col < 0 || col >= 8 || row < 0 || row >= 8) return;
 
-        // Nếu có quân cờ tại ô click
-        if (clickedPiece) {
-            // Đặt quân cờ được chọn là clickedPiece
-            selectedPiece = clickedPiece;
+    Pieces* lastPiece = selectedPiece; // lastPiece = quân cờ cũ
+    selectedPiece = board[row][col].get(); // Lấy quân cờ ở ô đã click
 
-            // Xóa ô tô màu cũ
-            highlightTiles.clear();
-
-            // Lấy danh sách các nước đi có thể
-            auto possibleMoves = selectedPiece->getPossibleMoves(board);
-
-            // Tô màu các ô theo danh sách
-            for (auto& move : possibleMoves) {
-                int targetRow = move.first;
-                int targetCol = move.second;
-
-                sf::RectangleShape highlightTile(sf::Vector2f(100, 100)); // Kích thước ô là 100x100
-                highlightTile.setPosition(65 + targetCol * 100, 65 + targetRow * 100); // Đặt vị trí ô tô màu với viền
-
-                // Nếu ô chứa quân địch, tô màu đỏ; nếu không, tô màu xanh
-                if (board[targetRow][targetCol] && board[targetRow][targetCol]->getColor() != selectedPiece->getColor()) {
-                    highlightTile.setFillColor(sf::Color(255, 99, 71, 100)); // Màu đỏ
-                }
-                else {
-                    highlightTile.setFillColor(sf::Color(144, 238, 144, 100)); // Màu xanh
-                }
-
-                highlightTiles.push_back(highlightTile); // Thêm ô tô màu vào danh sách
-            }
-            // Tô cả ô đang đứng
-            sf::RectangleShape highlightTile(sf::Vector2f(100, 100)); // Kích thước ô là 100x100
-            highlightTile.setPosition(65 + selectedPiece->getCol() * 100, 65 + selectedPiece->getRow() * 100); // Đặt vị trí ô tô màu với viền
-            highlightTile.setFillColor(sf::Color(100, 255, 100, 128)); // Màu xanh
-            highlightTiles.push_back(highlightTile);
+    // Nếu trước đó có chọn quân cờ
+    if (lastPiece != nullptr) {
+        highlightTiles.clear();
+        // Nếu ta chọn quân cờ khác thì reset biến numPress
+        if (selectedPiece != lastPiece) {
+            lastPiece->resetNumPress();
         }
     }
+
+    // Nếu ta chọn một quân cờ được đi
+    if (selectedPiece != nullptr && selectedPiece->getColor() == whiteTurn) {
+        selectedPiece->press();
+        highlightPossibleMove(selectedPiece);
+        pieceFollowingMouse = selectedPiece;
+    }
+    // Nếu chọn ô khác mà trước đó ta có chọn một quân cờ được đi
+    else if (lastPiece != nullptr && lastPiece->getColor() == whiteTurn) {
+        selectedPiece = lastPiece;
+    }
+}
+
+void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
+    // Nếu trước đó đang giữ quân nào thì thả quân đó ra
+    if (pieceFollowingMouse != nullptr) {
+        pieceFollowingMouse->setPosition(pieceFollowingMouse->getCol(), pieceFollowingMouse->getRow());
+        pieceFollowingMouse = nullptr;
+    }
+
+    // Nếu trước đó không chọn quân cờ được phép đi thì ta bỏ qua
+    if (selectedPiece == nullptr || selectedPiece->getColor() != whiteTurn) return;
+
+    int row = (mouseY - 65) / 100; // Kích thước ô là 100, trừ viền 65px
+    int col = (mouseX - 65) / 100; // Kích thước ô là 100, trừ viền 65px
+
+    // Nếu ô được chọn nằm ngoài bàn cờ thì ta không làm gì
+    if (col < 0 || col >= 8 || row < 0 || row >= 8) return;
+
+    Pieces* lastPiece = selectedPiece; // lastPiece = quân cờ cũ
+    selectedPiece = board[row][col].get(); // Lấy quân cờ ở ô đã click
+
+    // Nếu nước đi hiện tại là đúng luật
+    vector<std::pair<int, int>> possibleMoves = lastPiece->getPossibleMoves(board);
+    if (std::find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
+        // Cập nhật lượt tiếp theo
+        alterTurn();
+
+        // Đặt quân cờ vào ô hiện tại
+        board[row][col] = std::move(board[lastPiece->getRow()][lastPiece->getCol()]);
+        board[row][col]->setPosition(col, row);
+
+        // Bỏ chọn quân cờ này
+        board[row][col]->resetNumPress();
+        highlightTiles.clear();
+        selectedPiece = nullptr;
+    }
+    // Nếu nhấn vào ô trước đó
+    else if (selectedPiece == lastPiece) {
+        // Nếu số lần nhấn vào = 1 thì không làm gì
+        if (selectedPiece == lastPiece && selectedPiece->getNumPress() == 1) return;
+
+        // Bỏ chọn quân cờ này
+        board[row][col]->resetNumPress();
+        highlightTiles.clear();
+        selectedPiece = nullptr;
+    }
+    // Nếu không đi đúng luật thì đặt quân cờ về lại vị trí ban đầu
+    else {
+        // selectedPiece->setPosition(lastPiece->getCol(), lastPiece->getRow());
+    }
+}
+
+void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
+    // Đặt quân cờ được chọn là clickedPiece
+    selectedPiece = clickedPiece;
+
+    // Lấy danh sách các nước đi có thể
+    auto possibleMoves = selectedPiece->getPossibleMoves(board);
+
+    // Tô màu các ô theo danh sách
+    for (auto& move : possibleMoves) {
+        int targetRow = move.first;
+        int targetCol = move.second;
+
+        sf::RectangleShape highlightTile(sf::Vector2f(100, 100)); // Kích thước ô là 100x100
+        highlightTile.setPosition(65 + targetCol * 100, 65 + targetRow * 100); // Đặt vị trí ô tô màu với viền
+
+        // Nếu ô chứa quân địch, tô màu đỏ; nếu không, tô màu xanh
+        if (board[targetRow][targetCol] && board[targetRow][targetCol]->getColor() != selectedPiece->getColor()) {
+            highlightTile.setFillColor(sf::Color(255, 99, 71, 100)); // Màu đỏ
+        }
+        else {
+            highlightTile.setFillColor(sf::Color(144, 238, 144, 100)); // Màu xanh
+        }
+
+        highlightTiles.push_back(highlightTile); // Thêm ô tô màu vào danh sách
+    }
+    // Tô cả ô đang đứng
+    sf::RectangleShape highlightTile(sf::Vector2f(100, 100)); // Kích thước ô là 100x100
+    highlightTile.setPosition(65 + selectedPiece->getCol() * 100, 65 + selectedPiece->getRow() * 100); // Đặt vị trí ô tô màu với viền
+    highlightTile.setFillColor(sf::Color(100, 255, 100, 128)); // Màu xanh
+    highlightTiles.push_back(highlightTile);
+}
+
+// Player turn
+void ChessBoard::alterTurn(void) {
+    whiteTurn ^= true;
 }

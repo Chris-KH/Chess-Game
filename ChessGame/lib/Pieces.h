@@ -24,8 +24,11 @@ protected:
     bool isWhite;
     
     // Movement
+    Vector2f initialPosition; // Vị trí ban đầu của quân cờ
+    vector<pair<int, int>> possibleMoves;
     Movement movement;
-    bool drag;
+    bool chosen;
+    int numPress = 0;
 
     // Current position
     int col = 0, row = 0;
@@ -40,19 +43,17 @@ public:
 
     bool loadTexture(const vector<string>& texturePaths);
     void changeTexture(size_t index);
-    void scaleToFitCell(float squareSize);
-    void setPosition(int col, int row, float squareSize);
+    void scaleToFitCell(float cellSize);
+    void setPosition(int col, int row, float cellSize = 100);
     void draw(RenderWindow& window);
     virtual string getType() const = 0;
 
-    // Drag a piece
-    bool getDrag(void);
-    void setDrag(bool state);
-    bool contain(const sf::Vector2f& point);
-    void moveTo(const sf::Vector2f& point);
-
-    // Release a piece
-    void toNearestCell(const sf::Vector2f& point);
+    // Drag/click a piece
+    void setInitialPosition(const sf::Vector2f& position);
+    int getNumPress(void) { return numPress; } // return variable numPress
+    void press(void) { numPress++;  } // increase variable numPress by 1
+    void resetNumPress(void) { numPress = 0; } // set variable numPress = 0
+    void followMouse(sf::Vector2i mousePos); // set position of the piece to the mouse's position
 
     //Possible move
     virtual vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) = 0;
