@@ -21,8 +21,7 @@ int main() {
     // Khởi động Stockfish
     
     try {
-        sf::RenderWindow window(sf::VideoMode(930, 930), "Chess Game", sf::Style::Close | sf::Style::Titlebar);
-        GameEngine.startGame(&window);
+        GameEngine.startGame();
     }
     catch (const exception& e) {
         cerr << "Error: " << e.what() << endl;

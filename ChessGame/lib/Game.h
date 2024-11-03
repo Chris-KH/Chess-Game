@@ -12,7 +12,7 @@ public:
 	Game();
 	Game(bool againstAI, Stockfish& stockfish, int skillLevel = 0);
 
-	void startGame(sf::RenderWindow* win);
+	void startGame(void);
 	void playAgainstAI();
 	void playAgainstPlayer();
 };
