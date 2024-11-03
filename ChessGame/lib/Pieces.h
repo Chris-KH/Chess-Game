@@ -16,7 +16,7 @@ class Pieces {
 protected:
     // Texture texture; // Texture cho quân cờ
     Sprite sprite;   // Sprite để vẽ quân cờ
-    string type;    // Loại quân cờ (vd: "Pawn", "Rook", "Knight", ...)
+    string type;    // Loại quân cờ (vd: "pawn", "rook", "knight", ...)
 
     // Theme
     size_t currentTextureIndex;

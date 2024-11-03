@@ -71,6 +71,7 @@ void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
         Dùng để khởi tạo quân cờ
     */
     piece->setPosition(col, row, cellSize); // Đặt vị trí quân cờ
+    board[row][col].reset();
     board[row][col] = move(piece);
 }
 
@@ -278,7 +279,7 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
     }
     // Nếu không đi đúng luật thì đặt quân cờ về lại vị trí ban đầu
     else {
-        // selectedPiece->setPosition(lastPiece->getCol(), lastPiece->getRow());
+        //selectedPiece->setPosition(lastPiece->getCol(), lastPiece->getRow());
     }
 }
 

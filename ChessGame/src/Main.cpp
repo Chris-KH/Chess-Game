@@ -15,14 +15,30 @@ using namespace sf;
 #include "../lib/Game.h"
 #include "../lib/ChessBoard.h"
 
-Game GameEngine;
-
 int main() {
     // Khởi động Stockfish
     
     try {
         sf::RenderWindow window(sf::VideoMode(930, 930), "Chess Game", sf::Style::Close | sf::Style::Titlebar);
-        GameEngine.startGame(&window);
+        ChessBoard chessBoard(&window, 0);
+        cout << "Created a chessboard\n";
+
+        Stockfish stockfish;
+
+        // Vòng lặp chính của chương trình
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    window.close();
+                }
+                chessBoard.update(event);
+            }
+
+            window.clear();
+            chessBoard.draw();
+            window.display();
+        }
     }
     catch (const exception& e) {
         cerr << "Error: " << e.what() << endl;
