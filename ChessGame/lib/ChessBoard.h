@@ -26,7 +26,6 @@ private:
     int currentBoardIndex; // Chỉ số bàn cờ hiện tại
 
     vector<vector<unique_ptr<Pieces>>> board;
-    vector<Pieces*> capturingPiece[8][8];
 
     float cellSize = 100; // Kích thước mỗi ô
 
