@@ -73,6 +73,10 @@ void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
     piece->setPosition(col, row, cellSize); // Đặt vị trí quân cờ
     board[row][col].reset();
     board[row][col] = move(piece);
+    vector<pair<int, int>> possibleMoves = board[row][col]->getPossibleMoves(board);
+    for (const pair<int, int>& pii : possibleMoves) {
+        capturingPiece[pii.first][pii.second].push_back(board[row][col].get());
+    }
 }
 
 bool ChessBoard::loadBoardTexture(const string& filePath) {
@@ -258,9 +262,30 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
         // Cập nhật lượt tiếp theo
         alterTurn();
 
-        // Đặt quân cờ vào ô hiện tại
-        board[row][col] = std::move(board[lastPiece->getRow()][lastPiece->getCol()]);
-        board[row][col]->setPosition(col, row);
+        // Đặt quân cờ từ ô cũ đến ô hiện tại
+        {
+            //  Nếu ô hiện tại đang có quân cờ thì ta xóa quân cờ ấy đi
+            if (board[row][col] != nullptr) {
+                // Xóa quân cờ hiện tại ra khỏi vector capturingPiece của từng ô mà nó tới được
+                vector<pair<int, int>> curMoves = selectedPiece->getPossibleMoves(board);
+                for (const pair<int, int>& pii : curMoves) {
+                    vector<Pieces*>::iterator it = find(capturingPiece[pii.first][pii.second].begin(),
+                        capturingPiece[pii.first][pii.second].end(), board[row][col].get());
+                    capturingPiece[pii.first][pii.second].erase(it);
+                }
+                // Xóa quân cờ hiện tại ra khỏi bàn cờ
+                board[row][col].reset();
+            }
+            //  Di chuyển đến ô hiện tại
+            board[row][col] = std::move(board[lastPiece->getRow()][lastPiece->getCol()]);
+            board[row][col]->setPosition(col, row);
+
+            //   Giải phóng đường đi các ô cũ
+            //...(To be continued)
+            
+            //   Cập nhật đường đi các ô mới
+            //...(To be continued)
+        }
 
         // Bỏ chọn quân cờ này
         board[row][col]->resetNumPress();
@@ -276,10 +301,6 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
         board[row][col]->resetNumPress();
         highlightTiles.clear();
         selectedPiece = nullptr;
-    }
-    // Nếu không đi đúng luật thì đặt quân cờ về lại vị trí ban đầu
-    else {
-        //selectedPiece->setPosition(lastPiece->getCol(), lastPiece->getRow());
     }
 }
 
