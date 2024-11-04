@@ -15,7 +15,7 @@ string Bishop::getType() const {
 	return this->type;
 }
 
-vector<pair<int, int>> Bishop::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
+vector<pair<int, int>> Bishop::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board, bool inCheck = false) {
     vector<pair<int, int>> moves;
     int directions[4][2] = { {1, 1}, {1, -1}, {-1, 1}, {-1, -1} }; // Duyệt 4 hướng chéo
 

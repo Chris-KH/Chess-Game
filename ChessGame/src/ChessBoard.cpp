@@ -64,6 +64,9 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
 
     // Player turn
     whiteTurn = true;
+
+    // Check
+    inCheck = false;
 }
 
 void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
@@ -193,6 +196,10 @@ void ChessBoard::draw() {
         window->draw(tile);
     }
 
+    for (const auto& tile : checkTiles) {
+        window->draw(tile);
+    }
+
     for (auto& pieces : board) {
         for (auto& piece : pieces) {
             if (!piece) continue;
@@ -267,6 +274,7 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             //  Di chuyển đến ô hiện tại
             board[row][col] = std::move(board[lastPiece->getRow()][lastPiece->getCol()]);
             board[row][col]->setPosition(col, row);
+            inCheck = isCheck();
         }
 
         // Bỏ chọn quân cờ này
@@ -291,7 +299,7 @@ void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
     selectedPiece = clickedPiece;
 
     // Lấy danh sách các nước đi có thể
-    auto possibleMoves = selectedPiece->getPossibleMoves(board);
+    auto possibleMoves = selectedPiece->getPossibleMoves(board, inCheck);
 
     // Tô màu các ô theo danh sách
     for (auto& move : possibleMoves) {
@@ -321,4 +329,53 @@ void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
 // Player turn
 void ChessBoard::alterTurn(void) {
     whiteTurn ^= true;
+}
+
+// Detect check, checkmate, draw
+bool ChessBoard::isCheck(void) {
+    checkTiles.clear();
+
+    // Tìm king
+    Pieces* king;
+    int r, c;
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (board[i][j] != nullptr && board[i][j]->getType() == "king" && 
+                board[i][j]->getColor() == whiteTurn) {
+                king = board[i][j].get();
+                r = king->getRow(), c = king->getCol();
+            }
+        }
+    }
+
+    // Xét xem có quân cờ nào chiếu vào không
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            // Nếu bị chiếu ta tô màu đỏ đậm
+            if (board[i][j] != nullptr && board[i][j]->getColor() != whiteTurn) {
+                vector<pair<int, int>> moves = board[i][j]->getPossibleMoves(board);
+                if (find(moves.begin(), moves.end(), make_pair(r, c)) != 
+                    moves.end()) {
+                    sf::RectangleShape tile(sf::Vector2f(100, 100)); // Kích thước ô là 100x100
+                    tile.setPosition(65 + c * 100, 65 + r * 100); // Đặt vị trí ô tô màu với viền
+                    tile.setFillColor(sf::Color(255, 99, 71)); // Màu đỏ đậm
+                    checkTiles.push_back(tile);
+
+                    tile.setPosition(65 + j * 100, 65 + i * 100); // Đặt vị trí ô tô màu với viền
+                    checkTiles.push_back(tile);
+
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool ChessBoard::isCheckMate(void) {
+    return false;
+}
+
+bool ChessBoard::isDraw(void) {
+    return false;
 }

@@ -40,6 +40,9 @@ private:
     // Player turn
     bool whiteTurn;
 
+    // Indicate checks
+    bool inCheck;
+    vector<RectangleShape> checkTiles;
 public:
     // Constructor
     ChessBoard(RenderWindow* win, int currentBoardIndex = 0);
@@ -62,4 +65,9 @@ public:
     // Player turn
     bool isWhiteTurn(void) { return this->whiteTurn; }
     void alterTurn(void); // Đổi lượt
+
+    // Detect check, checkmate, draw
+    bool isCheck(void); // To check if current player is in check
+    bool isCheckMate(void); // To check if current player is in checkmate
+    bool isDraw(void); // To check if current player is in draw
 };

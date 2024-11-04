@@ -15,7 +15,7 @@ string Rook::getType() const {
 	return this->type;
 }
 
-vector<pair<int, int>> Rook::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
+vector<pair<int, int>> Rook::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board, bool inCheck = false) {
     vector<pair<int, int>> moves;
     int directions[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} }; // Duyệt các hướng lên, xuống, trái, phải
 

@@ -56,6 +56,6 @@ public:
     void followMouse(sf::Vector2i mousePos); // set position of the piece to the mouse's position
 
     //Possible move
-    virtual vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) = 0;
+    virtual vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board, bool inCheck = false) = 0;
 };
 
