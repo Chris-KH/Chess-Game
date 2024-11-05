@@ -72,7 +72,7 @@ public:
 
     // Detect check, checkmate, draw
     bool isCheck(bool color, bool save); // To check if current player is in check
-    bool isCheckMate(void); // To check if current player is in checkmate
+    bool cannotMove(void); // To check if current player is in checkmate
     bool isDraw(void); // To check if current player is in draw
     bool isOver(void) { return gameOver; }
 };

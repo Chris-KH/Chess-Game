@@ -184,8 +184,13 @@ void ChessBoard::update(const sf::Event& event) {
         int mouseY = event.mouseButton.y;
         handleMouseRelease(mouseX, mouseY);
         if (isCheck(whiteTurn, true)) {
-            if (isCheckMate()) {
-                gameOver = true;
+            if (cannotMove()) {
+                gameOver = true; // Checkmate
+            }
+        }
+        else {
+            if (cannotMove()) {
+                gameOver = true; // Stalemate
             }
         }
         isCheck(1 - whiteTurn, true);
@@ -432,7 +437,7 @@ bool ChessBoard::isCheck(bool color, bool save) {
     return false;
 }
 
-bool ChessBoard::isCheckMate(void) {
+bool ChessBoard::cannotMove(void) {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             if (board[i][j] && board[i][j]->getColor() == whiteTurn) {
