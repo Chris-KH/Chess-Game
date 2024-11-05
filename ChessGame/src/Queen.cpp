@@ -15,7 +15,7 @@ string Queen::getType() const {
 	return this->type;
 }
 
-vector<pair<int, int>> Queen::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board, bool inCheck = false) {
+vector<pair<int, int>> Queen::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
     vector<pair<int, int>> moves;
     int directions[8][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1} };
 

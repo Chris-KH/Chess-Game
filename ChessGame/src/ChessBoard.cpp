@@ -261,6 +261,9 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
 
     // Nếu nước đi hiện tại là đúng luật
     vector<std::pair<int, int>> possibleMoves = lastPiece->getPossibleMoves(board);
+    if (inCheck) { // Xử lý nếu đang bị chiếu
+
+    }
     if (std::find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
         // Cập nhật lượt tiếp theo
         alterTurn();
@@ -272,9 +275,9 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
                 board[row][col].reset();
             }
             //  Di chuyển đến ô hiện tại
-            board[row][col] = std::move(board[lastPiece->getRow()][lastPiece->getCol()]);
+            board[row][col] = move(board[lastPiece->getRow()][lastPiece->getCol()]);
             board[row][col]->setPosition(col, row);
-            inCheck = isCheck();
+            isCheck();
         }
 
         // Bỏ chọn quân cờ này
@@ -299,7 +302,11 @@ void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
     selectedPiece = clickedPiece;
 
     // Lấy danh sách các nước đi có thể
-    auto possibleMoves = selectedPiece->getPossibleMoves(board, inCheck);
+    auto possibleMoves = selectedPiece->getPossibleMoves(board);
+
+    if (inCheck) { // Xử lý nếu đang bị chiếu
+
+    }
 
     // Tô màu các ô theo danh sách
     for (auto& move : possibleMoves) {
@@ -333,6 +340,15 @@ void ChessBoard::alterTurn(void) {
 
 // Detect check, checkmate, draw
 bool ChessBoard::isCheck(void) {
+    /*
+        @Brief xét xem quân cờ có màu hiện tại có bị chiếu hay không? True = có, False = không
+            Nếu bị chiếu thì tô đỏ quân cờ đang chiếu và quân vua bị chiếu
+        @Idea Ý tưởng: 
+            1. Tìm vị trí của con vua
+            2. Ta sẽ duyệt hết bàn cờ, mỗi quân cờ ta lấy các nước đi có thể của quân cờ đó.
+               Nếu quân cờ này có thể ăn được con vua thì ta tô màu đỏ cho ô của con cờ này và con vua.
+    */
+    inCheck = false;
     checkTiles.clear();
 
     // Tìm king
@@ -349,26 +365,32 @@ bool ChessBoard::isCheck(void) {
     }
 
     // Xét xem có quân cờ nào chiếu vào không
+    sf::RectangleShape tile(sf::Vector2f(cellSize, cellSize)); // Kích thước ô là 100x100
+    tile.setFillColor(sf::Color(255, 99, 71)); // Màu đỏ
+
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            // Nếu bị chiếu ta tô màu đỏ đậm
+            // Nếu quân của đối phương chiếu quân vua của ta thì tô màu đỏ
             if (board[i][j] != nullptr && board[i][j]->getColor() != whiteTurn) {
                 vector<pair<int, int>> moves = board[i][j]->getPossibleMoves(board);
                 if (find(moves.begin(), moves.end(), make_pair(r, c)) != 
                     moves.end()) {
-                    sf::RectangleShape tile(sf::Vector2f(100, 100)); // Kích thước ô là 100x100
-                    tile.setPosition(65 + c * 100, 65 + r * 100); // Đặt vị trí ô tô màu với viền
-                    tile.setFillColor(sf::Color(255, 99, 71)); // Màu đỏ đậm
+                    tile.setPosition(65 + j * cellSize, 65 + i * cellSize); // Đặt vị trí ô tô màu với viền
                     checkTiles.push_back(tile);
 
-                    tile.setPosition(65 + j * 100, 65 + i * 100); // Đặt vị trí ô tô màu với viền
-                    checkTiles.push_back(tile);
-
-                    return true;
+                    inCheck = true;
                 }
             }
         }
     }
+
+    // Nếu quân vua bị chiếu thì tô màu ô chứa quân vua màu đỏ
+    if (inCheck) {
+        tile.setPosition(65 + c * cellSize, 65 + r * cellSize);
+        checkTiles.push_back(tile);
+        return true;
+    }
+
     return false;
 }
 

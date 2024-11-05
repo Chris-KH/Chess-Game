@@ -15,7 +15,7 @@ string Knight::getType() const {
 	return this->type;
 }
 
-vector<pair<int, int>> Knight::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board, bool inCheck = false) {
+vector<pair<int, int>> Knight::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
     vector<pair<int, int>> moves;
     int knightMoves[8][2] = { {1, 2}, {2, 1}, {-1, -2}, {-2, -1}, {1, -2}, {-1, 2}, {2, -1}, {-2, 1} };
 
