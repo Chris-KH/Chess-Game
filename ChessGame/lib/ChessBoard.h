@@ -41,8 +41,8 @@ private:
     bool whiteTurn;
 
     // Indicate checks
-    bool inCheck;
-    vector<RectangleShape> checkTiles;
+    bool inCheck[2];
+    vector<RectangleShape> checkTiles[2];
 public:
     // Constructor
     ChessBoard(RenderWindow* win, int currentBoardIndex = 0);
@@ -58,6 +58,7 @@ public:
     void draw();
 
     // Handle mouse click
+    void getPossibleMoves(Pieces* clickedPiece, vector<pair<int, int>>& vpii);
     void handleMousePress(int mouseX, int mouseY);
     void handleMouseRelease(int mouseX, int mouseY);
     void highlightPossibleMove(Pieces* clickedPiece);
@@ -67,7 +68,7 @@ public:
     void alterTurn(void); // Đổi lượt
 
     // Detect check, checkmate, draw
-    bool isCheck(void); // To check if current player is in check
+    bool isCheck(bool color, bool save); // To check if current player is in check
     bool isCheckMate(void); // To check if current player is in checkmate
     bool isDraw(void); // To check if current player is in draw
 };
