@@ -295,6 +295,10 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
         highlightTiles.clear();
         selectedPiece = nullptr;
     }
+    // Nếu ta đi nước đi không hợp lệ thì trả quân cờ về vị trí ban đầu
+    else {
+        selectedPiece = lastPiece;
+    }
 }
 
 void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
