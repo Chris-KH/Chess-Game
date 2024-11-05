@@ -67,6 +67,9 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
 
     // Check
     inCheck[0] = inCheck[1] = false;
+
+    // Game Over
+    gameOver = false;
 }
 
 void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
@@ -180,8 +183,12 @@ void ChessBoard::update(const sf::Event& event) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMouseRelease(mouseX, mouseY);
-        isCheck(0, true); // Kiểm tra đen có bị chiếu hay không, nếu có cập nhật các ô cần đánh dấu
-        isCheck(1, true); // Kiểm tra trắng có bị chiếu hay không, nếu có cập nhật các ô cần đánh dấu
+        if (isCheck(whiteTurn, true)) {
+            if (isCheckMate()) {
+                gameOver = true;
+            }
+        }
+        isCheck(1 - whiteTurn, true);
     }
 
     if (pieceFollowingMouse != nullptr) {
@@ -374,8 +381,10 @@ bool ChessBoard::isCheck(bool color, bool save) {
             2. Ta sẽ duyệt hết bàn cờ, mỗi quân cờ ta lấy các nước đi có thể của quân cờ đó.
                Nếu quân cờ này có thể ăn được con vua thì ta tô màu đỏ cho ô của con cờ này và con vua.
     */
-    inCheck[color] = false;
-    checkTiles[color].clear();
+    if (save) {
+        inCheck[color] = false;
+        checkTiles[color].clear();
+    }
 
     // Tìm king
     Pieces* king;
@@ -392,7 +401,7 @@ bool ChessBoard::isCheck(bool color, bool save) {
 
     // Xét xem có quân cờ nào chiếu vào không
     sf::RectangleShape tile(sf::Vector2f(cellSize, cellSize)); // Kích thước ô là 100x100
-    tile.setFillColor(sf::Color(255, 99, 71, 150)); // Màu đỏ
+    tile.setFillColor(sf::Color(255, 99, 71, 100)); // Màu đỏ
 
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
@@ -424,7 +433,18 @@ bool ChessBoard::isCheck(bool color, bool save) {
 }
 
 bool ChessBoard::isCheckMate(void) {
-    return false;
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (board[i][j] && board[i][j]->getColor() == whiteTurn) {
+                vector<pair<int, int>> moves;
+                getPossibleMoves(board[i][j].get(), moves);
+                if (moves.size() > 0) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
 }
 
 bool ChessBoard::isDraw(void) {
