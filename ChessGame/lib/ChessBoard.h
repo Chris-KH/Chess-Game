@@ -46,6 +46,9 @@ private:
 
     // Game over
     bool gameOver;
+
+    // Undo operator
+    vector<pair<string, vector<pair<int, int>>>> moveTracker; // Track movement with formula = {type of movement, list of cells}
 public:
     // Constructor
     ChessBoard(RenderWindow* win, int currentBoardIndex = 0);

@@ -21,7 +21,7 @@ int main() {
     try {
         //Game GameEngine;
         //GameEngine.startGame();
-        sf::RenderWindow window(sf::VideoMode(930, 930), "Chess Game", sf::Style::Close | sf::Style::Titlebar);
+        sf::RenderWindow window(sf::VideoMode(1130, 930), "Chess Game", sf::Style::Close | sf::Style::Titlebar);
         ChessBoard chessBoard(&window, 0);
         cout << "Created a chessboard\n";
 
