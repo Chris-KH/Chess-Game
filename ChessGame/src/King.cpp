@@ -31,3 +31,7 @@ vector<pair<int, int>> King::getPossibleMoves(const vector<vector<unique_ptr<Pie
 	this->possibleMoves = moves;
 	return moves;
 }
+
+bool King::checkPromote() const {
+	return false;
+}

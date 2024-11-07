@@ -48,3 +48,7 @@ vector<pair<int, int>> Rook::getPossibleMoves(const vector<vector<unique_ptr<Pie
     this->possibleMoves = moves;
 	return moves;
 }
+
+bool Rook::checkPromote() const {
+    return false;
+}

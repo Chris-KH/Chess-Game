@@ -1,21 +1,5 @@
 ﻿#pragma once
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Network.hpp>
-#include <SFML/OpenGL.hpp>
-#include <bits/stdc++.h>
-
-using namespace sf;
-
-#include"Pieces.h"
-#include "Pawn.h"
-#include "King.h"
-#include "Queen.h"
-#include "Rook.h"
-#include "Knight.h"
-#include "Bishop.h"
+#include "GUI.h"
 
 class ChessBoard {
 private:
@@ -43,6 +27,17 @@ private:
     // Indicate checks
     bool inCheck[2];
     vector<RectangleShape> checkTiles[2];
+
+    // Game over
+    bool gameOver;
+
+    // Undo operator
+    // ... (To be continued)
+    /*
+    RectangleShape undoButton;
+    Font undoFont;
+    Text undoText;
+    */
 public:
     // Constructor
     ChessBoard(RenderWindow* win, int currentBoardIndex = 0);
@@ -69,6 +64,12 @@ public:
 
     // Detect check, checkmate, draw
     bool isCheck(bool color, bool save); // To check if current player is in check
-    bool isCheckMate(void); // To check if current player is in checkmate
-    bool isDraw(void); // To check if current player is in draw
+    bool cannotMove(void); // To check if current player is in checkmate
+    bool isTie(void); // To check if current player is in draw
+    bool isOver(void) { return gameOver; }
+
+    // Undo-feature
+    /* ... (To be continued)
+    void undo(void);
+    */
 };

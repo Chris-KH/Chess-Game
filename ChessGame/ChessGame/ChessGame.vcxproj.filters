@@ -57,6 +57,9 @@
     <ClCompile Include="..\src\Pieces.cpp">
       <Filter>Source Files\Pieces</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\GUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\lib\StockFish.h">
@@ -91,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="..\lib\Pieces.h">
       <Filter>Header Files\Pieces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\GUI.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

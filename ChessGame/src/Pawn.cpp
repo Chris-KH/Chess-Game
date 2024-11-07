@@ -41,7 +41,7 @@ vector<pair<int, int>> Pawn::getPossibleMoves(const vector<vector<unique_ptr<Pie
     return moves;
 }
 
-bool Pawn::checkPromote() {
+bool Pawn::checkPromote() const {
     if ((this->isWhite && row == 0) || (!this->isWhite && row == 7)) return true;
     return false;
 }

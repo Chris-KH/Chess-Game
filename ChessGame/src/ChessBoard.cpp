@@ -67,6 +67,35 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
 
     // Check
     inCheck[0] = inCheck[1] = false;
+
+    // Game Over
+    gameOver = false;
+
+    // Undo
+
+    // Design undo button
+    /* ... (To be continued)
+    undoButton.setSize(Vector2f(190, 100));
+    int posUndoButtonX = 930;
+    int posUndoButtonY = 10;
+    undoButton.setPosition(posUndoButtonX, posUndoButtonY);
+    undoButton.setFillColor(Color::Blue);
+
+    if (!undoFont.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
+        cerr << "Cannot load font for undo text\n";
+        throw(1);
+        return;
+    }
+    undoText.setFont(undoFont);
+    undoText.setString(String("UNDO"));
+    undoText.setCharacterSize(30);
+    float posUndoTextX = posUndoButtonX + (undoButton.getGlobalBounds().width - undoText.getGlobalBounds().width) / 2;
+    float posUndoTextY = posUndoButtonY + (undoButton.getGlobalBounds().height - undoText.getGlobalBounds().height) / 2;
+    undoText.setPosition(posUndoTextX, posUndoTextY);
+
+    undoButton.setOutlineThickness(5);
+    undoText.setOutlineThickness(5);
+    */
 }
 
 void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
@@ -180,8 +209,17 @@ void ChessBoard::update(const sf::Event& event) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMouseRelease(mouseX, mouseY);
-        isCheck(0, true); // Kiểm tra đen có bị chiếu hay không, nếu có cập nhật các ô cần đánh dấu
-        isCheck(1, true); // Kiểm tra trắng có bị chiếu hay không, nếu có cập nhật các ô cần đánh dấu
+        if (isCheck(whiteTurn, true)) {
+            if (cannotMove()) {
+                gameOver = true; // Checkmate
+            }
+        }
+        else {
+            if (cannotMove() || isTie()) {
+                gameOver = true; // Tie state
+            }
+        }
+        isCheck(1 - whiteTurn, true);
     }
 
     if (pieceFollowingMouse != nullptr) {
@@ -191,7 +229,7 @@ void ChessBoard::update(const sf::Event& event) {
 
 void ChessBoard::draw() {
     window->draw(boardSprite);
-    //Draw pieces
+    //Pieces
     for (int i = 0; i < 2; i++) for (const auto& tile : checkTiles[i]) {
         window->draw(tile);
     }
@@ -206,6 +244,12 @@ void ChessBoard::draw() {
             piece->draw(*window);
         }
     }
+
+    // Buttons
+    /*
+    window->draw(undoButton);
+    window->draw(undoText);
+    */
 }
 
 // Handle mouse operators
@@ -279,6 +323,8 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
     // Nếu trước đó không chọn quân cờ được phép đi thì ta bỏ qua
     if (selectedPiece == nullptr || selectedPiece->getColor() != whiteTurn) return;
 
+    int lastRow = selectedPiece->getRow();
+    int lastCol = selectedPiece->getCol();
     int row = (mouseY - 65) / 100; // Kích thước ô là 100, trừ viền 65px
     int col = (mouseX - 65) / 100; // Kích thước ô là 100, trừ viền 65px
 
@@ -298,9 +344,37 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
 
         // Đặt quân cờ từ ô cũ đến ô hiện tại
         {
+            // Nếu ở ô hiện tại đang có quân cờ khác nghĩa là quân cờ này sẽ bị ăn
+            if (selectedPiece) {
+                // ... (to be continued)
+            }
+            // Thực hiện nước đi
             board[row][col].reset();
-            board[row][col] = move(board[lastPiece->getRow()][lastPiece->getCol()]);
+            board[row][col] = move(board[lastRow][lastCol]);
             board[row][col]->setPosition(col, row);
+
+            // Vẽ lại giao diện để hiển thị quân mới di chuyển
+            window->clear();
+            draw();    // Giả sử hàm này vẽ lại toàn bộ bàn cờ và quân cờ
+            window->display();
+
+            // Kiểm tra nếu quân tốt cần thăng cấp
+            if (board[row][col]->getType() == "pawn" && board[row][col]->checkPromote()) {
+                unique_ptr<Pieces> promotePiece = GUI::promoteChoice(board[row][col]);
+
+                // Nếu không chọn được quân thăng cấp, mặc định là quân Hậu
+                if (!promotePiece) promotePiece = make_unique<Queen>(board[row][col]->getColor());
+
+                promotePiece->changeTexture(board[row][col]->getCurrentTextureIndex());
+                board[row][col].reset();
+                board[row][col] = move(promotePiece);
+                board[row][col]->setPosition(col, row);
+            }
+
+            // Cập nhật lần cuối sau khi thăng cấp
+            window->clear();
+            draw();    // Vẽ lại bàn cờ và quân cờ sau khi thăng cấp
+            window->display();
         }
 
         // Bỏ chọn quân cờ này
@@ -374,8 +448,10 @@ bool ChessBoard::isCheck(bool color, bool save) {
             2. Ta sẽ duyệt hết bàn cờ, mỗi quân cờ ta lấy các nước đi có thể của quân cờ đó.
                Nếu quân cờ này có thể ăn được con vua thì ta tô màu đỏ cho ô của con cờ này và con vua.
     */
-    inCheck[color] = false;
-    checkTiles[color].clear();
+    if (save) {
+        inCheck[color] = false;
+        checkTiles[color].clear();
+    }
 
     // Tìm king
     Pieces* king;
@@ -392,7 +468,7 @@ bool ChessBoard::isCheck(bool color, bool save) {
 
     // Xét xem có quân cờ nào chiếu vào không
     sf::RectangleShape tile(sf::Vector2f(cellSize, cellSize)); // Kích thước ô là 100x100
-    tile.setFillColor(sf::Color(255, 99, 71, 150)); // Màu đỏ
+    tile.setFillColor(sf::Color(255, 99, 71, 100)); // Màu đỏ
 
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
@@ -423,10 +499,212 @@ bool ChessBoard::isCheck(bool color, bool save) {
     return false;
 }
 
-bool ChessBoard::isCheckMate(void) {
+bool ChessBoard::cannotMove(void) {
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (board[i][j] && board[i][j]->getColor() == whiteTurn) {
+                vector<pair<int, int>> moves;
+                getPossibleMoves(board[i][j].get(), moves);
+                if (moves.size() > 0) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+bool ChessBoard::isTie(void) {
+    // II. Dead position
+    int cnt[2][6], bishop[2][2];
+    for (int i = 0; i < 2; i++) for (int j = 0; j < 6; j++) cnt[i][j] = 0;
+    // 0 = pawn, 1 = rook, 2 = knight, 3 = bishop, 4 = queen, 5 = king
+    
+    vector<Pieces*> king, pawn;
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (board[i][j]) {
+                string pieceType = board[i][j]->getType();
+                int idType;
+                if (pieceType == "pawn") {
+                    idType = 0;
+                    pawn.push_back(board[i][j].get());
+                }
+                else if (pieceType == "rook") idType = 1;
+                else if (pieceType == "knight") idType = 2;
+                else if (pieceType == "bishop") {
+                    idType = 3;
+                    bishop[board[i][j]->getColor()][(i + j) % 2]++;
+                }
+                else if (pieceType == "queen") idType = 4;
+                else {
+                    idType = 5;
+                    king.push_back(board[i][j].get());
+                }
+                cnt[board[i][j]->getColor()][idType]++;
+            }
+        }
+    }
+
+    if (king[0]->getColor() == 0) swap(king[0], king[1]);
+
+    // 1. King vs. King
+    if (!cnt[0][0] && !cnt[0][1] && !cnt[0][2] && !cnt[0][3] && !cnt[0][4] &&
+        !cnt[1][0] && !cnt[1][1] && !cnt[1][2] && !cnt[1][3] && !cnt[1][4]) {
+        return true;
+    }
+
+    // 2. King vs. Bishop and King
+    if ((!cnt[0][0] && !cnt[0][1] && !cnt[0][2] && cnt[0][3] == 1 && !cnt[0][4] &&
+         !cnt[1][0] && !cnt[1][1] && !cnt[1][2] && !cnt[1][3] && !cnt[1][4]) ||
+        (!cnt[0][0] && !cnt[0][1] && !cnt[0][2] && !cnt[0][3] && !cnt[0][4] &&
+         !cnt[1][0] && !cnt[1][1] && !cnt[1][2] && cnt[1][3] == 1 && !cnt[1][4])) {
+        return true;
+    }
+
+    // 3. King vs. Knight and King
+    if ((!cnt[0][0] && !cnt[0][1] && cnt[0][2] == 1 && !cnt[0][3] && !cnt[0][4] &&
+         !cnt[1][0] && !cnt[1][1] && !cnt[1][2] && !cnt[1][3] && !cnt[1][4]) ||
+        (!cnt[0][0] && !cnt[0][1] && !cnt[0][2] && !cnt[0][3] && !cnt[0][4] &&
+         !cnt[1][0] && !cnt[1][1] && cnt[1][2] == 1 && !cnt[1][3] && !cnt[1][4])) {
+        return true;
+    }
+
+    // 4. King and Bishop vs. King and Bishop (with same cell color with opponent's Bishop)
+    if ((!cnt[0][0] && !cnt[0][1] && !cnt[0][2] && cnt[0][3] == 1 && !cnt[0][4] &&
+         !cnt[1][0] && !cnt[1][1] && !cnt[1][2] && cnt[1][3] == 1 && !cnt[1][4]) &&
+          bishop[0][0] == bishop[1][0] && bishop[0][1] == bishop[1][1]) {
+        return true;
+    }
+
+    // 5. Blocked Pawn Structures
+    /*
+        No other pieces exist. Only pawns and kings. Kings are cut off from the other side.
+        Impossible to make any progress.
+    */
+    if (!cnt[0][1] && !cnt[0][2] && !cnt[0][3] && !cnt[0][4] &&
+        !cnt[1][1] && !cnt[0][2] && !cnt[0][3] && !cnt[0][4]) {
+        // Examine if any pawn can make progress
+        bool pawnBlocked = true;
+        for (Pieces* p : pawn) {
+            if (!p->getPossibleMoves(board).empty()) {
+                pawnBlocked = false;
+            }
+        }
+
+        if (pawnBlocked) {
+            // BFS to check if each king can make any progress: capturing other pawns
+            int mat[8][8];
+
+            // Examine white king
+            for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++) mat[i][j] = 0;
+            bool whiteBlocked = true;
+            for (Pieces* p : pawn) { // Mark cell cannot be visited by white king
+                int r = p->getRow();
+                int c = p->getCol();
+                if (p->getColor()) { // White pawn
+                    mat[r][c] = -1;
+                }
+                else { //  Black pawn
+                    mat[r][c] = -2;
+                    int row[] = { r + 1, r + 1 };
+                    int col[] = { c - 1, c + 1 };
+                    for (int i = 0; i < 2; i++) {
+                        if (0 < row[i] && row[i] < 8 && 0 < col[i] && col[i] < 8) {
+                            mat[row[i]][col[i]] = -1;
+                        }
+                    }
+                }
+            }
+            { // BFS
+                const int dx[] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+                const int dy[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+                int num = 0, size = 0;
+                pair<int, int> q[65];
+                fill(q, q + 65, make_pair(-1, -1));
+                mat[king[0]->getRow()][king[0]->getCol()] = 1;
+                q[size++] = make_pair(king[0]->getRow(), king[0]->getCol());
+                while (num < size) {
+                    int r = q[num].first, c = q[num].second;
+                    num++;
+                    for (int i = 0; i < 8; i++) {
+                        int nr = r + dx[i], nc = c + dy[i];
+                        if (0 < nr && nr < 8 && 0 < nc && nc < 8) {
+                            if (mat[nr][nc] == 0) {
+                                mat[nr][nc] = 1;
+                                q[size++] = make_pair(nr, nc);
+                            }
+                            else if (mat[nr][nc] == -2) {
+                                whiteBlocked = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Examine black king
+            for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++) mat[i][j] = 0;
+            bool blackBlocked = true;
+            for (Pieces* p : pawn) { // Mark cell cannot be visited by black king
+                int r = p->getRow();
+                int c = p->getCol();
+                if (!p->getColor()) { // Black pawn
+                    mat[r][c] = -1;
+                }
+                else { //  White pawn
+                    mat[r][c] = -2;
+                    int row[] = { r + 1, r + 1 };
+                    int col[] = { c - 1, c + 1 };
+                    for (int i = 0; i < 2; i++) {
+                        if (0 < row[i] && row[i] < 8 && 0 < col[i] && col[i] < 8) {
+                            mat[row[i]][col[i]] = -1;
+                        }
+                    }
+                }
+            }
+            { // BFS
+                const int dx[] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+                const int dy[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+                int num = 0, size = 0;
+                pair<int, int> q[65];
+                fill(q, q + 65, make_pair(-1, -1));
+                mat[king[1]->getRow()][king[1]->getCol()] = 1;
+                q[size++] = make_pair(king[1]->getRow(), king[1]->getCol());
+                while (num < size) {
+                    int r = q[num].first, c = q[num].second;
+                    num++;
+                    for (int i = 0; i < 8; i++) {
+                        int nr = r + dx[i], nc = c + dy[i];
+                        if (0 < nr && nr < 8 && 0 < nc && nc < 8) {
+                            if (mat[nr][nc] == 0) {
+                                mat[nr][nc] = 1;
+                                q[size++] = make_pair(nr, nc);
+                            }
+                            else if (mat[nr][nc] == -2) {
+                                blackBlocked = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (whiteBlocked && blackBlocked) {
+                return true;
+            }
+        }
+    }
+
+    // III. Threefold Repetitin
+
+    // IV. 50-Move Rule
+
     return false;
 }
 
-bool ChessBoard::isDraw(void) {
-    return false;
+// Undo-feature ... (To be continued)
+/*
+void ChessBoard::undo(void) {
+
 }
+*/

@@ -31,6 +31,10 @@ int Pieces::getRow() const {
     return this->row;
 }
 
+size_t Pieces::getCurrentTextureIndex() const {
+    return this->currentTextureIndex;
+}
+
 bool Pieces::loadTexture(const vector<string>& texturePaths) {
     for (const auto& path : texturePaths) {
         Texture texture;

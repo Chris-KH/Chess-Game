@@ -40,6 +40,7 @@ public:
     bool getColor() const;
     int getCol() const;
     int getRow() const;
+    size_t getCurrentTextureIndex() const;
 
     bool loadTexture(const vector<string>& texturePaths);
     void changeTexture(size_t index);
@@ -57,5 +58,9 @@ public:
 
     //Possible move
     virtual vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) = 0;
+
+    //Promotion
+    virtual bool checkPromote() const = 0;
+    
 };
 
