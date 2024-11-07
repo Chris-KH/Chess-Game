@@ -19,28 +19,28 @@ int main() {
     // Khởi động Stockfish
     
     try {
-        //Game GameEngine;
-        //GameEngine.startGame();
-        sf::RenderWindow window(sf::VideoMode(930, 930), "Chess Game", sf::Style::Close | sf::Style::Titlebar);
-        ChessBoard chessBoard(&window, 0);
-        cout << "Created a chessboard\n";
+        Game GameEngine;
+        GameEngine.startGame();
+        //sf::RenderWindow window(sf::VideoMode(930, 930), "Chess Game", sf::Style::Close | sf::Style::Titlebar);
+        //ChessBoard chessBoard(&window, 0);
+        //cout << "Created a chessboard\n";
 
-        Stockfish stockfish;
+        //Stockfish stockfish;
 
-        // Vòng lặp chính của chương trình
-        while (window.isOpen()) {
-            sf::Event event;
-            while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) {
-                    window.close();
-                }
-                chessBoard.update(event);
-            }
+        //// Vòng lặp chính của chương trình
+        //while (window.isOpen()) {
+        //    sf::Event event;
+        //    while (window.pollEvent(event)) {
+        //        if (event.type == sf::Event::Closed) {
+        //            window.close();
+        //        }
+        //        chessBoard.update(event);
+        //    }
 
-            window.clear();
-            chessBoard.draw();
-            window.display();
-        }
+        //    window.clear();
+        //    chessBoard.draw();
+        //    window.display();
+        //}
     }
     catch (const exception& e) {
         cerr << "Error: " << e.what() << endl;
