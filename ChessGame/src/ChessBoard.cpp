@@ -319,6 +319,8 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
     // Nếu trước đó không chọn quân cờ được phép đi thì ta bỏ qua
     if (selectedPiece == nullptr || selectedPiece->getColor() != whiteTurn) return;
 
+    int lastRow = selectedPiece->getRow();
+    int lastCol = selectedPiece->getCol();
     int row = (mouseY - 65) / 100; // Kích thước ô là 100, trừ viền 65px
     int col = (mouseX - 65) / 100; // Kích thước ô là 100, trừ viền 65px
 
@@ -338,8 +340,13 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
 
         // Đặt quân cờ từ ô cũ đến ô hiện tại
         {
+            // Nếu ở ô hiện tại đang có quân cờ khác nghĩa là quân cờ này sẽ bị ăn
+            if (selectedPiece) {
+                // ... (to be continued)
+            }
+            
             board[row][col].reset();
-            board[row][col] = move(board[lastPiece->getRow()][lastPiece->getCol()]);
+            board[row][col] = move(board[lastRow][lastCol]);
             board[row][col]->setPosition(col, row);
         }
 
@@ -482,4 +489,9 @@ bool ChessBoard::cannotMove(void) {
 
 bool ChessBoard::isDraw(void) {
     return false;
+}
+
+// Undo-feature
+void ChessBoard::undo(void) {
+
 }

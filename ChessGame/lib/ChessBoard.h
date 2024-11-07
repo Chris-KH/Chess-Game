@@ -48,7 +48,7 @@ private:
     bool gameOver;
 
     // Undo operator
-    vector<pair<string, vector<pair<int, int>>>> moveTracker; // Track movement with formula = {type of movement, list of cells}
+
     RectangleShape undoButton;
     Font undoFont;
     Text undoText;
@@ -81,4 +81,7 @@ public:
     bool cannotMove(void); // To check if current player is in checkmate
     bool isDraw(void); // To check if current player is in draw
     bool isOver(void) { return gameOver; }
+
+    // Undo-feature
+    void undo(void);
 };
