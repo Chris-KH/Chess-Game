@@ -215,8 +215,8 @@ void ChessBoard::update(const sf::Event& event) {
             }
         }
         else {
-            if (cannotMove()) {
-                gameOver = true; // Stalemate
+            if (cannotMove() || isTie()) {
+                gameOver = true; // Tie state
             }
         }
         isCheck(1 - whiteTurn, true);
@@ -246,8 +246,10 @@ void ChessBoard::draw() {
     }
 
     // Buttons
+    /*
     window->draw(undoButton);
     window->draw(undoText);
+    */
 }
 
 // Handle mouse operators
@@ -489,7 +491,191 @@ bool ChessBoard::cannotMove(void) {
     return true;
 }
 
-bool ChessBoard::isDraw(void) {
+bool ChessBoard::isTie(void) {
+    // II. Dead position
+    int cnt[2][6], bishop[2][2];
+    for (int i = 0; i < 2; i++) for (int j = 0; j < 6; j++) cnt[i][j] = 0;
+    // 0 = pawn, 1 = rook, 2 = knight, 3 = bishop, 4 = queen, 5 = king
+    
+    vector<Pieces*> king, pawn;
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (board[i][j]) {
+                string pieceType = board[i][j]->getType();
+                int idType;
+                if (pieceType == "pawn") {
+                    idType = 0;
+                    pawn.push_back(board[i][j].get());
+                }
+                else if (pieceType == "rook") idType = 1;
+                else if (pieceType == "knight") idType = 2;
+                else if (pieceType == "bishop") {
+                    idType = 3;
+                    bishop[board[i][j]->getColor()][(i + j) % 2]++;
+                }
+                else if (pieceType == "queen") idType = 4;
+                else {
+                    idType = 5;
+                    king.push_back(board[i][j].get());
+                }
+                cnt[board[i][j]->getColor()][idType]++;
+            }
+        }
+    }
+
+    if (king[0]->getColor() == 0) swap(king[0], king[1]);
+
+    // 1. King vs. King
+    if (!cnt[0][0] && !cnt[0][1] && !cnt[0][2] && !cnt[0][3] && !cnt[0][4] &&
+        !cnt[1][0] && !cnt[1][1] && !cnt[1][2] && !cnt[1][3] && !cnt[1][4]) {
+        return true;
+    }
+
+    // 2. King vs. Bishop and King
+    if ((!cnt[0][0] && !cnt[0][1] && !cnt[0][2] && cnt[0][3] == 1 && !cnt[0][4] &&
+         !cnt[1][0] && !cnt[1][1] && !cnt[1][2] && !cnt[1][3] && !cnt[1][4]) ||
+        (!cnt[0][0] && !cnt[0][1] && !cnt[0][2] && !cnt[0][3] && !cnt[0][4] &&
+         !cnt[1][0] && !cnt[1][1] && !cnt[1][2] && cnt[1][3] == 1 && !cnt[1][4])) {
+        return true;
+    }
+
+    // 3. King vs. Knight and King
+    if ((!cnt[0][0] && !cnt[0][1] && cnt[0][2] == 1 && !cnt[0][3] && !cnt[0][4] &&
+         !cnt[1][0] && !cnt[1][1] && !cnt[1][2] && !cnt[1][3] && !cnt[1][4]) ||
+        (!cnt[0][0] && !cnt[0][1] && !cnt[0][2] && !cnt[0][3] && !cnt[0][4] &&
+         !cnt[1][0] && !cnt[1][1] && cnt[1][2] == 1 && !cnt[1][3] && !cnt[1][4])) {
+        return true;
+    }
+
+    // 4. King and Bishop vs. King and Bishop (with same cell color with opponent's Bishop)
+    if ((!cnt[0][0] && !cnt[0][1] && !cnt[0][2] && cnt[0][3] == 1 && !cnt[0][4] &&
+         !cnt[1][0] && !cnt[1][1] && !cnt[1][2] && cnt[1][3] == 1 && !cnt[1][4]) &&
+          bishop[0][0] == bishop[1][0] && bishop[0][1] == bishop[1][1]) {
+        return true;
+    }
+
+    // 5. Blocked Pawn Structures
+    /*
+        No other pieces exist. Only pawns and kings. Kings are cut off from the other side.
+        Impossible to make any progress.
+    */
+    if (!cnt[0][1] && !cnt[0][2] && !cnt[0][3] && !cnt[0][4] &&
+        !cnt[1][1] && !cnt[0][2] && !cnt[0][3] && !cnt[0][4]) {
+        // Examine if any pawn can make progress
+        bool pawnBlocked = true;
+        for (Pieces* p : pawn) {
+            if (!p->getPossibleMoves(board).empty()) {
+                pawnBlocked = false;
+            }
+        }
+
+        if (pawnBlocked) {
+            // BFS to check if each king can make any progress: capturing other pawns
+            int mat[8][8];
+
+            // Examine white king
+            for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++) mat[i][j] = 0;
+            bool whiteBlocked = true;
+            for (Pieces* p : pawn) { // Mark cell cannot be visited by white king
+                int r = p->getRow();
+                int c = p->getCol();
+                if (p->getColor()) { // White pawn
+                    mat[r][c] = -1;
+                }
+                else { //  Black pawn
+                    mat[r][c] = -2;
+                    int row[] = { r + 1, r + 1 };
+                    int col[] = { c - 1, c + 1 };
+                    for (int i = 0; i < 2; i++) {
+                        if (0 < row[i] && row[i] < 8 && 0 < col[i] && col[i] < 8) {
+                            mat[row[i]][col[i]] = -1;
+                        }
+                    }
+                }
+            }
+            { // BFS
+                const int dx[] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+                const int dy[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+                int num = 0, size = 0;
+                pair<int, int> q[65];
+                fill(q, q + 65, make_pair(-1, -1));
+                mat[king[0]->getRow()][king[0]->getCol()] = 1;
+                q[size++] = make_pair(king[0]->getRow(), king[0]->getCol());
+                while (num < size) {
+                    int r = q[num].first, c = q[num].second;
+                    num++;
+                    for (int i = 0; i < 8; i++) {
+                        int nr = r + dx[i], nc = c + dy[i];
+                        if (0 < nr && nr < 8 && 0 < nc && nc < 8) {
+                            if (mat[nr][nc] == 0) {
+                                mat[nr][nc] = 1;
+                                q[size++] = make_pair(nr, nc);
+                            }
+                            else if (mat[nr][nc] == -2) {
+                                whiteBlocked = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Examine black king
+            for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++) mat[i][j] = 0;
+            bool blackBlocked = true;
+            for (Pieces* p : pawn) { // Mark cell cannot be visited by black king
+                int r = p->getRow();
+                int c = p->getCol();
+                if (!p->getColor()) { // Black pawn
+                    mat[r][c] = -1;
+                }
+                else { //  White pawn
+                    mat[r][c] = -2;
+                    int row[] = { r + 1, r + 1 };
+                    int col[] = { c - 1, c + 1 };
+                    for (int i = 0; i < 2; i++) {
+                        if (0 < row[i] && row[i] < 8 && 0 < col[i] && col[i] < 8) {
+                            mat[row[i]][col[i]] = -1;
+                        }
+                    }
+                }
+            }
+            { // BFS
+                const int dx[] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+                const int dy[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+                int num = 0, size = 0;
+                pair<int, int> q[65];
+                fill(q, q + 65, make_pair(-1, -1));
+                mat[king[1]->getRow()][king[1]->getCol()] = 1;
+                q[size++] = make_pair(king[1]->getRow(), king[1]->getCol());
+                while (num < size) {
+                    int r = q[num].first, c = q[num].second;
+                    num++;
+                    for (int i = 0; i < 8; i++) {
+                        int nr = r + dx[i], nc = c + dy[i];
+                        if (0 < nr && nr < 8 && 0 < nc && nc < 8) {
+                            if (mat[nr][nc] == 0) {
+                                mat[nr][nc] = 1;
+                                q[size++] = make_pair(nr, nc);
+                            }
+                            else if (mat[nr][nc] == -2) {
+                                blackBlocked = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (whiteBlocked && blackBlocked) {
+                return true;
+            }
+        }
+    }
+
+    // III. Threefold Repetitin
+
+    // IV. 50-Move Rule
+
     return false;
 }
 

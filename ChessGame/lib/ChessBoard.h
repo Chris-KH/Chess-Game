@@ -81,7 +81,7 @@ public:
     // Detect check, checkmate, draw
     bool isCheck(bool color, bool save); // To check if current player is in check
     bool cannotMove(void); // To check if current player is in checkmate
-    bool isDraw(void); // To check if current player is in draw
+    bool isTie(void); // To check if current player is in draw
     bool isOver(void) { return gameOver; }
 
     // Undo-feature
