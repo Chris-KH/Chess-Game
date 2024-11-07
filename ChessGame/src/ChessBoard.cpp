@@ -70,6 +70,30 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
 
     // Game Over
     gameOver = false;
+
+    // Undo
+
+    // Design undo button
+    undoButton.setSize(Vector2f(190, 100));
+    int posUndoButtonX = 930;
+    int posUndoButtonY = 10;
+    undoButton.setPosition(posUndoButtonX, posUndoButtonY);
+    undoButton.setFillColor(Color::Blue);
+
+    if (!undoFont.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
+        cerr << "Cannot load font for undo text\n";
+        throw(1);
+        return;
+    }
+    undoText.setFont(undoFont);
+    undoText.setString(String("UNDO"));
+    undoText.setCharacterSize(30);
+    float posUndoTextX = posUndoButtonX + (undoButton.getGlobalBounds().width - undoText.getGlobalBounds().width) / 2;
+    float posUndoTextY = posUndoButtonY + (undoButton.getGlobalBounds().height - undoText.getGlobalBounds().height) / 2;
+    undoText.setPosition(posUndoTextX, posUndoTextY);
+
+    undoButton.setOutlineThickness(5);
+    undoText.setOutlineThickness(5);
 }
 
 void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
@@ -203,7 +227,7 @@ void ChessBoard::update(const sf::Event& event) {
 
 void ChessBoard::draw() {
     window->draw(boardSprite);
-    //Draw pieces
+    //Pieces
     for (int i = 0; i < 2; i++) for (const auto& tile : checkTiles[i]) {
         window->draw(tile);
     }
@@ -218,6 +242,10 @@ void ChessBoard::draw() {
             piece->draw(*window);
         }
     }
+
+    // Buttons
+    window->draw(undoButton);
+    window->draw(undoText);
 }
 
 // Handle mouse operators

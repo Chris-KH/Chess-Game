@@ -49,6 +49,9 @@ private:
 
     // Undo operator
     vector<pair<string, vector<pair<int, int>>>> moveTracker; // Track movement with formula = {type of movement, list of cells}
+    RectangleShape undoButton;
+    Font undoFont;
+    Text undoText;
 public:
     // Constructor
     ChessBoard(RenderWindow* win, int currentBoardIndex = 0);
