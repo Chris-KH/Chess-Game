@@ -74,6 +74,7 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     // Undo
 
     // Design undo button
+    /* ... (To be continued)
     undoButton.setSize(Vector2f(190, 100));
     int posUndoButtonX = 930;
     int posUndoButtonY = 10;
@@ -94,6 +95,7 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
 
     undoButton.setOutlineThickness(5);
     undoText.setOutlineThickness(5);
+    */
 }
 
 void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
@@ -491,7 +493,9 @@ bool ChessBoard::isDraw(void) {
     return false;
 }
 
-// Undo-feature
+// Undo-feature ... (To be continued)
+/*
 void ChessBoard::undo(void) {
 
 }
+*/

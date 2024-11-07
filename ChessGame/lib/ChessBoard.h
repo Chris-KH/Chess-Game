@@ -48,10 +48,12 @@ private:
     bool gameOver;
 
     // Undo operator
-
+    // ... (To be continued)
+    /*
     RectangleShape undoButton;
     Font undoFont;
     Text undoText;
+    */
 public:
     // Constructor
     ChessBoard(RenderWindow* win, int currentBoardIndex = 0);
@@ -83,5 +85,7 @@ public:
     bool isOver(void) { return gameOver; }
 
     // Undo-feature
+    /* ... (To be continued)
     void undo(void);
+    */
 };
