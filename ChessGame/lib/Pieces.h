@@ -22,6 +22,7 @@ protected:
     size_t currentTextureIndex;
     vector<Texture> textures;
     bool isWhite;
+    bool isAlreadeMove;
     
     // Movement
     Vector2f initialPosition; // Vị trí ban đầu của quân cờ
@@ -41,6 +42,8 @@ public:
     int getCol() const;
     int getRow() const;
     size_t getCurrentTextureIndex() const;
+    bool getAlreadyMove() const;
+    void setAlreadyMove(bool isAlreadyMove);
 
     bool loadTexture(const vector<string>& texturePaths);
     void changeTexture(size_t index);
@@ -50,11 +53,15 @@ public:
     virtual string getType() const = 0;
 
     // Drag/click a piece
-    void setInitialPosition(const sf::Vector2f& position);
+    void setInitialPosition(const 
+        
+        
+        
+        Vector2f& position);
     int getNumPress(void) { return numPress; } // return variable numPress
     void press(void) { numPress++;  } // increase variable numPress by 1
     void resetNumPress(void) { numPress = 0; } // set variable numPress = 0
-    void followMouse(sf::Vector2i mousePos); // set position of the piece to the mouse's position
+    void followMouse(Vector2i mousePos); // set position of the piece to the mouse's position
 
     //Possible move
     virtual vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) = 0;
@@ -63,4 +70,3 @@ public:
     virtual bool checkPromote() const = 0;
     
 };
-

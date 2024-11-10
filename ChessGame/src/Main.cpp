@@ -21,7 +21,9 @@ int main() {
     try {
         //Game GameEngine;
         //GameEngine.startGame();
-        sf::RenderWindow window(sf::VideoMode(1130, 930), "Chess Game", sf::Style::Close | sf::Style::Titlebar);
+        RenderWindow window(VideoMode(900, 900), "Chess Game", 
+            
+            Style::Close | Style::Titlebar);
         ChessBoard chessBoard(&window, 0);
         cout << "Created a chessboard\n";
 
@@ -29,9 +31,9 @@ int main() {
 
         // Vòng lặp chính của chương trình
         while (window.isOpen()) {
-            sf::Event event;
+            Event event;
             while (window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed) {
+                if (event.type == Event::Closed) {
                     window.close();
                 }
                 if (!chessBoard.isOver()) {

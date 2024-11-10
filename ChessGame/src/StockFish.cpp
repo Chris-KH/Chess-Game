@@ -7,13 +7,13 @@ Stockfish::Stockfish() {
 
     // Tạo pipe cho stdin và stdout
     if (!CreatePipe(&hStdinRead, &hStdinWrite, &saAttr, 0)) {
-        std::cerr << "CreatePipe for stdin failed\n";
-        throw std::runtime_error("Failed to create stdin pipe");
+        cerr << "CreatePipe for stdin failed\n";
+        throw runtime_error("Failed to create stdin pipe");
     }
 
     if (!CreatePipe(&hStdoutRead, &hStdoutWrite, &saAttr, 0)) {
-        std::cerr << "CreatePipe for stdout failed\n";
-        throw std::runtime_error("Failed to create stdout pipe");
+        cerr << "CreatePipe for stdout failed\n";
+        throw runtime_error("Failed to create stdout pipe");
     }
 
     // Đảm bảo không kế thừa đầu đọc của stdout và đầu ghi của stdin
@@ -35,8 +35,8 @@ Stockfish::Stockfish() {
 
     // Chạy Stockfish
     if (!CreateProcess(NULL, program, NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo)) {
-        std::cerr << "CreateProcess failed\n";
-        throw std::runtime_error("Failed to create Stockfish process");
+        cerr << "CreateProcess failed\n";
+        throw runtime_error("Failed to create Stockfish process");
     }
 
     // Đóng các handle không cần thiết
@@ -67,7 +67,11 @@ void Stockfish::sendCommand(const string& command) {
 string Stockfish::getResponse() {
     char buffer[256];
     DWORD dwRead;
-    std::string response;
+    
+    
+    
+    
+    string response;
     int retryCount = 0;  // Giới hạn số lần thử đọc dữ liệu
 
     while (true) {
@@ -75,9 +79,9 @@ string Stockfish::getResponse() {
             buffer[dwRead] = '\0';  // Kết thúc chuỗi
             response += buffer;     // Nối phản hồi vào chuỗi response
             // Dừng khi nhận được các tín hiệu kết thúc
-            if (response.find("uciok") != std::string::npos ||
-                response.find("readyok") != std::string::npos ||
-                response.find("bestmove") != std::string::npos) {
+            if (response.find("uciok") != string::npos ||
+                response.find("readyok") != string::npos ||
+                response.find("bestmove") != string::npos) {
                 break;
             }
         }
@@ -153,5 +157,5 @@ string Stockfish::calculateBestMoveWithDepth(int depth, int timeLimit) {
 }
 
 void Stockfish::setHashSize(int size) {
-    sendCommand("setoption name Hash value " + std::to_string(size) + "\n");
+    sendCommand("setoption name Hash value " + to_string(size) + "\n");
 }

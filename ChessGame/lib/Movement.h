@@ -7,14 +7,22 @@
 #include <SFML/OpenGL.hpp>
 #include <bits/stdc++.h>
 
+using namespace std;
+using namespace sf;
+
 class Movement {
 private:
 	int cellSize;
 	int boardSize;
-	sf::Vector2f cords[8][8]; // cords[row][col] lấy ra tọa độ góc trái trên của ô hàng row, cột col
+	
+	
+	
+	
+	
+	Vector2f cords[8][8]; // cords[row][col] lấy ra tọa độ góc trái trên của ô hàng row, cột col
 public:
 	// Constant
-	const sf::Vector2f UNDEFINED_POINT = sf::Vector2f(1e9, 1e9);
+	const Vector2f UNDEFINED_POINT = Vector2f(1e9, 1e9);
 
 	// Initialization
 	Movement(int cellSize = 0);
@@ -28,7 +36,7 @@ public:
 	// Calculation
 	int getRow(float x);
 	int getCol(float y);
-	float dist(const sf::Vector2f& x, const sf::Vector2f& y);
-	sf::Vector2f cordLeftTop(int row, int col);
-	sf::Vector2f cordCentre(int row, int col);
+	float dist(const Vector2f& x, const Vector2f& y);
+	Vector2f cordLeftTop(int row, int col);
+	Vector2f cordCentre(int row, int col);
 };

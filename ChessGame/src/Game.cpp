@@ -10,14 +10,18 @@ Game::Game(bool againstAI, int skillLevel) {
 }
 
 void Game::startGame(void) {
-    sf::RenderWindow menu(sf::VideoMode(930, 930), "Chess Game!", sf::Style::Titlebar | sf::Style::Close);
+    
+    
+    
+    
+    RenderWindow menu(VideoMode(930, 930), "Chess Game!", Style::Titlebar | Style::Close);
 
-    sf::Texture bgTexture, onePlayerTexture, twoPlayerTexture;
+    Texture bgTexture, onePlayerTexture, twoPlayerTexture;
     bgTexture.loadFromFile("../assets/Menu/tempBG.jpg");
     onePlayerTexture.loadFromFile("../assets/Menu/one-player-button.png");
     twoPlayerTexture.loadFromFile("../assets/Menu/two-player-button.png");
 
-    sf::Sprite bgSprite, onePlayerSprite, twoPlayerSprite;
+    Sprite bgSprite, onePlayerSprite, twoPlayerSprite;
     bgSprite.setTexture(bgTexture);
     onePlayerSprite.setTexture(onePlayerTexture);
     twoPlayerSprite.setTexture(twoPlayerTexture);
@@ -33,14 +37,14 @@ void Game::startGame(void) {
 
     // Start with a menu with 1-player and 2-player mode
     while (menu.isOpen()) {
-        sf::Event event;
+        Event event;
         while (menu.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
+            if (event.type == Event::Closed) {
                 menu.close();
             }
 
-            sf::Vector2i mousePos = sf::Mouse::getPosition(menu);
-            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+            Vector2i mousePos = Mouse::getPosition(menu);
+            if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                 if (twoPlayerSprite.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                     againstAI = false;
                     menu.close();
@@ -66,14 +70,14 @@ void Game::playAgainstAI() {
 
 void Game::playAgainstPlayer() {
     // Tạo bàn cờ với các đường dẫn đã cho
-    sf::RenderWindow window(sf::VideoMode(930, 930), "Chess Game", sf::Style::Titlebar | sf::Style::Close);
+    RenderWindow window(VideoMode(930, 930), "Chess Game", Style::Titlebar | Style::Close);
     ChessBoard chessBoard(&window, 0);
 
     // Vòng lặp chính của chương trình
     while (window.isOpen()) {
-        sf::Event event;
+        Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
+            if (event.type == Event::Closed) {
                 window.close();
             }
             chessBoard.update(event);

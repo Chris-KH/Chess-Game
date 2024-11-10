@@ -16,7 +16,11 @@ string Pawn::getType() const {
 }
 
 vector<pair<int, int>> Pawn::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
-    vector<std::pair<int, int>> moves;
+    vector<
+        
+        
+        
+        pair<int, int>> moves;
     int direction = (isWhite) ? -1 : 1;
 
     // Nước đi thẳng

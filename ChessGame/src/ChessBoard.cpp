@@ -166,46 +166,46 @@ void ChessBoard::changePieces(int newIndex) {
     }
 }
 
-void ChessBoard::update(const sf::Event& event) {
+void ChessBoard::update(const Event& event) {
     /*
         Update các sự kiện xảy ra trên bàn cờ
     */
 
     // Nhấn số [1..5] để thay đổi bàn cờ
-    if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::Num1) {
+    if (event.type == Event::KeyPressed) {
+        if (event.key.code == Keyboard::Num1) {
             changeBoard(0); // Thay đổi sang bàn cờ 1
         }
-        else if (event.key.code == sf::Keyboard::Num2) {
+        else if (event.key.code == Keyboard::Num2) {
             changeBoard(1); // Thay đổi sang bàn cờ 2
         }
-        else if (event.key.code == sf::Keyboard::Num3) {
+        else if (event.key.code == Keyboard::Num3) {
             changeBoard(2); // Thay đổi sang bàn cờ 3
         }
-        else if (event.key.code == sf::Keyboard::Num4) {
+        else if (event.key.code == Keyboard::Num4) {
             this->changeBoard(3); // Thay đổi sang bàn cờ 4
         }
-        else if (event.key.code == sf::Keyboard::Num5) {
+        else if (event.key.code == Keyboard::Num5) {
             this->changeBoard(4); // Thay đổi sang bàn cờ 5
         }
-        else if (event.key.code == sf::Keyboard::Num6) {
+        else if (event.key.code == Keyboard::Num6) {
             this->changePieces(0); 
         }
-        else if (event.key.code == sf::Keyboard::Num7) {
+        else if (event.key.code == Keyboard::Num7) {
             this->changePieces(1); 
         }
-        else if (event.key.code == sf::Keyboard::Num8) {
+        else if (event.key.code == Keyboard::Num8) {
             this->changePieces(2); 
         }
     }
     // Nhấn chuột trái
-    else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+    else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMousePress(mouseX, mouseY);
     }
     // Nếu thả chuột trái
-    else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+    else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMouseRelease(mouseX, mouseY);
@@ -223,7 +223,7 @@ void ChessBoard::update(const sf::Event& event) {
     }
 
     if (pieceFollowingMouse != nullptr) {
-        pieceFollowingMouse->followMouse(sf::Mouse::getPosition(*window));
+        pieceFollowingMouse->followMouse(Mouse::getPosition(*window));
     }
 }
 
@@ -335,10 +335,10 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
     selectedPiece = board[row][col].get(); // Lấy quân cờ ở ô đã click
 
     // Nếu nước đi hiện tại là đúng luật
-    vector<std::pair<int, int>> possibleMoves; 
+    vector<pair<int, int>> possibleMoves; 
     getPossibleMoves(lastPiece, possibleMoves);
 
-    if (std::find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
+    if (find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
         // Cập nhật lượt tiếp theo
         alterTurn();
 
@@ -370,6 +370,8 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
                 board[row][col] = move(promotePiece);
                 board[row][col]->setPosition(col, row);
             }
+
+            board[row][col]->setAlreadyMove(true);
 
             // Cập nhật lần cuối sau khi thăng cấp
             window->clear();
@@ -411,23 +413,23 @@ void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
         int targetRow = move.first;
         int targetCol = move.second;
 
-        sf::RectangleShape highlightTile(sf::Vector2f(100, 100)); // Kích thước ô là 100x100
+        RectangleShape highlightTile(Vector2f(100, 100)); // Kích thước ô là 100x100
         highlightTile.setPosition(65 + targetCol * 100, 65 + targetRow * 100); // Đặt vị trí ô tô màu với viền
 
         // Nếu ô chứa quân địch, tô màu đỏ; nếu không, tô màu xanh
         if (board[targetRow][targetCol] && board[targetRow][targetCol]->getColor() != selectedPiece->getColor()) {
-            highlightTile.setFillColor(sf::Color(255, 99, 71, 100)); // Màu đỏ
+            highlightTile.setFillColor(Color(255, 99, 71, 100)); // Màu đỏ
         }
         else {
-            highlightTile.setFillColor(sf::Color(144, 238, 144, 100)); // Màu xanh
+            highlightTile.setFillColor(Color(144, 238, 144, 100)); // Màu xanh
         }
 
         highlightTiles.push_back(highlightTile); // Thêm ô tô màu vào danh sách
     }
     // Tô cả ô đang đứng
-    sf::RectangleShape highlightTile(sf::Vector2f(100, 100)); // Kích thước ô là 100x100
+    RectangleShape highlightTile(Vector2f(100, 100)); // Kích thước ô là 100x100
     highlightTile.setPosition(65 + selectedPiece->getCol() * 100, 65 + selectedPiece->getRow() * 100); // Đặt vị trí ô tô màu với viền
-    highlightTile.setFillColor(sf::Color(100, 255, 100, 128)); // Màu xanh
+    highlightTile.setFillColor(Color(100, 255, 100, 128)); // Màu xanh
     highlightTiles.push_back(highlightTile);
 }
 
@@ -467,8 +469,8 @@ bool ChessBoard::isCheck(bool color, bool save) {
     }
 
     // Xét xem có quân cờ nào chiếu vào không
-    sf::RectangleShape tile(sf::Vector2f(cellSize, cellSize)); // Kích thước ô là 100x100
-    tile.setFillColor(sf::Color(255, 99, 71, 100)); // Màu đỏ
+    RectangleShape tile(Vector2f(cellSize, cellSize)); // Kích thước ô là 100x100
+    tile.setFillColor(Color(255, 99, 71, 100)); // Màu đỏ
 
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {

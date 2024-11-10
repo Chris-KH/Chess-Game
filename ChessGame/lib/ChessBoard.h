@@ -19,7 +19,7 @@ private:
 
     Pieces* selectedPiece = nullptr;
     Pieces* pieceFollowingMouse = nullptr;
-    std::vector<sf::RectangleShape> highlightTiles; // Danh sách ô cần tô màu
+    vector<RectangleShape> highlightTiles; // Danh sách ô cần tô màu
 
     // Player turn
     bool whiteTurn;
@@ -49,7 +49,7 @@ public:
     void changePieces(int newIndex);
     void addPiece(unique_ptr<Pieces> piece, int col, int row);
 
-    void update(const sf::Event& ev);
+    void update(const Event& ev);
     void draw();
 
     // Handle mouse click
@@ -59,14 +59,14 @@ public:
     void highlightPossibleMove(Pieces* clickedPiece);
 
     // Player turn
-    bool isWhiteTurn(void) { return this->whiteTurn; }
+    bool isWhiteTurn(void) const { return this->whiteTurn; }
     void alterTurn(void); // Đổi lượt
 
     // Detect check, checkmate, draw
     bool isCheck(bool color, bool save); // To check if current player is in check
     bool cannotMove(void); // To check if current player is in checkmate
     bool isTie(void); // To check if current player is in draw
-    bool isOver(void) { return gameOver; }
+    bool isOver(void) const { return gameOver; }
 
     // Undo-feature
     /* ... (To be continued)

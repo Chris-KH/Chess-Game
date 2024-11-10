@@ -5,6 +5,7 @@ Pieces::Pieces() {
     this->type = "";
     this->isWhite = true;
     this->chosen = false;
+    this->isAlreadeMove = false;
 }
 
 //Pieces::Pieces(const bool& isWhite) {
@@ -17,6 +18,7 @@ Pieces::Pieces(bool isWhite) {
     this->currentTextureIndex = 0;
     this->isWhite = isWhite;
     this->chosen = false;
+    this->isAlreadeMove = false;
 }
 
 bool Pieces::getColor() const {
@@ -33,6 +35,14 @@ int Pieces::getRow() const {
 
 size_t Pieces::getCurrentTextureIndex() const {
     return this->currentTextureIndex;
+}
+
+bool Pieces::getAlreadyMove() const {
+    return this->isAlreadeMove;
+}
+
+void Pieces::setAlreadyMove(bool isAlreadyMove) {
+    this->isAlreadeMove = isAlreadyMove;
 }
 
 bool Pieces::loadTexture(const vector<string>& texturePaths) {
@@ -63,7 +73,7 @@ void Pieces::scaleToFitCell(float cellSize) {
     Vector2u textureSize = textures[currentTextureIndex].getSize();
     float scaleX = cellSize / textureSize.x;
     float scaleY = cellSize / textureSize.y;
-    float scale = std::min(scaleX, scaleY); // Đảm bảo tỷ lệ đồng nhất
+    float scale = min(scaleX, scaleY); // Đảm bảo tỷ lệ đồng nhất
     sprite.setScale(scale, scale);
 }
 
@@ -85,12 +95,17 @@ string Pieces::getType() const {
     return type;
 }
 
-void Pieces::setInitialPosition(const sf::Vector2f& position) {
+void Pieces::setInitialPosition(const 
+    
+    
+    
+    
+    Vector2f& position) {
     this->initialPosition = position;
 }
 
 // Drag a piece
-void Pieces::followMouse(sf::Vector2i mousePos) {
+void Pieces::followMouse(Vector2i mousePos) {
     float x = mousePos.x - sprite.getGlobalBounds().width / 2.0;
     float y = mousePos.y - sprite.getGlobalBounds().height / 2.0;
     sprite.setPosition(x, y);
