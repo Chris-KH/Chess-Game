@@ -22,7 +22,7 @@ protected:
     size_t currentTextureIndex;
     vector<Texture> textures;
     bool isWhite;
-    bool isAlreadeMove;
+    bool isAlreadyMove;
     
     // Movement
     Vector2f initialPosition; // Vị trí ban đầu của quân cờ
@@ -57,7 +57,7 @@ public:
         
         
         
-        Vector2f& position);
+    Vector2f& position);
     int getNumPress(void) { return numPress; } // return variable numPress
     void press(void) { numPress++;  } // increase variable numPress by 1
     void resetNumPress(void) { numPress = 0; } // set variable numPress = 0
@@ -65,8 +65,11 @@ public:
 
     //Possible move
     virtual vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) = 0;
+    bool canMoveTo(const int& row, const int& col, const vector<vector<unique_ptr<Pieces>>>& board);
+    bool isThreatened(int row, int col, const vector<vector<unique_ptr<Pieces>>>& board) const;
 
     //Promotion
     virtual bool checkPromote() const = 0;
-    
+
+    virtual void attemptCastling(int lastRow, int lastCol, int row, int col, vector<vector<unique_ptr<Pieces>>>& board) { return; };
 };

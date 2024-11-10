@@ -5,7 +5,7 @@ Pieces::Pieces() {
     this->type = "";
     this->isWhite = true;
     this->chosen = false;
-    this->isAlreadeMove = false;
+    this->isAlreadyMove = false;
 }
 
 //Pieces::Pieces(const bool& isWhite) {
@@ -18,7 +18,7 @@ Pieces::Pieces(bool isWhite) {
     this->currentTextureIndex = 0;
     this->isWhite = isWhite;
     this->chosen = false;
-    this->isAlreadeMove = false;
+    this->isAlreadyMove = false;
 }
 
 bool Pieces::getColor() const {
@@ -38,11 +38,11 @@ size_t Pieces::getCurrentTextureIndex() const {
 }
 
 bool Pieces::getAlreadyMove() const {
-    return this->isAlreadeMove;
+    return this->isAlreadyMove;
 }
 
 void Pieces::setAlreadyMove(bool isAlreadyMove) {
-    this->isAlreadeMove = isAlreadyMove;
+    this->isAlreadyMove = isAlreadyMove;
 }
 
 bool Pieces::loadTexture(const vector<string>& texturePaths) {
@@ -95,12 +95,7 @@ string Pieces::getType() const {
     return type;
 }
 
-void Pieces::setInitialPosition(const 
-    
-    
-    
-    
-    Vector2f& position) {
+void Pieces::setInitialPosition(const Vector2f& position) {
     this->initialPosition = position;
 }
 
@@ -109,4 +104,31 @@ void Pieces::followMouse(Vector2i mousePos) {
     float x = mousePos.x - sprite.getGlobalBounds().width / 2.0;
     float y = mousePos.y - sprite.getGlobalBounds().height / 2.0;
     sprite.setPosition(x, y);
+}
+
+bool Pieces::canMoveTo(const int& row, const int& col, const vector<vector<unique_ptr<Pieces>>>& board) {
+    vector<pair<int, int>> possibleMoves = this->getPossibleMoves(board);
+    return find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end();
+}
+
+bool Pieces::isThreatened(int row, int col, const vector<vector<unique_ptr<Pieces>>>& board) const {
+    // Duyệt qua toàn bộ bàn cờ
+    for (int r = 0; r < 8; ++r) {
+        for (int c = 0; c < 8; ++c) {
+            // Bỏ qua ô trống
+            if (board[r][c] == nullptr) continue;
+
+            // Lấy quân cờ tại ô đó
+            auto piece = board[r][c].get();
+
+            // Kiểm tra nếu quân cờ không là cờ chùng màu
+            if (piece->getColor() != this->getColor()) {
+                // Kiểm tra nếu quân cờ có thể di chuyển đến ô đích
+                if (piece->canMoveTo(row, col, board)) {
+                    return true; // Ô bị đe dọa
+                }
+            }
+        }
+    }
+    return false; // Ô không bị đe dọa
 }

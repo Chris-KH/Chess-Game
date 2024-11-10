@@ -348,18 +348,23 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             if (selectedPiece) {
                 // ... (to be continued)
             }
+
+
             // Thực hiện nước đi
             board[row][col].reset();
             board[row][col] = move(board[lastRow][lastCol]);
             board[row][col]->setPosition(col, row);
 
-            // Vẽ lại giao diện để hiển thị quân mới di chuyển
-            window->clear();
-            draw();    // Giả sử hàm này vẽ lại toàn bộ bàn cờ và quân cờ
-            window->display();
+            if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove() == false) {
+                board[row][col]->attemptCastling(lastRow, lastCol, row, col, board);
+            }
 
             // Kiểm tra nếu quân tốt cần thăng cấp
             if (board[row][col]->getType() == "pawn" && board[row][col]->checkPromote()) {
+                // Vẽ lại giao diện để hiển thị quân mới di chuyển
+                window->clear();
+                draw();    // Giả sử hàm này vẽ lại toàn bộ bàn cờ và quân cờ
+                window->display();
                 unique_ptr<Pieces> promotePiece = GUI::promoteChoice(board[row][col]);
 
                 // Nếu không chọn được quân thăng cấp, mặc định là quân Hậu
@@ -372,11 +377,6 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             }
 
             board[row][col]->setAlreadyMove(true);
-
-            // Cập nhật lần cuối sau khi thăng cấp
-            window->clear();
-            draw();    // Vẽ lại bàn cờ và quân cờ sau khi thăng cấp
-            window->display();
         }
 
         // Bỏ chọn quân cờ này

@@ -21,9 +21,7 @@ int main() {
     try {
         //Game GameEngine;
         //GameEngine.startGame();
-        RenderWindow window(VideoMode(900, 900), "Chess Game", 
-            
-            Style::Close | Style::Titlebar);
+        RenderWindow window(VideoMode(930, 930), "Chess Game", Style::Close | Style::Titlebar);
         ChessBoard chessBoard(&window, 0);
         cout << "Created a chessboard\n";
 
