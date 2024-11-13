@@ -19,6 +19,12 @@
     <Filter Include="Source Files\Pieces">
       <UniqueIdentifier>{4d02d560-208b-45c4-bd60-9b751afde3a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GUI">
+      <UniqueIdentifier>{198d0286-28a0-45f4-bfbd-b779413e7214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{220506b7-64e8-47e7-b095-ecc3204d34b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Main.cpp">
@@ -58,7 +64,7 @@
       <Filter>Source Files\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="..\src\GUI.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -96,7 +102,7 @@
       <Filter>Header Files\Pieces</Filter>
     </ClInclude>
     <ClInclude Include="..\lib\GUI.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

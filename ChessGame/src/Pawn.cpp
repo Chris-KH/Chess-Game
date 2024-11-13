@@ -7,6 +7,7 @@ Pawn::Pawn(bool isWhite) : Pieces(isWhite) {
 	texturePaths.push_back("../assets/Standard Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Cartoon Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Pixel Theme/" + color + this->type + ".png");
+    texturePaths.push_back("../assets/Neo Theme/" + color + this->type + ".png");
 
 	loadTexture(texturePaths);
 }
@@ -16,11 +17,7 @@ string Pawn::getType() const {
 }
 
 vector<pair<int, int>> Pawn::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
-    vector<
-        
-        
-        
-        pair<int, int>> moves;
+    vector<pair<int, int>> moves;
     int direction = (isWhite) ? -1 : 1;
 
     // Nước đi thẳng
@@ -41,6 +38,9 @@ vector<pair<int, int>> Pawn::getPossibleMoves(const vector<vector<unique_ptr<Pie
         moves.emplace_back(row + direction, col + 1);
     }
 
+    pair<int, int> enPassant = this->enPassant(board);
+    if (enPassant.first != -1) moves.emplace_back(enPassant);
+
     possibleMoves = moves;
     return moves;
 }
@@ -48,4 +48,26 @@ vector<pair<int, int>> Pawn::getPossibleMoves(const vector<vector<unique_ptr<Pie
 bool Pawn::checkPromote() const {
     if ((this->isWhite && row == 0) || (!this->isWhite && row == 7)) return true;
     return false;
+}
+
+pair<int, int> Pawn::enPassant(const vector<vector<unique_ptr<Pieces>>>& board) {
+    if (this->getColor() == true && row == 3) {
+        if (col + 1 < 8 && board[row][col + 1] && board[row][col + 1]->getType() == "pawn" && board[row][col + 1]->getColor() == false) {
+            if (board[row][col + 1]->getJustMove() == true) return { row - 1, col + 1 };
+        }
+        if (col - 1 >= 0 && board[row][col - 1] && board[row][col - 1]->getType() == "pawn" && board[row][col - 1]->getColor() == false) {
+            if (board[row][col - 1]->getJustMove() == true) return { row - 1, col - 1 };
+        }
+    }
+
+    if (!this->getColor() && row == 4) {
+        if (col + 1 < 8 && board[row][col + 1] && board[row][col + 1]->getType() == "pawn" && board[row][col + 1]->getColor() == true) {
+            if (board[row][col + 1]->getJustMove()) return { row + 1, col + 1 };
+        }
+        if (col - 1 >= 0 && board[row][col - 1] && board[row][col - 1]->getType() == "pawn" && board[row][col - 1]->getColor() == true) {
+            if (board[row][col - 1]->getJustMove()) return { row + 1, col - 1 };
+        }
+    }
+
+    return {-1, -1};
 }

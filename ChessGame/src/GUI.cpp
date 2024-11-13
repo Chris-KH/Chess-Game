@@ -11,7 +11,8 @@ unique_ptr<Pieces> GUI::promoteChoice(unique_ptr<Pieces>& piece) {
     vector<string> paths = {
         "../assets/Standard Theme/",
         "../assets/Cartoon Theme/",
-        "../assets/Pixel Theme/"
+        "../assets/Pixel Theme/",
+        "../assets/Neo Theme/"
     };
 
     string pathFolder = paths[piece->getCurrentTextureIndex()];

@@ -9,7 +9,9 @@ private:
     vector<string> boardFiles; // Danh sách đường dẫn bàn cờ
     int currentBoardIndex; // Chỉ số bàn cờ hiện tại
 
+    size_t numPieces;
     vector<vector<unique_ptr<Pieces>>> board;
+    Pieces* justMovePiece = nullptr;
 
     float cellSize = 100; // Kích thước mỗi ô
 
@@ -48,6 +50,7 @@ public:
     bool changeBoard(int newIndex);
     void changePieces(int newIndex);
     void addPiece(unique_ptr<Pieces> piece, int col, int row);
+    size_t countPieces();
 
     void update(const Event& ev);
     void draw();

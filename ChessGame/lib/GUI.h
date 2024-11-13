@@ -17,7 +17,7 @@ using namespace sf;
 #include "Rook.h"
 #include "Knight.h"
 #include "Bishop.h"
-
+#include "ChessBoard.h"
 
 class GUI {
 public:

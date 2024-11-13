@@ -25,6 +25,8 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
         row.resize(8); // Mỗi hàng sẽ có 8 cột
     }
 
+    this->numPieces = 8 * 4;
+
     // Tạo quân cờ
     addPiece(make_unique<Rook>(true), 0, 7); // Xe trắng
     addPiece(make_unique<Knight>(true), 1, 7); // Mã trắng
@@ -115,6 +117,7 @@ bool ChessBoard::loadBoardTexture(const string& filePath) {
         return false; // Không thể load ảnh
     }
     boardSprite.setTexture(boardTexture);
+    boardSprite.setPosition(0, 0);
     updateBoardScale(); // Cập nhật tỉ lệ
     return true;
 }
@@ -197,6 +200,9 @@ void ChessBoard::update(const Event& event) {
         else if (event.key.code == Keyboard::Num8) {
             this->changePieces(2); 
         }
+        else if (event.key.code == Keyboard::Num9) {
+            this->changePieces(3);
+        }
     }
     // Nhấn chuột trái
     else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
@@ -250,6 +256,16 @@ void ChessBoard::draw() {
     window->draw(undoButton);
     window->draw(undoText);
     */
+}
+
+size_t ChessBoard::countPieces() {
+    size_t count = 0;
+    for (auto& pieces : board) {
+        for (auto& piece : pieces) {
+            if (piece) count++;
+        }
+    }
+    return count;
 }
 
 // Handle mouse operators
@@ -351,9 +367,11 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
 
 
             // Thực hiện nước đi
+            if (board[row][col]) this->numPieces--;
             board[row][col].reset();
             board[row][col] = move(board[lastRow][lastCol]);
             board[row][col]->setPosition(col, row);
+            cout << numPieces;
 
             if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove() == false) {
                 board[row][col]->attemptCastling(lastRow, lastCol, row, col, board);
@@ -376,7 +394,22 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
                 board[row][col]->setPosition(col, row);
             }
 
+            //Check enPassant
+            if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1) {
+                if (this->numPieces == this->countPieces()) {
+                    if (board[row][col]->getColor()) {
+                        board[row + 1][col].reset();
+                    }
+                    else {
+                        board[row - 1][col].reset();
+                    }
+                }
+            }
+
+            if (justMovePiece) justMovePiece->setJustMove(false);
             board[row][col]->setAlreadyMove(true);
+            this->justMovePiece = board[col][row].get();
+            if (justMovePiece) justMovePiece->setJustMove(true);
         }
 
         // Bỏ chọn quân cờ này

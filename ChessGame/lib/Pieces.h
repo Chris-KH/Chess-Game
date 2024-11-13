@@ -23,6 +23,7 @@ protected:
     vector<Texture> textures;
     bool isWhite;
     bool isAlreadyMove;
+    bool justMove = false;
     
     // Movement
     Vector2f initialPosition; // Vị trí ban đầu của quân cờ
@@ -44,6 +45,8 @@ public:
     size_t getCurrentTextureIndex() const;
     bool getAlreadyMove() const;
     void setAlreadyMove(bool isAlreadyMove);
+    bool getJustMove() const { return justMove; }
+    void setJustMove(bool justMove) { this->justMove = justMove; }
 
     bool loadTexture(const vector<string>& texturePaths);
     void changeTexture(size_t index);
@@ -70,6 +73,6 @@ public:
 
     //Promotion
     virtual bool checkPromote() const = 0;
-
     virtual void attemptCastling(int lastRow, int lastCol, int row, int col, vector<vector<unique_ptr<Pieces>>>& board) { return; };
+    virtual pair<int, int> enPassant(const vector<vector<unique_ptr<Pieces>>>& board) { return {}; };
 };

@@ -14,11 +14,6 @@ class Movement {
 private:
 	int cellSize;
 	int boardSize;
-	
-	
-	
-	
-	
 	Vector2f cords[8][8]; // cords[row][col] lấy ra tọa độ góc trái trên của ô hàng row, cột col
 public:
 	// Constant
