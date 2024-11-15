@@ -1,6 +1,6 @@
 ﻿#include"../lib/Queen.h"
 
-Queen::Queen(bool isWhite) : Pieces(isWhite) {
+Queen::Queen(bool isWhite, int originRow, int originCol) : Pieces(isWhite, originRow, originCol) {
 	vector<string> texturePaths;
 	string color = (isWhite ? "white-" : "black-");
 	this->type = "queen";

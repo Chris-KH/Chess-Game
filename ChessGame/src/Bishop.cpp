@@ -1,6 +1,6 @@
 ﻿#include"../lib/Bishop.h"
 
-Bishop::Bishop(bool isWhite) : Pieces(isWhite) {
+Bishop::Bishop(bool isWhite, int originRow, int originCol) : Pieces(isWhite, originRow, originCol) {
 	vector<string> texturePaths;
 	string color = (isWhite ? "white-" : "black-");
 	this->type = "bishop";

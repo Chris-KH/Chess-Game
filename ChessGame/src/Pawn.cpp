@@ -1,6 +1,6 @@
 ﻿#include"../lib/Pawn.h"
 
-Pawn::Pawn(bool isWhite) : Pieces(isWhite) {
+Pawn::Pawn(bool isWhite, int originRow, int originCol) : Pieces(isWhite, originRow, originCol) {
 	vector<string> texturePaths;
 	string color = (isWhite ? "white-" : "black-");
 	this->type = "pawn";
@@ -39,7 +39,10 @@ vector<pair<int, int>> Pawn::getPossibleMoves(const vector<vector<unique_ptr<Pie
     }
 
     pair<int, int> enPassant = this->enPassant(board);
-    if (enPassant.first != -1) moves.emplace_back(enPassant);
+    if (enPassant.first != -1) {
+        moves.emplace_back(enPassant);
+        cout << enPassant.first << " " << enPassant.second << "\n";
+    }
 
     possibleMoves = moves;
     return moves;
@@ -52,20 +55,20 @@ bool Pawn::checkPromote() const {
 
 pair<int, int> Pawn::enPassant(const vector<vector<unique_ptr<Pieces>>>& board) {
     if (this->getColor() == true && row == 3) {
-        if (col + 1 < 8 && board[row][col + 1] && board[row][col + 1]->getType() == "pawn" && board[row][col + 1]->getColor() == false) {
-            if (board[row][col + 1]->getJustMove() == true) return { row - 1, col + 1 };
+        if (col + 1 < 8 && board[row][col + 1] && board[row][col + 1]->getType() == "pawn" && board[row][col + 1]->getColor() == false && board[row][col + 1]->getJustMove() && !board[row - 1][col + 1]) {
+            return { row - 1, col + 1 };
         }
-        if (col - 1 >= 0 && board[row][col - 1] && board[row][col - 1]->getType() == "pawn" && board[row][col - 1]->getColor() == false) {
-            if (board[row][col - 1]->getJustMove() == true) return { row - 1, col - 1 };
+        if (col - 1 >= 0 && board[row][col - 1] && board[row][col - 1]->getType() == "pawn" && board[row][col - 1]->getColor() == false && board[row][col - 1]->getJustMove() && !board[row - 1][col - 1]) {
+            return { row - 1, col - 1 };
         }
     }
 
-    if (!this->getColor() && row == 4) {
-        if (col + 1 < 8 && board[row][col + 1] && board[row][col + 1]->getType() == "pawn" && board[row][col + 1]->getColor() == true) {
-            if (board[row][col + 1]->getJustMove()) return { row + 1, col + 1 };
+    if (this->getColor() == false && row == 4) {
+        if (col + 1 < 8 && board[row][col + 1] && board[row][col + 1]->getType() == "pawn" && board[row][col + 1]->getColor() == true && board[row][col + 1]->getJustMove() && !board[row + 1][col + 1]) {
+            return { row + 1, col + 1 };
         }
-        if (col - 1 >= 0 && board[row][col - 1] && board[row][col - 1]->getType() == "pawn" && board[row][col - 1]->getColor() == true) {
-            if (board[row][col - 1]->getJustMove()) return { row + 1, col - 1 };
+        if (col - 1 >= 0 && board[row][col - 1] && board[row][col - 1]->getType() == "pawn" && board[row][col - 1]->getColor() == true && board[row][col - 1]->getJustMove() && !board[row + 1][col - 1]) {
+            return { row + 1, col - 1 };
         }
     }
 

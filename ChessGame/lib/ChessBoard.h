@@ -34,7 +34,9 @@ private:
     bool gameOver;
 
     // Undo operator
-    // ... (To be continued)
+    // Stack lưu trạng thái bàn cờ
+    stack<vector<int>> undoStack; //index 0, 1 for start position and 2,3 for destination position
+    stack<vector<int>> redoStack;
     /*
     RectangleShape undoButton;
     Font undoFont;
@@ -72,7 +74,6 @@ public:
     bool isOver(void) const { return gameOver; }
 
     // Undo-feature
-    /* ... (To be continued)
-    void undo(void);
-    */
+    void undoMove();
+    void redoMove();
 };

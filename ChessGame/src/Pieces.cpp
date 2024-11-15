@@ -14,13 +14,17 @@ Pieces::Pieces() {
 //    this->isWhite = isWhite;
 //}
 
-Pieces::Pieces(bool isWhite) {
+Pieces::Pieces(bool isWhite, int originRow, int originCol) {
     this->currentTextureIndex = 0;
     this->isWhite = isWhite;
+    this->originRow = originRow;
+    this->originCol = originCol;
     this->chosen = false;
     this->isAlreadyMove = false;
 }
 
+
+//isWhite
 bool Pieces::getColor() const {
     return this->isWhite;
 }

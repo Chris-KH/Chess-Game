@@ -76,10 +76,10 @@ unique_ptr<Pieces> GUI::promoteChoice(unique_ptr<Pieces>& piece) {
                 for (size_t i = 0; i < sprites.size(); ++i) {
                     if (sprites[i].getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                         switch (i) {
-                        case 0: return make_unique<Queen>(isWhite);
-                        case 1: return make_unique<Bishop>(isWhite);
-                        case 2: return make_unique<Knight>(isWhite);
-                        case 3: return make_unique<Rook>(isWhite);
+                        case 0: return make_unique<Queen>(isWhite, piece->getRow(), piece->getCol());
+                        case 1: return make_unique<Bishop>(isWhite, piece->getRow(), piece->getCol());
+                        case 2: return make_unique<Knight>(isWhite, piece->getRow(), piece->getCol());
+                        case 3: return make_unique<Rook>(isWhite, piece->getRow(), piece->getCol());
                         }
                     }
                 }

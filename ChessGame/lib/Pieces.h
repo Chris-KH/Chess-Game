@@ -32,12 +32,14 @@ protected:
     bool chosen;
     int numPress = 0;
 
+    //Original Postion
+    int originCol = 0, originRow = 0;
     // Current position
     int col = 0, row = 0;
 public:
     Pieces();
     //Pieces(const bool& isWhite);
-    Pieces(bool isWhite);
+    Pieces(bool isWhite, int originRow, int originCol);
 
     bool getColor() const;
     int getCol() const;

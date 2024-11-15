@@ -28,41 +28,41 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     this->numPieces = 8 * 4;
 
     // Tạo quân cờ
-    addPiece(make_unique<Rook>(true), 0, 7); // Xe trắng
-    addPiece(make_unique<Knight>(true), 1, 7); // Mã trắng
-    addPiece(make_unique<Bishop>(true), 2, 7); // Tượng trắng
-    addPiece(make_unique<Queen>(true), 3, 7); // Hậu trắng
-    addPiece(make_unique<King>(true), 4, 7); // Vua trắng
-    addPiece(make_unique<Bishop>(true), 5, 7); // Tượng trắng
-    addPiece(make_unique<Knight>(true), 6, 7); // Mã trắng
-    addPiece(make_unique<Rook>(true), 7, 7); // Xe trắng
+    addPiece(make_unique<Rook>(true, 0, 7), 0, 7); // Xe trắng
+    addPiece(make_unique<Knight>(true, 1, 7), 1, 7); // Mã trắng
+    addPiece(make_unique<Bishop>(true, 2, 7), 2, 7); // Tượng trắng
+    addPiece(make_unique<Queen>(true, 3, 7), 3, 7); // Hậu trắng
+    addPiece(make_unique<King>(true, 4, 7), 4, 7); // Vua trắng
+    addPiece(make_unique<Bishop>(true, 5, 7), 5, 7); // Tượng trắng
+    addPiece(make_unique<Knight>(true, 6, 7), 6, 7); // Mã trắng
+    addPiece(make_unique<Rook>(true, 7, 7), 7, 7); // Xe trắng
                   
-    addPiece(make_unique<Rook>(false), 0, 0); // Xe đen
-    addPiece(make_unique<Knight>(false), 1, 0); // Mã đen
-    addPiece(make_unique<Bishop>(false), 2, 0); // Tượng đen
-    addPiece(make_unique<Queen>(false), 3, 0); // Hậu đen
-    addPiece(make_unique<King>(false), 4, 0); // Vua đen
-    addPiece(make_unique<Bishop>(false), 5, 0); // Tượng đen
-    addPiece(make_unique<Knight>(false), 6, 0); // Mã đen
-    addPiece(make_unique<Rook>(false), 7, 0); // Xe đen
+    addPiece(make_unique<Rook>(false, 0, 0), 0, 0); // Xe đen
+    addPiece(make_unique<Knight>(false, 1, 0), 1, 0); // Mã đen
+    addPiece(make_unique<Bishop>(false, 2, 0), 2, 0); // Tượng đen
+    addPiece(make_unique<Queen>(false, 3, 0), 3, 0); // Hậu đen
+    addPiece(make_unique<King>(false, 4, 0), 4, 0); // Vua đen
+    addPiece(make_unique<Bishop>(false, 5, 0), 5, 0); // Tượng đen
+    addPiece(make_unique<Knight>(false, 6, 0), 6, 0); // Mã đen
+    addPiece(make_unique<Rook>(false, 7, 0), 7, 0); // Xe đen
                    
-    addPiece(make_unique<Pawn>(false), 0, 1);
-    addPiece(make_unique<Pawn>(false), 1, 1);
-    addPiece(make_unique<Pawn>(false), 2, 1);
-    addPiece(make_unique<Pawn>(false), 3, 1);
-    addPiece(make_unique<Pawn>(false), 4, 1);
-    addPiece(make_unique<Pawn>(false), 5, 1);
-    addPiece(make_unique<Pawn>(false), 6, 1);
-    addPiece(make_unique<Pawn>(false), 7, 1);
+    addPiece(make_unique<Pawn>(false, 0, 1), 0, 1);
+    addPiece(make_unique<Pawn>(false, 1, 1), 1, 1);
+    addPiece(make_unique<Pawn>(false, 2, 1), 2, 1);
+    addPiece(make_unique<Pawn>(false, 3, 1), 3, 1);
+    addPiece(make_unique<Pawn>(false, 4, 1), 4, 1);
+    addPiece(make_unique<Pawn>(false, 5, 1), 5, 1);
+    addPiece(make_unique<Pawn>(false, 6, 1), 6, 1);
+    addPiece(make_unique<Pawn>(false, 7, 1), 7, 1);
              
-    addPiece(make_unique<Pawn>(true), 0, 6);
-    addPiece(make_unique<Pawn>(true), 1, 6);
-    addPiece(make_unique<Pawn>(true), 2, 6);
-    addPiece(make_unique<Pawn>(true), 3, 6);
-    addPiece(make_unique<Pawn>(true), 4, 6);
-    addPiece(make_unique<Pawn>(true), 5, 6);
-    addPiece(make_unique<Pawn>(true), 6, 6);
-    addPiece(make_unique<Pawn>(true), 7, 6);
+    addPiece(make_unique<Pawn>(true, 0, 6), 0, 6);
+    addPiece(make_unique<Pawn>(true, 1, 6), 1, 6);
+    addPiece(make_unique<Pawn>(true, 2, 6), 2, 6);
+    addPiece(make_unique<Pawn>(true, 3, 6), 3, 6);
+    addPiece(make_unique<Pawn>(true, 4, 6), 4, 6);
+    addPiece(make_unique<Pawn>(true, 5, 6), 5, 6);
+    addPiece(make_unique<Pawn>(true, 6, 6), 6, 6);
+    addPiece(make_unique<Pawn>(true, 7, 6), 7, 6);
 
     // Player turn
     whiteTurn = true;
@@ -371,7 +371,6 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             board[row][col].reset();
             board[row][col] = move(board[lastRow][lastCol]);
             board[row][col]->setPosition(col, row);
-            cout << numPieces;
 
             if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove() == false) {
                 board[row][col]->attemptCastling(lastRow, lastCol, row, col, board);
@@ -386,7 +385,7 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
                 unique_ptr<Pieces> promotePiece = GUI::promoteChoice(board[row][col]);
 
                 // Nếu không chọn được quân thăng cấp, mặc định là quân Hậu
-                if (!promotePiece) promotePiece = make_unique<Queen>(board[row][col]->getColor());
+                if (!promotePiece) promotePiece = make_unique<Queen>(board[row][col]->getColor(), row, col);
 
                 promotePiece->changeTexture(board[row][col]->getCurrentTextureIndex());
                 board[row][col].reset();
@@ -410,6 +409,7 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             board[row][col]->setAlreadyMove(true);
             this->justMovePiece = board[col][row].get();
             if (justMovePiece) justMovePiece->setJustMove(true);
+            undoStack.push({ lastRow, lastCol, row, col });
         }
 
         // Bỏ chọn quân cờ này
@@ -737,9 +737,14 @@ bool ChessBoard::isTie(void) {
     return false;
 }
 
-// Undo-feature ... (To be continued)
-/*
-void ChessBoard::undo(void) {
+// Undo-feature
+void ChessBoard::undoMove() {
+    vector<int> tmp = undoStack.top();
+    undoStack.pop();
+    redoStack.push(tmp);
 
 }
-*/
+
+void ChessBoard::redoMove() {
+
+}
