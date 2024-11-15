@@ -14,7 +14,7 @@ Pieces::Pieces() {
 //    this->isWhite = isWhite;
 //}
 
-Pieces::Pieces(bool isWhite, int originRow, int originCol) {
+Pieces::Pieces(bool isWhite, int originCol, int originRow) {
     this->currentTextureIndex = 0;
     this->isWhite = isWhite;
     this->originRow = originRow;

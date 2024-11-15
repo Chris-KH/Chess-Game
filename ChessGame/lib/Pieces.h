@@ -39,7 +39,7 @@ protected:
 public:
     Pieces();
     //Pieces(const bool& isWhite);
-    Pieces(bool isWhite, int originRow, int originCol);
+    Pieces(bool isWhite, int originCol, int originRow);
 
     bool getColor() const;
     int getCol() const;

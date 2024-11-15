@@ -1,6 +1,6 @@
 ﻿#include"../lib/King.h"
 
-King::King(bool isWhite, int originRow, int originCol) : Pieces(isWhite, originRow, originCol) {
+King::King(bool isWhite, int originCol, int originRow) : Pieces(isWhite, originCol, originRow) {
 	vector<string> texturePaths;
 	string color = (isWhite ? "white-" : "black-");
 	this->type = "king";

@@ -3,7 +3,7 @@
 
 class Rook : public Pieces {
 public:
-    Rook(bool isWhite, int originRow, int originCol);
+    Rook(bool isWhite, int originCol, int originRow);
     string getType() const override;
     vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board);
     bool checkPromote() const override;

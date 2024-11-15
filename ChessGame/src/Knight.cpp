@@ -1,6 +1,6 @@
 #include"../lib/Knight.h"
 
-Knight::Knight(bool isWhite, int originRow, int originCol) : Pieces(isWhite, originRow, originCol) {
+Knight::Knight(bool isWhite, int originCol, int originRow) : Pieces(isWhite, originCol, originRow) {
 	vector<string> texturePaths;
 	string color = (isWhite ? "white-" : "black-");
 	this->type = "knight";

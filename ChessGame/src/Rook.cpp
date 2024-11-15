@@ -1,6 +1,6 @@
 ﻿#include"../lib/Rook.h"
 
-Rook::Rook(bool isWhite, int originRow, int originCol) : Pieces(isWhite, originRow, originCol) {
+Rook::Rook(bool isWhite, int originCol, int originRow) : Pieces(isWhite, originCol, originRow) {
 	vector<string> texturePaths;
 	string color = (isWhite ? "white-" : "black-");
 	this->type = "rook";
