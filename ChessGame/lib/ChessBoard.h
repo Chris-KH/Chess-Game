@@ -16,8 +16,6 @@ private:
     float cellSize = 100; // Kích thước mỗi ô
 
     Font font; // Phông chữ để vẽ chữ và số
-    Text rowLabels[8]; // Mảng chứa các chữ số cho hàng
-    Text colLabels[8]; // Mảng chứa các chữ cái cho cột
 
     Pieces* selectedPiece = nullptr;
     Pieces* pieceFollowingMouse = nullptr;

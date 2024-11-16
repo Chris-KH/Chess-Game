@@ -365,7 +365,6 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
                 // ... (to be continued)
             }
 
-
             // Thực hiện nước đi
             if (board[row][col]) this->numPieces--;
             board[row][col].reset();
@@ -394,15 +393,15 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             }
 
             //Check enPassant
-            if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1) {
-                if (this->numPieces == this->countPieces()) {
-                    if (board[row][col]->getColor()) {
-                        board[row + 1][col].reset();
-                    }
-                    else {
-                        board[row - 1][col].reset();
-                    }
+            cout << this->numPieces << " " << this->countPieces() << '\n';
+            if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1 && this->numPieces == this->countPieces()) {
+                if (board[row][col]->getColor()) {
+                    board[row + 1][col].reset();
                 }
+                if (!board[row][col]->getColor()) {
+                    board[row - 1][col].reset();
+                }
+                this->numPieces--;
             }
 
             if (justMovePiece) justMovePiece->setJustMove(false);

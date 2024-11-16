@@ -57,22 +57,18 @@ pair<int, int> Pawn::enPassant(const vector<vector<unique_ptr<Pieces>>>& board) 
     //cout << this->row << " " << this->col << '\n';
     if (isWhite && this->row == 3) {
         if (col + 1 < 8 && board[row][col + 1] && board[row][col + 1]->getType() == "pawn" && board[row][col + 1]->getColor() == false && board[row][col + 1]->getJustMove() && !board[row - 1][col + 1]) {
-            cout << "a\n";
             return make_pair(row - 1, col + 1);
         }
         if (col - 1 >= 0 && board[row][col - 1] && board[row][col - 1]->getType() == "pawn" && board[row][col - 1]->getColor() == false && board[row][col - 1]->getJustMove() && !board[row - 1][col - 1]) {
-            cout << "b\n";
             return make_pair(row - 1, col - 1);
         }
     }
 
     else if (!isWhite && this->row == 4) {
         if (col + 1 < 8 && board[row][col + 1] && board[row][col + 1]->getType() == "pawn" && board[row][col + 1]->getColor() == true && board[row][col + 1]->getJustMove() && !board[row + 1][col + 1]) {
-            cout << "c\n";
             return make_pair(row + 1, col + 1);
         }
         if (col - 1 >= 0 && board[row][col - 1] && board[row][col - 1]->getType() == "pawn" && board[row][col - 1]->getColor() == true && board[row][col - 1]->getJustMove() && !board[row + 1][col - 1]) {
-            cout << "d\n";
             return make_pair(row + 1, col - 1);
         }
     }
