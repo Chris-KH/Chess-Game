@@ -19,21 +19,18 @@ string Queen::getType() const {
 vector<pair<int, int>> Queen::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
     vector<pair<int, int>> moves;
     int directions[8][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1} };
-
     for (auto& dir : directions) {
         int newRow = row;
         int newCol = col;
-
         while (true) {
             newRow += dir[0];
             newCol += dir[1];
-
             if (newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) break;
 
             if (!board[newRow][newCol]) {
                 moves.emplace_back(newRow, newCol);
             }
-            else if (board[newRow][newCol]->getColor() != isWhite) {
+            else if (board[newRow][newCol]->getColor() != this->getColor()) {
                 moves.emplace_back(newRow, newCol);
                 break;
             }

@@ -21,14 +21,15 @@ private:
     SECURITY_ATTRIBUTES saAttr;
 
     vector<string> moveHistory;
+    vector<string> redoHistory;
 public:
     Stockfish();
     ~Stockfish();
 
     void sendCommand(const string& command);
     string getResponse();
-    string calculateBestMove();
-    string calculateBestMove(int timeLimit);
+    string calculateBestMove(int timeLimit = 1000);
+    string calculateBestMoveWithDepth(int depth, int timeLimit = 1000);
     void setSkillLevel(int level);
     void newGame();
     void setBoardState(const string& fen);
@@ -36,8 +37,7 @@ public:
     void makeMove(const string& move);
     string getMoveHistory() const;
     void undoMove();
-    string calculateBestMoveWithDepth(int depth);
-    string calculateBestMoveWithDepth(int depth, int timeLimit);
+    void redoMove();
     void setHashSize(int size);
 
 };

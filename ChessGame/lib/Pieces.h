@@ -22,7 +22,6 @@ protected:
     size_t currentTextureIndex;
     vector<Texture> textures;
     bool isWhite;
-    bool isAlreadyMove;
     bool justMove = false;
     
     // Movement
@@ -45,8 +44,7 @@ public:
     int getCol() const;
     int getRow() const;
     size_t getCurrentTextureIndex() const;
-    bool getAlreadyMove() const;
-    void setAlreadyMove(bool isAlreadyMove);
+    bool getAlreadyMove(int row, int col) const;
     bool getJustMove() const { return justMove; }
     void setJustMove(bool justMove) { this->justMove = justMove; }
 

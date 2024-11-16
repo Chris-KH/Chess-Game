@@ -67,10 +67,6 @@ void Stockfish::sendCommand(const string& command) {
 string Stockfish::getResponse() {
     char buffer[256];
     DWORD dwRead;
-    
-    
-    
-    
     string response;
     int retryCount = 0;  // Giới hạn số lần thử đọc dữ liệu
 
@@ -97,13 +93,13 @@ string Stockfish::getResponse() {
     return response;
 }
 
-string Stockfish::calculateBestMove() {
-    sendCommand("go\n");
+string Stockfish::calculateBestMove(int timeLimit) {
+    sendCommand("go movetime " + to_string(timeLimit) + "\n");
     return getResponse();
 }
 
-string Stockfish::calculateBestMove(int timeLimit) {
-    sendCommand("go movetime " + to_string(timeLimit) + "\n");
+string Stockfish::calculateBestMoveWithDepth(int depth, int timeLimit) {
+    sendCommand("go depth " + to_string(depth) + " movetime " + to_string(timeLimit) + "\n");
     return getResponse();
 }
 
@@ -141,20 +137,20 @@ string Stockfish::getMoveHistory() const {
 
 void Stockfish::undoMove() {
     if (!moveHistory.empty()) {
+        redoHistory.push_back(moveHistory.back());
         moveHistory.pop_back();  
     }
     sendCommand("position startpos moves " + getMoveHistory() + "\n");
 }
 
-string Stockfish::calculateBestMoveWithDepth(int depth) {
-    sendCommand("go depth " + to_string(depth) + "\n");
-    return getResponse();
+void Stockfish::redoMove() {
+    if (!redoHistory.empty()) {
+        moveHistory.push_back(redoHistory.back());
+        redoHistory.pop_back();
+    }
+    sendCommand("position startpos moves " + getMoveHistory() + "\n");
 }
 
-string Stockfish::calculateBestMoveWithDepth(int depth, int timeLimit) {
-    sendCommand("go depth " + to_string(depth) + " movetime " + to_string(timeLimit) + "\n");
-    return getResponse();
-}
 
 void Stockfish::setHashSize(int size) {
     sendCommand("setoption name Hash value " + to_string(size) + "\n");

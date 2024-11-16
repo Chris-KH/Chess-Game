@@ -101,18 +101,14 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
 }
 
 void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
-    /*
-        Dùng để khởi tạo quân cờ
-    */
+    //Dùng để khởi tạo quân cờ
     piece->setPosition(col, row, cellSize); // Đặt vị trí quân cờ
     board[row][col].reset();
     board[row][col] = move(piece);
 }
 
 bool ChessBoard::loadBoardTexture(const string& filePath) {
-    /*
-        Dùng để khởi tạo / thay đổi bàn cờ
-    */
+    //Dùng để khởi tạo / thay đổi bàn cờ
     if (!boardTexture.loadFromFile(filePath)) {
         return false; // Không thể load ảnh
     }
@@ -170,10 +166,7 @@ void ChessBoard::changePieces(int newIndex) {
 }
 
 void ChessBoard::update(const Event& event) {
-    /*
-        Update các sự kiện xảy ra trên bàn cờ
-    */
-
+    //Update các sự kiện xảy ra trên bàn cờ
     // Nhấn số [1..5] để thay đổi bàn cờ
     if (event.type == Event::KeyPressed) {
         if (event.key.code == Keyboard::Num1) {
@@ -283,7 +276,7 @@ void ChessBoard::getPossibleMoves(Pieces* clickedPiece, vector<pair<int, int>>& 
 
     // Ta xét mỗi nước đi có hợp lệ hay không?
     vector<pair<int, int>> ret;
-    for (pair<int, int> pii : vpii) {
+    for (pair<int, int>& pii : vpii) {
         // Giả sử ta đặt quân cờ đang xét vào ô hiện tại
         unique_ptr<Pieces> save = move(board[pii.first][pii.second]);
         board[pii.first][pii.second] = move(board[r][c]);
@@ -366,16 +359,27 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             }
 
             // Thực hiện nước đi
-            if (board[row][col]) this->numPieces--;
+            unique_ptr<Pieces> deletePiece = move(board[row][col]);
             board[row][col].reset();
             board[row][col] = move(board[lastRow][lastCol]);
             board[row][col]->setPosition(col, row);
 
-            if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove() == false) {
+            //Check enPassant
+            if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1 && !deletePiece) {
+                if (board[row][col]->getColor()) {
+                    board[row + 1][col].reset();
+                }
+                if (!board[row][col]->getColor()) {
+                    board[row - 1][col].reset();
+                }
+            }
+
+            //Check Castling
+            if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove(lastRow, lastCol) == false) {
                 board[row][col]->attemptCastling(lastRow, lastCol, row, col, board);
             }
 
-            // Kiểm tra nếu quân tốt cần thăng cấp
+            // Check promotion
             if (board[row][col]->getType() == "pawn" && board[row][col]->checkPromote()) {
                 // Vẽ lại giao diện để hiển thị quân mới di chuyển
                 window->clear();
@@ -392,23 +396,10 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
                 board[row][col]->setPosition(col, row);
             }
 
-            //Check enPassant
-            cout << this->numPieces << " " << this->countPieces() << '\n';
-            if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1 && this->numPieces == this->countPieces()) {
-                if (board[row][col]->getColor()) {
-                    board[row + 1][col].reset();
-                }
-                if (!board[row][col]->getColor()) {
-                    board[row - 1][col].reset();
-                }
-                this->numPieces--;
-            }
-
             if (justMovePiece) justMovePiece->setJustMove(false);
-            board[row][col]->setAlreadyMove(true);
             this->justMovePiece = board[row][col].get();
             if (justMovePiece) justMovePiece->setJustMove(true);
-            undoStack.push({ lastRow, lastCol, row, col });
+            undoStack.push_back({ lastRow, lastCol, row, col });
         }
 
         // Bỏ chọn quân cờ này
@@ -492,8 +483,7 @@ bool ChessBoard::isCheck(bool color, bool save) {
     int r, c;
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            if (board[i][j].get() != nullptr && board[i][j]->getType() == "king" && 
-                board[i][j]->getColor() == color) {
+            if (board[i][j] && board[i][j]->getType() == "king" && board[i][j]->getColor() == color) {
                 king = board[i][j].get();
                 r = i, c = j;
             }
@@ -507,7 +497,7 @@ bool ChessBoard::isCheck(bool color, bool save) {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             // Nếu quân của đối phương chiếu quân vua của ta thì tô màu đỏ
-            if (board[i][j] != nullptr && board[i][j]->getColor() != color) {
+            if (board[i][j] && board[i][j]->getColor() != color) {
                 vector<pair<int, int>> moves = board[i][j]->getPossibleMoves(board);
                 if (find(moves.begin(), moves.end(), make_pair(r, c)) != 
                     moves.end()) {
@@ -738,12 +728,17 @@ bool ChessBoard::isTie(void) {
 
 // Undo-feature
 void ChessBoard::undoMove() {
-    vector<int> tmp = undoStack.top();
-    undoStack.pop();
-    redoStack.push(tmp);
-
+    if (!undoStack.empty()) {
+        vector<int> tmp = undoStack.back();
+        undoStack.pop_back();
+        redoStack.push_back(tmp);
+    }
 }
 
 void ChessBoard::redoMove() {
-
+    if (!redoStack.empty()) {
+        vector<int> tmp = redoStack.back();
+        redoStack.pop_back();
+        undoStack.push_back(tmp);
+    }
 }

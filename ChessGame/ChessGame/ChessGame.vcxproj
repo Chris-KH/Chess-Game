@@ -26,6 +26,7 @@
     <ClCompile Include="..\src\King.cpp" />
     <ClCompile Include="..\src\Knight.cpp" />
     <ClCompile Include="..\src\Main.cpp" />
+    <ClCompile Include="..\src\Move.cpp" />
     <ClCompile Include="..\src\Movement.cpp" />
     <ClCompile Include="..\src\Pawn.cpp" />
     <ClCompile Include="..\src\Pieces.cpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="..\lib\GUI.h" />
     <ClInclude Include="..\lib\King.h" />
     <ClInclude Include="..\lib\Knight.h" />
+    <ClInclude Include="..\lib\Move..h" />
     <ClInclude Include="..\lib\Movement.h" />
     <ClInclude Include="..\lib\Pawn.h" />
     <ClInclude Include="..\lib\Pieces.h" />

@@ -33,8 +33,8 @@ private:
 
     // Undo operator
     // Stack lưu trạng thái bàn cờ
-    stack<vector<int>> undoStack; //index 0, 1 for start position and 2,3 for destination position
-    stack<vector<int>> redoStack;
+    vector<vector<int>> undoStack; //index 0, 1 for start position and 2,3 for destination position
+    vector<vector<int>> redoStack;
     /*
     RectangleShape undoButton;
     Font undoFont;
