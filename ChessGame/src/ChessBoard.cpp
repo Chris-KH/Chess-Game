@@ -464,11 +464,14 @@ void ChessBoard::alterTurn(void) {
 // Detect check, checkmate, draw
 bool ChessBoard::isCheck(bool color, bool save) {
     /*
-        @Brief xét xem quân cờ có màu hiện tại có bị chiếu hay không? True = có, False = không
+        @Return :
+            True nếu đang bị chiếu tướng
+            False nếu không bị
+        @Brief : xét xem quân cờ có màu hiện tại có bị chiếu hay không? True = có, False = không
             Nếu bị chiếu thì tô đỏ quân cờ đang chiếu và quân vua bị chiếu
             Nếu tham số save = 1, mình sẽ cập nhật các thay đổi
             Nếu tham số save = 0, mình chỉ trả về kết quả chứ không cập nhật kết quả
-        @Idea Ý tưởng: 
+        @Idea : Ý tưởng :
             1. Tìm vị trí của con vua
             2. Ta sẽ duyệt hết bàn cờ, mỗi quân cờ ta lấy các nước đi có thể của quân cờ đó.
                Nếu quân cờ này có thể ăn được con vua thì ta tô màu đỏ cho ô của con cờ này và con vua.
@@ -480,7 +483,7 @@ bool ChessBoard::isCheck(bool color, bool save) {
 
     // Tìm king
     Pieces* king;
-    int r, c;
+    int r, c; // r là hàng, c là cột của quân cờ vua
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             if (board[i][j] && board[i][j]->getType() == "king" && board[i][j]->getColor() == color) {
@@ -493,22 +496,69 @@ bool ChessBoard::isCheck(bool color, bool save) {
     // Xét xem có quân cờ nào chiếu vào không
     RectangleShape tile(Vector2f(cellSize, cellSize)); // Kích thước ô là 100x100
     tile.setFillColor(Color(255, 99, 71, 100)); // Màu đỏ
-
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             // Nếu quân của đối phương chiếu quân vua của ta thì tô màu đỏ
             if (board[i][j] && board[i][j]->getColor() != color) {
-                vector<pair<int, int>> moves = board[i][j]->getPossibleMoves(board);
-                if (find(moves.begin(), moves.end(), make_pair(r, c)) != 
-                    moves.end()) {
-                    tile.setPosition(65 + j * cellSize, 65 + i * cellSize); // Đặt vị trí ô tô màu với viền
-                    if (save) {
-                        checkTiles[color].push_back(tile);
-                        inCheck[color] = true;
+                if (board[i][j]->getType() == "king" && abs(i - r) <= 1 && abs(j - c) <= 1) {
+                    return true;
+                }
+                else if (board[i][j]->getType() == "queen") {
+                    if (r == i || c == j || r + c == i + j || r - c == i - j) { // Cùng hàng, cột, đường chéo
+                        int dx = i - r, dy = j - c, d = max(abs(dx), abs(dy));
+                        dx /= d, dy /= d;
+                        int x = r + dx, y = c + dy;
+                        bool queenCheck = true;
+                        while (x != i && y != j) {
+                            if (board[x][y] != nullptr) {
+                                queenCheck = false;
+                                break;
+                            }
+                            x += dy, y += dy;
+                        }
+                        if (queenCheck) return true;
                     }
-                    else {
+                }
+                else if (board[i][j]->getType() == "bishop") {
+                    if (r + c == i + j || r - c == i - j) { // cùng đường chéo
+                        int dx = i - r, dy = j - c, d = max(abs(dx), abs(dy));
+                        dx /= d, dy /= d;
+                        int x = r + dx, y = c + dy;
+                        bool bishopCheck = true;
+                        while (x != i && y != j) {
+                            if (board[x][y] != nullptr) {
+                                bishopCheck = false;
+                                break;
+                            }
+                            x += dx, y += dy;
+                        }
+                        if (bishopCheck) return true;
+                    }
+                }
+                else if (board[i][j]->getType() == "knight") {
+                    if (abs(i - r) == 2 && abs(j - c) == 1) return true;
+                    if (abs(i - r) == 1 && abs(j - c) == 2) return true;
+                }
+                else if (board[i][j]->getType() == "rook") {
+                    if (r == i || c == j) { // Cùng đường chéo
+                        int dx = i - r, dy = j - c, d = max(abs(dx), abs(dy));
+                        dx /= d, dy /= d;
+                        int x = r + dx, y = c + dy;
+                        bool rookCheck = true;
+                        while (x != i && y != j) {
+                            if (board[x][y] != nullptr) {
+                                rookCheck = false;
+                                break;
+                            }
+                            x += dx, y += dy;
+                        }
+                        if (rookCheck) return true;
+                    }
+                }
+                else if (board[i][j]->getType() == "pawn") {
+                    int Dir = color ? 1 : -1;
+                    if (r == i + Dir && (c == j - 1 || c == j + 1))
                         return true;
-                    }
                 }
             }
         }
