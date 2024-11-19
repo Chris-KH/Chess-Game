@@ -74,30 +74,50 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     gameOver = false;
 
     // Undo
-
-    // Design undo button
-    /* ... (To be continued)
-    undoButton.setSize(Vector2f(190, 100));
-    int posUndoButtonX = 930;
-    int posUndoButtonY = 10;
-    undoButton.setPosition(posUndoButtonX, posUndoButtonY);
-    undoButton.setFillColor(Color::Blue);
-
-    if (!undoFont.loadFromFile("C:/Windows/Fonts/Arial.ttf")) {
-        cerr << "Cannot load font for undo text\n";
-        throw(1);
-        return;
+    // Button (970, 40, 1350, 100)
+    undoRect.setSize(Vector2f(380, 60));
+    undoRect.setFillColor(Color::White);
+    undoRect.setPosition(Vector2f(970, 40));
+    undoRect.setOutlineThickness(5);
+    undoRect.setOutlineColor(Color::Blue);
+    // Text (should be center) ~ (
+    if (!undoFont.loadFromFile("../assets/fonts/Holen Vintage.otf")) {
+        throw runtime_error("Cannot load font for undo button\n");
     }
-    undoText.setFont(undoFont);
-    undoText.setString(String("UNDO"));
-    undoText.setCharacterSize(30);
-    float posUndoTextX = posUndoButtonX + (undoButton.getGlobalBounds().width - undoText.getGlobalBounds().width) / 2;
-    float posUndoTextY = posUndoButtonY + (undoButton.getGlobalBounds().height - undoText.getGlobalBounds().height) / 2;
-    undoText.setPosition(posUndoTextX, posUndoTextY);
+    undoTxt.setFont(undoFont);
+    undoTxt.setFillColor(Color::Black);
+    undoTxt.setString("UNDO");
+    undoTxt.setPosition(Vector2f(1120, 50)); // intuitive cordinates
 
-    undoButton.setOutlineThickness(5);
-    undoText.setOutlineThickness(5);
-    */
+    // Redo
+    // Button (970, 120, 1350, 180)
+    redoRect = undoRect;
+    redoRect.setPosition(Vector2f(970, 120));
+    redoFont = undoFont;
+    redoTxt.setFont(redoFont);
+    redoTxt.setFillColor(Color::Black);
+    redoTxt.setString("REDO");
+    redoTxt.setPosition(Vector2f(1120, 130));
+
+    // New game
+    // Button (970, 200, 1350, 260)
+    ngRect = undoRect;
+    ngRect.setPosition(Vector2f(970, 200));
+    ngFont = undoFont;
+    ngTxt.setFont(ngFont);
+    ngTxt.setFillColor(Color::Black);
+    ngTxt.setString("NEW GAME");
+    ngTxt.setPosition(Vector2f(1070, 210));
+
+    // Save game
+    // Button (970, 280, 1350, 340)
+    sgRect = undoRect;
+    sgRect.setPosition(Vector2f(970, 280));
+    sgFont = undoFont;
+    sgTxt.setFont(sgFont);
+    sgTxt.setFillColor(Color::Black);
+    sgTxt.setString("SAVE GAME");
+    sgTxt.setPosition(Vector2f(1070, 290));
 }
 
 void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
@@ -245,10 +265,14 @@ void ChessBoard::draw() {
     }
 
     // Buttons
-    /*
-    window->draw(undoButton);
-    window->draw(undoText);
-    */
+    window->draw(undoRect);
+    window->draw(undoTxt);
+    window->draw(redoRect);
+    window->draw(redoTxt);
+    window->draw(ngRect);
+    window->draw(ngTxt);
+    window->draw(sgRect);
+    window->draw(sgTxt);
 }
 
 size_t ChessBoard::countPieces() {

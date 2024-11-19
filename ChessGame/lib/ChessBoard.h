@@ -35,11 +35,10 @@ private:
     // Stack lưu trạng thái bàn cờ
     vector<vector<int>> undoStack; //index 0, 1 for start position and 2,3 for destination position
     vector<vector<int>> redoStack;
-    /*
-    RectangleShape undoButton;
-    Font undoFont;
-    Text undoText;
-    */
+    // Buttons
+    RectangleShape undoRect, redoRect, ngRect, sgRect;
+    Font undoFont, redoFont, ngFont, sgFont;
+    Text undoTxt, redoTxt, ngTxt, sgTxt;
 public:
     // Constructor
     ChessBoard(RenderWindow* win, int currentBoardIndex = 0);
