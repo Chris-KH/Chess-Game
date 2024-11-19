@@ -114,11 +114,71 @@ bool Pieces::isThreatened(int row, int col, const vector<vector<unique_ptr<Piece
             auto piece = board[r][c].get();
 
             // Kiểm tra nếu quân cờ không là cờ chùng màu
-            if (piece->getColor() != this->getColor()) {
+            if (piece->getColor() != getColor()) {
                 // Kiểm tra nếu quân cờ có thể di chuyển đến ô đích
-                if (piece->canMoveTo(row, col, board)) {
-                    return true; // Ô bị đe dọa
+                bool curCheck = false;
+                if (piece->getType() == "king") { // 1. Vua
+                    if (abs(r - getRow()) <= 1 && abs(c - getCol()) <= 1) curCheck = true;
                 }
+                else if (board[r][c]->getType() == "queen") { // 2. Hậu
+                    if (r == getRow() || c == getCol() || 
+                        r + c == getRow() + getCol() || r - c == getRow() - getCol()) { // Cùng hàng, cột, đường chéo
+                        curCheck = true;
+                        int dx = r - getRow(), dy = c - getCol(), d = max(abs(dx), abs(dy));
+                        dx /= d, dy /= d;
+                        int x = getRow() + dx, y = getCol() + dy;
+                        while (x != r || y != c) {
+                            if (board[x][y] != nullptr) {
+                                curCheck = false;
+                                break;
+                            }
+                            x += dx, y += dy;
+                        }
+                    }
+                }
+                else if (board[r][c]->getType() == "bishop") { // 3. Tượng
+                    if (r + c == getRow() + getCol() || r - c == getRow() - getCol()) { // cùng đường chéo
+                        curCheck = true;
+                        int dx = r - getRow(), dy = c - getCol(), d = max(abs(dx), abs(dy));
+                        dx /= d, dy /= d;
+                        int x = getRow() + dx, y = getCol() + dy;
+                        while (x != r || y != c) {
+                            if (board[x][y] != nullptr) {
+                                curCheck = false;
+                                break;
+                            }
+                            x += dx, y += dy;
+                        }
+                    }
+                }
+                else if (board[r][c]->getType() == "knight") { // 4. Mã
+                    if ((abs(getRow() - r) == 2 && abs(getCol() - c) == 1) ||
+                        (abs(getRow() - r) == 1 && abs(getCol() - c) == 2)) {
+                        curCheck = true;
+                    }
+                }
+                else if (board[r][c]->getType() == "rook") { // 5. Xe
+                    if (r == getRow() || c == getCol()) { // Cùng cột
+                        curCheck = true;
+                        int dx = r - getRow(), dy = c - getCol(), d = max(abs(dx), abs(dy));
+                        dx /= d, dy /= d;
+                        int x = r + dx, y = c + dy;
+                        while (x != r || y != c) {
+                            if (board[x][y] != nullptr) {
+                                curCheck = false;
+                                break;
+                            }
+                            x += dx, y += dy;
+                        }
+                    }
+                }
+                else if (board[r][c]->getType() == "pawn") { // 6. Tốt
+                    int Dir = isWhite ? 1 : -1;
+                    if (getRow() == r + Dir && (getCol() == c - 1 || getCol() == c + 1))
+                        curCheck = true;
+                }
+                
+                if (curCheck) return true; // Nếu quân cờ hiện tại có thể ăn thì ta bị đe dọa
             }
         }
     }
