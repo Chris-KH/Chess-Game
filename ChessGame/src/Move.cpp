@@ -1,4 +1,4 @@
-﻿#include"../lib/Move..h"
+﻿#include"../lib/Move.h"
 
 Move::Move() : fromX(0), fromY(0), toX(0), toY(0), pieceMoved(nullptr), pieceCaptured(nullptr), promotionPiece(nullptr) {         
     isCastling = false;;

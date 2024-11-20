@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "GUI.h"
+#include "Move.h"
 
 class ChessBoard {
 private:
@@ -33,8 +34,9 @@ private:
 
     // Undo operator
     // Stack lưu trạng thái bàn cờ
-    vector<vector<int>> undoStack; //index 0, 1 for start position and 2,3 for destination position
-    vector<vector<int>> redoStack;
+    vector<Move> undoStack; //index 0, 1 for start position and 2,3 for destination position
+    vector<Move> redoStack;
+
     // Buttons
     RectangleShape undoRect, redoRect, ngRect, sgRect;
     Font undoFont, redoFont, ngFont, sgFont;

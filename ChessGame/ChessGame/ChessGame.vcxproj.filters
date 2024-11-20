@@ -107,7 +107,7 @@
     <ClInclude Include="..\lib\GUI.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\lib\Move..h">
+    <ClInclude Include="..\lib\Move.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

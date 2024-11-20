@@ -423,7 +423,6 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             if (justMovePiece) justMovePiece->setJustMove(false);
             this->justMovePiece = board[row][col].get();
             if (justMovePiece) justMovePiece->setJustMove(true);
-            undoStack.push_back({ lastRow, lastCol, row, col });
         }
 
         // Bỏ chọn quân cờ này
@@ -813,7 +812,7 @@ bool ChessBoard::isTie(void) {
 // Undo-feature
 void ChessBoard::undoMove() {
     if (!undoStack.empty()) {
-        vector<int> tmp = undoStack.back();
+        Move tmp = undoStack.back();
         undoStack.pop_back();
         redoStack.push_back(tmp);
     }
@@ -821,7 +820,7 @@ void ChessBoard::undoMove() {
 
 void ChessBoard::redoMove() {
     if (!redoStack.empty()) {
-        vector<int> tmp = redoStack.back();
+        Move tmp = redoStack.back();
         redoStack.pop_back();
         undoStack.push_back(tmp);
     }
