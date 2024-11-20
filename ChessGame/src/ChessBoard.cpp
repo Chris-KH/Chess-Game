@@ -13,21 +13,23 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     };
     currentBoardIndex = currentBoardIndex;
 
-    // Thiết lập bàn cờ
-    loadBoardTexture(boardFiles[currentBoardIndex]); // Tải bàn cờ đầu tiên
+    // Set texture for chess board
+    // Load first texture
+    loadBoardTexture(boardFiles[currentBoardIndex]); 
     cellSize = 100;
 
-    // Tạo bàn cờ
+    // Create a chess board
     board.clear();
     board.resize(8);
 
+    //Each row have 8 column
     for (auto& row : board) {
-        row.resize(8); // Mỗi hàng sẽ có 8 cột
+        row.resize(8); 
     }
 
     this->numPieces = 8 * 4;
 
-    // Tạo quân cờ
+    // Create pieces
     addPiece(make_unique<Rook>(true, 0, 7), 0, 7); // Xe trắng
     addPiece(make_unique<Knight>(true, 1, 7), 1, 7); // Mã trắng
     addPiece(make_unique<Bishop>(true, 2, 7), 2, 7); // Tượng trắng

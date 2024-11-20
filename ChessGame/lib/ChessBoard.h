@@ -75,4 +75,8 @@ public:
     // Undo-feature
     void undoMove();
     void redoMove();
+
+    //Reset game (new game)
+
+    //Save game
 };
