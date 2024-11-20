@@ -20,7 +20,14 @@ using namespace sf;
 #include "ChessBoard.h"
 
 class GUI {
+	friend class ChessBoard;
 public:
+	//Promotion window
 	static unique_ptr<Pieces> promoteChoice(unique_ptr<Pieces>& piece);
+
+	/*
+		New game window
+		Two option, AI or Human
+	*/
 };
 

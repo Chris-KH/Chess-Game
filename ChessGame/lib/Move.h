@@ -2,6 +2,7 @@
 #include"Pieces.h"
 
 class Move {
+private:
     // Old position (x = row, y = col)
     int fromX, fromY;
     // New position (x = row, y = col)

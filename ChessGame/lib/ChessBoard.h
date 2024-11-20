@@ -77,6 +77,11 @@ public:
     void redoMove();
 
     //Reset game (new game)
+    void newtGame();
 
     //Save game
+    void saveGame();
+
+    //Load game
+    void loadGame();
 };

@@ -30,14 +30,14 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     this->numPieces = 8 * 4;
 
     // Create pieces
-    addPiece(make_unique<Rook>(true, 0, 7), 0, 7); // Xe trắng
-    addPiece(make_unique<Knight>(true, 1, 7), 1, 7); // Mã trắng
-    addPiece(make_unique<Bishop>(true, 2, 7), 2, 7); // Tượng trắng
-    addPiece(make_unique<Queen>(true, 3, 7), 3, 7); // Hậu trắng
-    addPiece(make_unique<King>(true, 4, 7), 4, 7); // Vua trắng
-    addPiece(make_unique<Bishop>(true, 5, 7), 5, 7); // Tượng trắng
-    addPiece(make_unique<Knight>(true, 6, 7), 6, 7); // Mã trắng
-    addPiece(make_unique<Rook>(true, 7, 7), 7, 7); // Xe trắng
+    addPiece(make_unique<Rook>(true, 0, 7), 0, 7); 
+    addPiece(make_unique<Knight>(true, 1, 7), 1, 7); 
+    addPiece(make_unique<Bishop>(true, 2, 7), 2, 7); 
+    addPiece(make_unique<Queen>(true, 3, 7), 3, 7); 
+    addPiece(make_unique<King>(true, 4, 7), 4, 7); 
+    addPiece(make_unique<Bishop>(true, 5, 7), 5, 7); 
+    addPiece(make_unique<Knight>(true, 6, 7), 6, 7); 
+    addPiece(make_unique<Rook>(true, 7, 7), 7, 7); 
 
     addPiece(make_unique<Pawn>(true, 0, 6), 0, 6);
     addPiece(make_unique<Pawn>(true, 1, 6), 1, 6);
@@ -48,14 +48,14 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     addPiece(make_unique<Pawn>(true, 6, 6), 6, 6);
     addPiece(make_unique<Pawn>(true, 7, 6), 7, 6);
                   
-    addPiece(make_unique<Rook>(false, 0, 0), 0, 0); // Xe đen
-    addPiece(make_unique<Knight>(false, 1, 0), 1, 0); // Mã đen
-    addPiece(make_unique<Bishop>(false, 2, 0), 2, 0); // Tượng đen
-    addPiece(make_unique<Queen>(false, 3, 0), 3, 0); // Hậu đen
-    addPiece(make_unique<King>(false, 4, 0), 4, 0); // Vua đen
-    addPiece(make_unique<Bishop>(false, 5, 0), 5, 0); // Tượng đen
-    addPiece(make_unique<Knight>(false, 6, 0), 6, 0); // Mã đen
-    addPiece(make_unique<Rook>(false, 7, 0), 7, 0); // Xe đen
+    addPiece(make_unique<Rook>(false, 0, 0), 0, 0); 
+    addPiece(make_unique<Knight>(false, 1, 0), 1, 0); 
+    addPiece(make_unique<Bishop>(false, 2, 0), 2, 0); 
+    addPiece(make_unique<Queen>(false, 3, 0), 3, 0); 
+    addPiece(make_unique<King>(false, 4, 0), 4, 0); 
+    addPiece(make_unique<Bishop>(false, 5, 0), 5, 0); 
+    addPiece(make_unique<Knight>(false, 6, 0), 6, 0); 
+    addPiece(make_unique<Rook>(false, 7, 0), 7, 0); 
                    
     addPiece(make_unique<Pawn>(false, 0, 1), 0, 1);
     addPiece(make_unique<Pawn>(false, 1, 1), 1, 1);
@@ -813,17 +813,93 @@ bool ChessBoard::isTie(void) {
 
 // Undo-feature
 void ChessBoard::undoMove() {
-    if (!undoStack.empty()) {
-        Move tmp = undoStack.back();
-        undoStack.pop_back();
-        redoStack.push_back(tmp);
-    }
+    if (undoStack.empty()) return;
+    Move tmp = undoStack.back();
+    undoStack.pop_back();
+    redoStack.push_back(tmp);
+    
+    //Xử lí bàn cờ khi nhấn undo
 }
 
 void ChessBoard::redoMove() {
-    if (!redoStack.empty()) {
-        Move tmp = redoStack.back();
-        redoStack.pop_back();
-        undoStack.push_back(tmp);
+    if (redoStack.empty()) return;
+    Move tmp = redoStack.back();
+    redoStack.pop_back();
+    undoStack.push_back(tmp);
+
+    //Xử lí bàn cờ khi nhấn redo
+}
+
+//Reset game (new game)
+void ChessBoard::newtGame() {
+    /*
+        Call GUI to show a window to choose mode for new game (AI or Human). 
+        Another setting
+    */
+
+
+    // CLear old pieces
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (board[i][j]) board[i][j].reset();
+        }
     }
+
+    this->numPieces = 8 * 4;
+
+    // Create pieces
+    addPiece(make_unique<Rook>(true, 0, 7), 0, 7);
+    addPiece(make_unique<Knight>(true, 1, 7), 1, 7);
+    addPiece(make_unique<Bishop>(true, 2, 7), 2, 7);
+    addPiece(make_unique<Queen>(true, 3, 7), 3, 7);
+    addPiece(make_unique<King>(true, 4, 7), 4, 7);
+    addPiece(make_unique<Bishop>(true, 5, 7), 5, 7);
+    addPiece(make_unique<Knight>(true, 6, 7), 6, 7);
+    addPiece(make_unique<Rook>(true, 7, 7), 7, 7);
+
+    addPiece(make_unique<Pawn>(true, 0, 6), 0, 6);
+    addPiece(make_unique<Pawn>(true, 1, 6), 1, 6);
+    addPiece(make_unique<Pawn>(true, 2, 6), 2, 6);
+    addPiece(make_unique<Pawn>(true, 3, 6), 3, 6);
+    addPiece(make_unique<Pawn>(true, 4, 6), 4, 6);
+    addPiece(make_unique<Pawn>(true, 5, 6), 5, 6);
+    addPiece(make_unique<Pawn>(true, 6, 6), 6, 6);
+    addPiece(make_unique<Pawn>(true, 7, 6), 7, 6);
+
+    addPiece(make_unique<Rook>(false, 0, 0), 0, 0);
+    addPiece(make_unique<Knight>(false, 1, 0), 1, 0);
+    addPiece(make_unique<Bishop>(false, 2, 0), 2, 0);
+    addPiece(make_unique<Queen>(false, 3, 0), 3, 0);
+    addPiece(make_unique<King>(false, 4, 0), 4, 0);
+    addPiece(make_unique<Bishop>(false, 5, 0), 5, 0);
+    addPiece(make_unique<Knight>(false, 6, 0), 6, 0);
+    addPiece(make_unique<Rook>(false, 7, 0), 7, 0);
+
+    addPiece(make_unique<Pawn>(false, 0, 1), 0, 1);
+    addPiece(make_unique<Pawn>(false, 1, 1), 1, 1);
+    addPiece(make_unique<Pawn>(false, 2, 1), 2, 1);
+    addPiece(make_unique<Pawn>(false, 3, 1), 3, 1);
+    addPiece(make_unique<Pawn>(false, 4, 1), 4, 1);
+    addPiece(make_unique<Pawn>(false, 5, 1), 5, 1);
+    addPiece(make_unique<Pawn>(false, 6, 1), 6, 1);
+    addPiece(make_unique<Pawn>(false, 7, 1), 7, 1);
+
+    // Player turn
+    whiteTurn = true;
+
+    // Check
+    inCheck[0] = inCheck[1] = false;
+
+    // Game Over
+    gameOver = false;
+}
+
+//Save game
+void ChessBoard::saveGame() {
+
+}
+
+//Load game
+void ChessBoard::loadGame() {
+
 }

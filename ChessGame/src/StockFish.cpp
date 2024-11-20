@@ -151,7 +151,6 @@ void Stockfish::redoMove() {
     sendCommand("position startpos moves " + getMoveHistory() + "\n");
 }
 
-
 void Stockfish::setHashSize(int size) {
     sendCommand("setoption name Hash value " + to_string(size) + "\n");
 }

@@ -43,10 +43,8 @@ bool Pieces::loadTexture(const vector<string>& texturePaths) {
         if (!texture.loadFromFile(path)) {
             throw runtime_error("Unable to load piece texture from: " + path);
         }
-        textures.push_back(move(texture)); // Thêm vào vector
+        textures.push_back(move(texture)); 
     }
-
-    // Đặt texture đầu tiên cho sprite
     sprite.setTexture(textures[currentTextureIndex]);
     return true;
 }
@@ -65,7 +63,7 @@ void Pieces::scaleToFitCell(float cellSize) {
     Vector2u textureSize = textures[currentTextureIndex].getSize();
     float scaleX = cellSize / textureSize.x;
     float scaleY = cellSize / textureSize.y;
-    float scale = min(scaleX, scaleY); // Đảm bảo tỷ lệ đồng nhất
+    float scale = min(scaleX, scaleY); 
     sprite.setScale(scale, scale);
 }
 
