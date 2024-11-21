@@ -24,7 +24,7 @@ int main() {
         RenderWindow window(VideoMode(1400, 930), "Chess Game", Style::Close | Style::Titlebar);
         Image icon;
         if (!icon.loadFromFile("../assets/ChessGameIcon.png")) {
-            std::cerr << "Failed to load icon!" << std::endl;
+            cerr << "Failed to load icon!" << '\n';
             return -1;
         }
 
@@ -53,6 +53,12 @@ int main() {
             if (chessBoard.isOver()) {
                 Texture GO;
                 GO.loadFromFile("../assets/gameover.png");
+                RectangleShape colorRect(sf::Vector2f(200, 150));
+                colorRect.setFillColor(sf::Color(200, 200, 200, 255)); 
+                colorRect.setPosition(365, 385);
+                colorRect.setOutlineThickness(10);
+                colorRect.setOutlineColor(Color::Black);
+                window.draw(colorRect);
                 Sprite GameOver;
                 GameOver.setTexture(GO);
                 GameOver.setPosition(347, 347);
