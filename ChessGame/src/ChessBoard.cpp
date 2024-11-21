@@ -73,7 +73,7 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     inCheck[0] = inCheck[1] = false;
 
     // Game Over
-    gameOver = false;
+    gameOver = 0;
 
     // Buttons
     undoBut.setSize(50, 50);
@@ -215,15 +215,15 @@ void ChessBoard::update(const Event& event) {
         handleButtonRelease(mouseX, mouseY);
         if (isCheck(whiteTurn, true)) {
             if (cannotMove()) {
-                gameOver = true; // Checkmate
+                gameOver = whiteTurn + 1; // Checkmate
             }
         }
         else {
             if (cannotMove() || isTie()) {
-                gameOver = true; // Tie state
+                gameOver = 3; // Tie state
             }
         }
-        // isCheck(1 - whiteTurn, true);
+        isCheck(1 - whiteTurn, true); // Delete old check highlight if it exists
     }
 
     if (pieceFollowingMouse != nullptr) {
@@ -500,7 +500,7 @@ void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
             newtGame();
         }
         else if (selectedBut->getName() == "surrender") {
-            gameOver = true;
+            gameOver = whiteTurn + 1;
         }
         else if (selectedBut->getName() == "settings") {
             GUI::settingChoice(*this);
@@ -911,14 +911,19 @@ void ChessBoard::newtGame() {
     addPiece(make_unique<Pawn>(false, 6, 1), 6, 1);
     addPiece(make_unique<Pawn>(false, 7, 1), 7, 1);
 
+    selectedPiece = pieceFollowingMouse = nullptr;
+    highlightTiles.clear();
+
     // Player turn
     whiteTurn = true;
 
     // Check
     inCheck[0] = inCheck[1] = false;
+    checkTiles[0].clear();
+    checkTiles[1].clear();
 
     // Game Over
-    gameOver = false;
+    gameOver = 0;
 }
 
 //Save game

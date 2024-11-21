@@ -34,21 +34,16 @@ int main() {
                 if (event.type == Event::Closed) {
                     window.close();
                 }
-                if (!chessBoard.isOver()) {
+                if (chessBoard.isOver() == 0) {
                     chessBoard.update(event);
+                }
+                else {
+                    GUI::gameOver(chessBoard);
                 }
             }
 
             window.clear();
             chessBoard.draw();
-            if (chessBoard.isOver()) {
-                Texture GO;
-                GO.loadFromFile("../assets/gameover.png");
-                Sprite GameOver;
-                GameOver.setTexture(GO);
-                GameOver.setPosition(347, 347);
-                window.draw(GameOver);
-            }
             window.display();
         }
     }

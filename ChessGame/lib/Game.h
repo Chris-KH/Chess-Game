@@ -5,8 +5,8 @@
 class Game {
 private:
 	bool againstAI; //True if play with AI
-	Stockfish* stockfish;
-	ChessBoard* chessboard;
+	Stockfish* stockfish = nullptr;
+	ChessBoard* chessboard = nullptr;
 public:
 	Game();
 	Game(bool againstAI, int skillLevel);
