@@ -37,6 +37,13 @@ unique_ptr<Pieces> GUI::promoteChoice(unique_ptr<Pieces>& piece) {
 
     // Create window and font
     RenderWindow window(VideoMode(600, 200), "Choose Promotion Piece");
+    Image icon;
+    if (!icon.loadFromFile("../assets/PromotionIcon.png")) {
+        std::cerr << "Failed to load icon!" << '\n';
+        return nullptr;
+    }
+    // Set icon for window
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     Font font;
     if (!font.loadFromFile("../assets/fonts/Holen Vintage.otf")) {
         throw runtime_error("Unable to load font.");
@@ -129,14 +136,25 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     save.setName("save");
 
     // Open setting window
-    RenderWindow settingWD(sf::VideoMode(500, 800), "Setting", Style::None);
+    RenderWindow settingWD(sf::VideoMode(500, 800), "Setting", Style::Close | Style::Titlebar);
+    Image icon;
+    if (!icon.loadFromFile("../assets/SettingIcon.png")) {
+        std::cerr << "Failed to load icon!" << '\n';
+        return;
+    }
+    // Set icon for window
+    settingWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     Event event;
     Button* selectedButton = nullptr;
 
     while (settingWD.isOpen()) {
         while (settingWD.pollEvent(event)) {
             Event::MouseButtonEvent mouse = event.mouseButton;
-            if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+            if (event.type == Event::Closed) {
+                settingWD.close();
+                return;
+            }
+            else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                 // handle press
                 selectedButton = nullptr;
                 if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
@@ -156,7 +174,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
             }
         }
 
-        settingWD.clear(Color::Cyan);
+        settingWD.clear(Color(50, 50, 50, 255));
         save.drawText(settingWD);
         settingWD.display();
     }

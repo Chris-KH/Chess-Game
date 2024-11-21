@@ -14,7 +14,7 @@ void Button::loadTexture(string path) {
 	// Set back rectangle
 	rectangle.setOutlineThickness(5);
 	rectangle.setFillColor(Color::White);
-	rectangle.setOutlineColor(Color::Blue);
+	rectangle.setOutlineColor(Color(100, 100, 100, 255));
 	rectangle.setSize(Vector2f(targetWidth + 20, targetHeight + 20)); // Rectangle's thickness is 20 / 2 = 10
 	rectangle.setPosition(targetX - 10, targetY - 10); // Minus rectangle's thickness: -10
 }
@@ -31,7 +31,7 @@ void Button::setText(string s, Font _font) {
 	// Set back rectangle
 	rectangle.setOutlineThickness(5);
 	rectangle.setFillColor(Color::White);
-	rectangle.setOutlineColor(Color::Blue);
+	rectangle.setOutlineColor(Color(100, 100, 100, 255));
 	rectangle.setSize(Vector2f(text.getGlobalBounds().width + 20, targetHeight + 20));
 	rectangle.setPosition(targetX - 10, targetY - 5);
 }
