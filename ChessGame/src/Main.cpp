@@ -22,6 +22,15 @@ int main() {
         //Game GameEngine;
         //GameEngine.startGame();
         RenderWindow window(VideoMode(1400, 930), "Chess Game", Style::Close | Style::Titlebar);
+        Image icon;
+        if (!icon.loadFromFile("../assets/ChessGameIcon.png")) {
+            std::cerr << "Failed to load icon!" << std::endl;
+            return -1;
+        }
+
+        // Set icon for window
+        window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
         ChessBoard chessBoard(&window, 0);
         cout << "Created a chessboard\n";
 
