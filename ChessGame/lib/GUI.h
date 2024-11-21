@@ -18,6 +18,7 @@ using namespace sf;
 #include "Knight.h"
 #include "Bishop.h"
 #include "Button.h"
+#include "ChessBoard.h"
 
 class GUI {
 	friend class ChessBoard;
@@ -26,7 +27,10 @@ public:
 	static unique_ptr<Pieces> promoteChoice(unique_ptr<Pieces>& piece);
 
 	//Setting window
-	static void settingChoice(void);
+	static void settingChoice(Chessboard &chessboard);
+
+	//Game Over window
+	static void gameOver(void);
 
 	/*
 		New game window

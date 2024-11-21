@@ -109,7 +109,7 @@ unique_ptr<Pieces> GUI::promoteChoice(unique_ptr<Pieces>& piece) {
     return nullptr;
 }
 
-void GUI::settingChoice(void) {
+void GUI::settingChoice(ChessBoard &chessboard) {
     /*
     * @Brief: Open a new setting choice, no close, resize button or title bar
     * @How to close: Click "Save" button to exit
@@ -140,16 +140,12 @@ void GUI::settingChoice(void) {
                 // handle press
                 selectedButton = nullptr;
                 if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
-
-                if (selectedButton) cout << "Press " << selectedButton->getName() << "\n";
             }
             else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                 // handle release
                 Button* lastSelectedButton = selectedButton;
                 selectedButton = nullptr;
                 if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
-                
-                if (selectedButton) cout << "Release " << selectedButton->getName() << "\n";
 
                 // If click (press and release) on a button then do operations
                 if(selectedButton && selectedButton == lastSelectedButton) {
@@ -166,4 +162,12 @@ void GUI::settingChoice(void) {
     }
 
     cout << "Window has been closed!\n";
+}
+
+void GUI::gameOver(void) {
+    /*
+    * Display text: "White won", "Black won", or "Tied" to announce that the game is over with the corresponding state.
+    */
+
+
 }
