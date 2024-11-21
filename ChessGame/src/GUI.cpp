@@ -237,7 +237,7 @@ void GUI::gameOver(ChessBoard& chessBoard) {
             }
         }
 
-        gameOverWD.clear(Color::White);
+        gameOverWD.clear(Color(200, 200, 200, 255));
         gameOverWD.draw(textGO);
         gameOverWD.draw(textS);
         gameOverWD.display();
