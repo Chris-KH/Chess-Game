@@ -117,3 +117,7 @@ void King::attemptCastling(int lastRow, int lastCol, int row, int col, vector<ve
         this->performCastling(false, board);
     }
 }
+
+unique_ptr<Pieces> King::clone() const {
+    return make_unique<King>(*this);
+}

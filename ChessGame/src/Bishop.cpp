@@ -48,3 +48,7 @@ vector<pair<int, int>> Bishop::getPossibleMoves(const vector<vector<unique_ptr<P
 bool Bishop::checkPromote() const {
     return false;
 }
+
+unique_ptr<Pieces> Bishop::clone() const {
+    return make_unique<Bishop>(*this);
+}

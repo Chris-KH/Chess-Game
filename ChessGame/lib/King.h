@@ -12,4 +12,5 @@ public:
     bool canCastleQueenside(const vector<vector<unique_ptr<Pieces>>>& board);
     void performCastling(bool isKingside, vector<vector<unique_ptr<Pieces>>>& board);
     void attemptCastling(int lastRow, int lastCol, int row, int col, vector<vector<unique_ptr<Pieces>>>& board);
+    unique_ptr<Pieces> clone() const override;
 };

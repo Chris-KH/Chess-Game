@@ -35,3 +35,7 @@ vector<pair<int, int>> Knight::getPossibleMoves(const vector<vector<unique_ptr<P
 bool Knight::checkPromote() const {
     return false;
 }
+
+unique_ptr<Pieces> Knight::clone() const {
+    return make_unique<Knight>(*this);
+}

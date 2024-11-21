@@ -188,7 +188,7 @@ void GUI::gameOver(ChessBoard& chessBoard) {
     * After turning off this window, game reset
     */
     int windowWidth = 300, windowHeight = 200;
-    float rW, rH;
+    //float rW, rH;
 
     // Sprite for game over
     Font fontGO;
@@ -199,7 +199,7 @@ void GUI::gameOver(ChessBoard& chessBoard) {
     textGO.setFont(fontGO);
     textGO.setString("GAME OVER");
     textGO.setCharacterSize(50);
-    textGO.setPosition(windowWidth / 2.0 - textGO.getGlobalBounds().width / 2.0, 25);
+    textGO.setPosition(float(windowWidth / 2.0) - float(textGO.getGlobalBounds().width / 2.0), 25);
     textGO.setFillColor(Color::Black);
 
     // Text for statement
@@ -227,6 +227,13 @@ void GUI::gameOver(ChessBoard& chessBoard) {
     textS.setFillColor(Color::Black);
     
     RenderWindow gameOverWD(VideoMode(windowWidth, windowHeight), "Game Over", Style::Titlebar | Style::Close);
+    Image icon;
+    if (!icon.loadFromFile("../assets/GameOVerIcon.png")) {
+        std::cerr << "Failed to load icon!" << '\n';
+        return;
+    }
+    // Set icon for window
+    gameOverWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     Event event;
 
     while (gameOverWD.isOpen()) {

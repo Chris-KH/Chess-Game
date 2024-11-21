@@ -73,6 +73,8 @@ public:
     virtual bool checkPromote() const = 0;
     virtual void attemptCastling(int lastRow, int lastCol, int row, int col, vector<vector<unique_ptr<Pieces>>>& board) { return; };
     virtual pair<int, int> enPassant(const vector<vector<unique_ptr<Pieces>>>& board) { return {}; };
+
+    virtual unique_ptr<Pieces> clone() const = 0;
 };
 
 

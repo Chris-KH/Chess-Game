@@ -73,3 +73,7 @@ pair<int, int> Pawn::enPassant(const vector<vector<unique_ptr<Pieces>>>& board) 
 
     return make_pair(-1, -1);
 }
+
+unique_ptr<Pieces> Pawn::clone() const {
+    return make_unique<Pawn>(*this);
+}

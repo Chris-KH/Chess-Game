@@ -45,3 +45,7 @@ vector<pair<int, int>> Queen::getPossibleMoves(const vector<vector<unique_ptr<Pi
 bool Queen::checkPromote() const {
     return false;
 }
+
+unique_ptr<Pieces> Queen::clone() const {
+    return make_unique<Queen>(*this);
+}

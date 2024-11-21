@@ -9,6 +9,7 @@ public:
     vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board);
     bool checkPromote() const override;
     pair<int, int> enPassant(const vector<vector<unique_ptr<Pieces>>>& board);
+    unique_ptr<Pieces> clone() const override;
 };
 
 

@@ -52,3 +52,7 @@ vector<pair<int, int>> Rook::getPossibleMoves(const vector<vector<unique_ptr<Pie
 bool Rook::checkPromote() const {
     return false;
 }
+
+unique_ptr<Pieces> Rook::clone() const {
+    return make_unique<Rook>(*this);
+}

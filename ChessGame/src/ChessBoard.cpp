@@ -27,7 +27,7 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
         row.resize(8); 
     }
 
-    this->numPieces = 8 * 4;
+    this->numPieces = size_t(8 * 4);
 
     // Create pieces
     addPiece(make_unique<Rook>(true, 0, 7), 0, 7); 
@@ -367,6 +367,8 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             }
 
             //Move
+            Move curMove(lastRow, lastCol, row, col);
+
             unique_ptr<Pieces> deletePiece = move(board[row][col]);
             board[row][col].reset();
             board[row][col] = move(board[lastRow][lastCol]);
@@ -856,8 +858,15 @@ void ChessBoard::undoMove() {
 
     }
     else {
-        /*pair<int, int> fromPosition = move.getTo();
-        board[fromPosition.first][fromPosition.second] = make_unique<Pieces>(*(move.getPieceMoved()));*/
+        pair<int, int> fromPosition = move.getFrom();
+        pair<int, int> toPosition = move.getTo();
+        board[fromPosition.first][fromPosition.second] = move.getPieceMoved()->clone();
+        board[fromPosition.first][fromPosition.second]->setPosition(fromPosition.second, fromPosition.first);
+        if (move.getPieceCaptured()) {
+            board[toPosition.first][toPosition.second] = move.getPieceCaptured()->clone();
+            board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
+            this->numPieces++;
+        }
     }
 }
 
@@ -885,7 +894,7 @@ void ChessBoard::newtGame() {
         }
     }
 
-    this->numPieces = 8 * 4;
+    this->numPieces = size_t(8 * 4);
 
     // Create pieces
     addPiece(make_unique<Rook>(true, 0, 7), 0, 7);

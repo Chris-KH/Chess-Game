@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include"../lib/Pieces.h"
 
 class Bishop : public Pieces {
@@ -8,4 +8,5 @@ public:
     string getType() const override;
     vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board);
     bool checkPromote() const override;
+    unique_ptr<Pieces> clone() const override;
 };
