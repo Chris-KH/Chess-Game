@@ -383,26 +383,37 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             board[row][col] = move(board[lastRow][lastCol]);
             board[row][col]->setPosition(col, row);
 
-            undoStack.push_back(curMove);
-
             //Check enPassant
             if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1 && !deletePiece) {
                 if (board[row][col]->getColor()) {
                     board[row + 1][col].reset();
+                    curMove->setEnPassant(true);
                 }
                 if (!board[row][col]->getColor()) {
                     board[row - 1][col].reset();
+                    curMove->setEnPassant(true);
                 }
             }
 
             //Check Castling
-            if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove(lastRow, lastCol) == false) {
-                board[row][col]->attemptCastling(lastRow, lastCol, row, col, board);
+            else if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove(lastRow, lastCol) == false) {
+                int moveDisplacement = col - lastCol;
+                if (moveDisplacement == 2) {
+                    curMove->setCastling(true);
+                    curMove->setIsKingSide(true);
+                    board[row][col]->attemptCastling(board, true);
+                }
+                else if (moveDisplacement == -2) {
+                    curMove->setCastling(true);
+                    curMove->setIsKingSide(false);
+                    board[row][col]->attemptCastling(board, false);
+                }
             }
 
             // Check promotion
-            if (board[row][col]->getType() == "pawn" && board[row][col]->checkPromote()) {
+            else if (board[row][col]->getType() == "pawn" && board[row][col]->checkPromote()) {
                 // Vẽ lại giao diện để hiển thị quân mới di chuyển
+                highlightTiles.clear();
                 window->clear();
                 draw();    // Giả sử hàm này vẽ lại toàn bộ bàn cờ và quân cờ
                 window->display();
@@ -415,8 +426,12 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
                 board[row][col].reset();
                 board[row][col] = move(promotePiece);
                 board[row][col]->setPosition(col, row);
+
+                curMove->setPromotion(true);
+                curMove->setPromotionPiece(board[row][col]);
             }
 
+            undoStack.push_back(curMove);
             if (justMovePiece) justMovePiece->setJustMove(false);
             this->justMovePiece = board[row][col].get();
             if (justMovePiece) justMovePiece->setJustMove(true);
@@ -860,8 +875,19 @@ void ChessBoard::undoMove() {
     redoStack.push_back(move);
     cout << "Undo\n";
     //Processing when press undo
-    if (move->getPromotion() == true) {
+    pair<int, int> fromPosition = move->getFrom();
+    pair<int, int> toPosition = move->getTo();
 
+    //Undo pieceMoved position
+    board[fromPosition.first][fromPosition.second].reset();
+    board[fromPosition.first][fromPosition.second] = move->getPieceMoved()->clone();
+    board[fromPosition.first][fromPosition.second]->setPosition(fromPosition.second, fromPosition.first);
+
+    //Set turn
+    whiteTurn = board[fromPosition.first][fromPosition.second]->getColor();
+
+    if (move->getPromotion() == true) {
+        board[toPosition.first][toPosition.second].reset();
     }
     else if (move->getEnPassant() == true) {
 
@@ -870,21 +896,12 @@ void ChessBoard::undoMove() {
 
     }
     else {
-        pair<int, int> fromPosition = move->getFrom();
-        pair<int, int> toPosition = move->getTo();
-        
-        board[fromPosition.first][fromPosition.second].reset();
-        board[fromPosition.first][fromPosition.second] = move->getPieceMoved()->clone();
-        board[fromPosition.first][fromPosition.second]->setPosition(fromPosition.second, fromPosition.first);
-
         board[toPosition.first][toPosition.second].reset();
         if (move->getPieceCaptured()) {
             board[toPosition.first][toPosition.second] = move->getPieceCaptured()->clone();
             board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
             this->numPieces++;
-        }
-
-        whiteTurn = board[fromPosition.first][fromPosition.second]->getColor();
+        }    
     }
 }
 
@@ -893,8 +910,38 @@ void ChessBoard::redoMove() {
     Move* move = redoStack.back();
     redoStack.pop_back();
     undoStack.push_back(move);
+    cout << "Redo\n";
 
     //Processing when press redo
+    pair<int, int> fromPosition = move->getFrom();
+    pair<int, int> toPosition = move->getTo();
+
+    //Undo pieceMoved position
+    board[fromPosition.first][fromPosition.second].reset();
+    
+    if (move->getPromotion() == true) {
+        board[toPosition.first][toPosition.second].reset();
+        board[toPosition.first][toPosition.second] = move->getPromotionPiece()->clone();
+        board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
+    }
+    else if (move->getEnPassant() == true) {
+
+    }
+    else if (move->getCastling() == true) {
+
+    }
+    else {
+        board[toPosition.first][toPosition.second].reset();
+        board[toPosition.first][toPosition.second] = move->getPieceMoved()->clone();
+        board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
+    }
+
+    //Set turn
+    whiteTurn = !board[toPosition.first][toPosition.second]->getColor();
+
+    if (move->getPieceCaptured()) {
+        this->numPieces--;
+    }
 }
 
 //Reset game (new game)

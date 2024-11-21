@@ -4,10 +4,7 @@ Move::Move() : fromRow(0), fromCol(0), toRow(0), toCol(0), pieceMoved(nullptr), 
     isCastling = false;
     isPromotion = false;                     
     isEnPassant = false;              
-    castlingRights[0][0] = false; 
-    castlingRights[0][1] = false; 
-    castlingRights[1][0] = false;
-    castlingRights[1][1] = false;
+    isKingSide = false;
 
 }
 
@@ -16,20 +13,11 @@ Move::Move(int fromRow, int fromCol, int toRow, int toCol)
     isCastling = false;
     isPromotion = false;
     isEnPassant = false;
-    castlingRights[0][0] = false;
-    castlingRights[0][1] = false;
-    castlingRights[1][0] = false;
-    castlingRights[1][1] = false;
+    isKingSide = false;
 }
 
 Move::Move(const Move& move)
-    : fromRow(move.fromRow), fromCol(move.fromCol), toRow(move.toRow), toCol(move.toCol), isCastling(move.isCastling), isPromotion(move.isPromotion), isEnPassant(move.isEnPassant) {
-
-    castlingRights[0][0] = move.castlingRights[0][0];
-    castlingRights[0][1] = move.castlingRights[0][1];
-    castlingRights[1][0] = move.castlingRights[1][0];
-    castlingRights[1][1] = move.castlingRights[1][1];
-
+    : fromRow(move.fromRow), fromCol(move.fromCol), toRow(move.toRow), toCol(move.toCol), isCastling(move.isCastling), isPromotion(move.isPromotion), isEnPassant(move.isEnPassant), isKingSide(move.isKingSide) {
     pieceMoved = move.pieceMoved->clone();
     pieceCaptured = move.pieceCaptured->clone();
     promotionPiece = move.promotionPiece->clone();
@@ -55,6 +43,10 @@ void Move::setEnPassant(bool isEnPassant) {
     this->isEnPassant = isEnPassant;
 }
 
+void Move::setIsKingSide(bool isKingSide) {
+    this->isKingSide = isKingSide;
+}
+
 bool Move::getCastling() const {
     return this->isCastling;
 }
@@ -65,6 +57,10 @@ bool Move::getPromotion() const {
 
 bool Move::getEnPassant() const {
     return this->isEnPassant;
+}
+
+bool Move::getIsKingSide() const {
+    return this->isKingSide;
 }
 
 void Move::setPieceMoved(unique_ptr<Pieces>& pieceMoved) {

@@ -107,15 +107,8 @@ void King::performCastling(bool isKingside, vector<vector<unique_ptr<Pieces>>>& 
     //board[row][6]->setPosition(6, row);
 }
 
-void King::attemptCastling(int lastRow, int lastCol, int row, int col, vector<vector<unique_ptr<Pieces>>>& board) {
-    int moveDisplacement = col - lastCol;
-
-    if (moveDisplacement == 2) {
-        this->performCastling(true, board);
-    }
-    else if (moveDisplacement == -2) {
-        this->performCastling(false, board);
-    }
+void King::attemptCastling(vector<vector<unique_ptr<Pieces>>>& board, bool isKingSide) {
+    this->performCastling(isKingSide, board);
 }
 
 unique_ptr<Pieces> King::clone() const {
