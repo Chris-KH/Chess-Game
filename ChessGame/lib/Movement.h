@@ -21,6 +21,7 @@ public:
 
 	// Initialization
 	Movement(int cellSize = 0);
+	Movement(const Movement& movement);
 	void setCellSize(int cellSize);
 
 	// Call for value

@@ -15,6 +15,23 @@ Pieces::Pieces(bool isWhite, int originCol, int originRow) {
     this->chosen = false;
 }
 
+Pieces::Pieces(const Pieces& piece) :
+    sprite(piece.sprite),
+    type(piece.type),
+    currentTextureIndex(piece.currentTextureIndex),
+    textures(piece.textures),
+    isWhite(piece.isWhite),
+    justMove(piece.justMove),
+    initialPosition(piece.initialPosition),
+    movement(piece.movement),
+    chosen(piece.chosen),
+    numPress(piece.numPress),
+    originCol(piece.originCol),
+    originRow(piece.originRow),
+    col(piece.col),
+    row(piece.row)
+{
+}
 
 //isWhite
 bool Pieces::getColor() const {

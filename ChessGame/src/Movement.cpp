@@ -5,6 +5,17 @@ Movement::Movement(int _cellSize) {
 	setCellSize(_cellSize);
 }
 
+Movement::Movement(const Movement& movement) {
+	cellSize = movement.cellSize;
+	boardSize = movement.boardSize;
+
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			cords[i][j] = movement.cords[i][j];
+		}
+	}
+}
+
 void Movement::setCellSize(int _cellSize) {
 	cellSize = _cellSize;
 	boardSize = _cellSize * 8;

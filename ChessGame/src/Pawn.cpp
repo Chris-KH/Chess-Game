@@ -43,8 +43,6 @@ vector<pair<int, int>> Pawn::getPossibleMoves(const vector<vector<unique_ptr<Pie
         moves.emplace_back(enPassant);
         //cout << enPassant.first << " " << enPassant.second << "\n";
     }
-
-    possibleMoves = moves;
     return moves;
 }
 

@@ -4,14 +4,14 @@
 class Move {
 private:
     // Old position (x = row, y = col)
-    int fromX, fromY;
+    int fromRow, fromCol;
     // New position (x = row, y = col)
-    int toX, toY;
-    Pieces* pieceMoved;            // Moved piece
-    Pieces* pieceCaptured;         // Captured piece 
+    int toRow, toCol;
+    unique_ptr<Pieces> pieceMoved;            // Moved piece
+    unique_ptr<Pieces> pieceCaptured;         // Captured piece 
     bool isCastling;               // Is a castling move
     bool isPromotion;              // Is a protion move
-    Pieces* promotionPiece;        // Type of piece is promoted
+    unique_ptr<Pieces> promotionPiece;        // Type of piece is promoted
     bool isEnPassant;              // Is an en passant move
 
     /*
@@ -23,8 +23,8 @@ private:
     bool castlingRights[2][2];     
 public:
     Move();
-    Move(int fromX, int fromY, int toX, int toY);
-    Move(int fromX, int fromY, int toX, int toY, Pieces*& pieceMoved, Pieces*& pieceCaptured, Pieces*& promotionPiece);
+    Move(int fromRow, int fromCol, int toRow, int toCol);
+    Move(const Move& move);
     pair<int, int> getFrom() const;
     pair<int, int> getTo() const;
     void setCastling(bool isCastling);
@@ -34,9 +34,9 @@ public:
     bool getPromotion() const;
     bool getEnPassant() const;
 
-    void setPieceMoved(Pieces*& pieceMoved);
-    void setPieceCaptured(Pieces*& pieceCaptured);
-    void setPromotionPiece(Pieces*& promotionPiece);
+    void setPieceMoved(unique_ptr<Pieces>& pieceMoved);
+    void setPieceCaptured(unique_ptr<Pieces>& pieceCaptured);
+    void setPromotionPiece(unique_ptr<Pieces>& promotionPiece);
 
     Pieces* getPieceMoved() const;
     Pieces* getPieceCaptured() const;

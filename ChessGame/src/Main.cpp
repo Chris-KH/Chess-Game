@@ -12,7 +12,7 @@ using namespace std;
 using namespace sf;
 
 //Header include
-#include "../lib/Game.h"
+//#include "../lib/Game.h"
 #include "../lib/ChessBoard.h"
 
 int main() {

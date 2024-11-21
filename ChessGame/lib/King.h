@@ -4,6 +4,7 @@
 class King : public Pieces {
 public:
     King(bool isWhite, int originCol, int originRow);
+    King(const King& king) : Pieces(king) {};
     string getType() const override;
     vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board);
     bool checkPromote() const override;

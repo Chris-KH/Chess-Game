@@ -31,7 +31,6 @@ vector<pair<int, int>> King::getPossibleMoves(const vector<vector<unique_ptr<Pie
 	}
     if (canCastleKingside(board)) moves.emplace_back(this->getRow(), 6);
     if (canCastleQueenside(board)) moves.emplace_back(this->getRow(), 2);
-	this->possibleMoves = moves;
 	return moves;
 }
 

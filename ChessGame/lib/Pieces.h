@@ -26,7 +26,6 @@ protected:
     
     // Movement
     Vector2f initialPosition; // Vị trí ban đầu của quân cờ
-    vector<pair<int, int>> possibleMoves;
     Movement movement;
     bool chosen;
     int numPress = 0;
@@ -39,6 +38,9 @@ public:
     Pieces();
     //Pieces(const bool& isWhite);
     Pieces(bool isWhite, int originCol, int originRow);
+    Pieces(const Pieces& piece);
+
+    virtual ~Pieces() = default;
 
     bool getColor() const;
     int getCol() const;
@@ -56,11 +58,7 @@ public:
     virtual string getType() const = 0;
 
     // Drag/click a piece
-    void setInitialPosition(const 
-        
-        
-        
-    Vector2f& position);
+    void setInitialPosition(const Vector2f& position);
     int getNumPress(void) { return numPress; } // return variable numPress
     void press(void) { numPress++;  } // increase variable numPress by 1
     void resetNumPress(void) { numPress = 0; } // set variable numPress = 0
@@ -76,3 +74,5 @@ public:
     virtual void attemptCastling(int lastRow, int lastCol, int row, int col, vector<vector<unique_ptr<Pieces>>>& board) { return; };
     virtual pair<int, int> enPassant(const vector<vector<unique_ptr<Pieces>>>& board) { return {}; };
 };
+
+

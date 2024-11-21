@@ -1,9 +1,8 @@
 ﻿#include"../lib/Move.h"
 
-Move::Move() : fromX(0), fromY(0), toX(0), toY(0), pieceMoved(nullptr), pieceCaptured(nullptr), promotionPiece(nullptr) {         
-    isCastling = false;;
-    isPromotion = false;              
-    promotionPiece = nullptr;        
+Move::Move() : fromRow(0), fromCol(0), toRow(0), toCol(0), pieceMoved(nullptr), pieceCaptured(nullptr), promotionPiece(nullptr) {         
+    isCastling = false;
+    isPromotion = false;                     
     isEnPassant = false;              
     castlingRights[0][0] = false; 
     castlingRights[0][1] = false; 
@@ -12,21 +11,9 @@ Move::Move() : fromX(0), fromY(0), toX(0), toY(0), pieceMoved(nullptr), pieceCap
 
 }
 
-Move::Move(int fromX, int fromY, int toX, int toY)
-    : fromX(fromX), fromY(fromY), toX(toX), toY(toY), pieceMoved(nullptr), pieceCaptured(nullptr), promotionPiece(nullptr) {
-    isCastling = false;;
-    isPromotion = false;
-    promotionPiece = nullptr;
-    isEnPassant = false;
-    castlingRights[0][0] = false;
-    castlingRights[0][1] = false;
-    castlingRights[1][0] = false;
-    castlingRights[1][1] = false;
-}
-
-Move::Move(int fromX, int fromY, int toX, int toY, Pieces*& moved, Pieces*& captured, Pieces*& promotionPiece)
-    : fromX(fromX), fromY(fromY), toX(toX), toY(toY), pieceMoved(moved), pieceCaptured(captured), promotionPiece(promotionPiece) {
-    isCastling = false;;
+Move::Move(int fromRow, int fromCol, int toRow, int toCol)
+    : fromRow(fromRow), fromCol(fromCol), toRow(toRow), toCol(toCol), pieceMoved(nullptr), pieceCaptured(nullptr), promotionPiece(nullptr) {
+    isCastling = false;
     isPromotion = false;
     isEnPassant = false;
     castlingRights[0][0] = false;
@@ -35,13 +22,25 @@ Move::Move(int fromX, int fromY, int toX, int toY, Pieces*& moved, Pieces*& capt
     castlingRights[1][1] = false;
 }
 
+Move::Move(const Move& move)
+    : fromRow(move.fromRow), fromCol(move.fromCol), toRow(move.toRow), toCol(move.toCol), isCastling(move.isCastling), isPromotion(move.isPromotion), isEnPassant(move.isEnPassant) {
+
+    castlingRights[0][0] = move.castlingRights[0][0];
+    castlingRights[0][1] = move.castlingRights[0][1];
+    castlingRights[1][0] = move.castlingRights[1][0];
+    castlingRights[1][1] = move.castlingRights[1][1];
+
+    //pieceMoved = make_unique<Pieces>(*pieceMoved);
+    //pieceCaptured = make_unique<Pieces>(*pieceCaptured);
+    //promotionPiece = make_unique<Pieces>(*promotionPiece);
+}
 
 pair<int, int> Move::getFrom() const {
-    return make_pair(fromX, fromY);
+    return make_pair(fromRow, fromCol);
 }
 
 pair<int, int> Move::getTo() const {
-    return make_pair(toX, toY);
+    return make_pair(toRow, toCol);
 }
 
 void Move::setCastling(bool isCastling) {
@@ -68,26 +67,26 @@ bool Move::getEnPassant() const {
     return this->isEnPassant;
 }
 
-void Move::setPieceMoved(Pieces*& pieceMoved) {
-    this->pieceMoved = pieceMoved;
+void Move::setPieceMoved(unique_ptr<Pieces>& pieceMoved) {
+    //this->pieceMoved = make_unique<Pieces>(*pieceMoved);
 }
 
-void Move::setPieceCaptured(Pieces*& pieceCaptured) {
-    this->pieceCaptured = pieceCaptured;
+void Move::setPieceCaptured(unique_ptr<Pieces>& pieceCaptured) {
+    //this->pieceCaptured = make_unique<Pieces>(*pieceCaptured);
 }
 
-void Move::setPromotionPiece(Pieces*& promotionPiece) {
-    this->promotionPiece = promotionPiece;
+void Move::setPromotionPiece(unique_ptr<Pieces>& promotionPiece) {
+    //this->promotionPiece = make_unique<Pieces>(*promotionPiece);
 }
 
 Pieces* Move::getPieceMoved() const {
-    return this->pieceMoved;
+    return this->pieceMoved.get();
 }
 
 Pieces* Move::getPieceCaptured() const {
-    return this->pieceCaptured;
+    return this->pieceCaptured.get();
 }
 
 Pieces* Move::getPromotionPiece() const {
-    return this->promotionPiece;
+    return this->promotionPiece.get();
 }

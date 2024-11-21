@@ -366,7 +366,7 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
                 // ... (to be continued)
             }
 
-            // Thực hiện nước đi
+            //Move
             unique_ptr<Pieces> deletePiece = move(board[row][col]);
             board[row][col].reset();
             board[row][col] = move(board[lastRow][lastCol]);
@@ -841,20 +841,33 @@ bool ChessBoard::isTie(void) {
 // Undo-feature
 void ChessBoard::undoMove() {
     if (undoStack.empty()) return;
-    Move tmp = undoStack.back();
+    Move move = undoStack.back();
     undoStack.pop_back();
-    redoStack.push_back(tmp);
+    redoStack.push_back(move);
     
-    //Xử lí bàn cờ khi nhấn undo
+    //Processing when press undo
+    if (move.getPromotion() == true) {
+
+    }
+    else if (move.getEnPassant() == true) {
+
+    }
+    else if (move.getCastling() == true) {
+
+    }
+    else {
+        /*pair<int, int> fromPosition = move.getTo();
+        board[fromPosition.first][fromPosition.second] = make_unique<Pieces>(*(move.getPieceMoved()));*/
+    }
 }
 
 void ChessBoard::redoMove() {
     if (redoStack.empty()) return;
-    Move tmp = redoStack.back();
+    Move move = redoStack.back();
     redoStack.pop_back();
-    undoStack.push_back(tmp);
+    undoStack.push_back(move);
 
-    //Xử lí bàn cờ khi nhấn redo
+    //Processing when press redo
 }
 
 //Reset game (new game)
@@ -919,6 +932,14 @@ void ChessBoard::newtGame() {
 
     // Game Over
     gameOver = false;
+
+    undoStack.clear();
+    redoStack.clear();
+    justMovePiece = nullptr;
+    selectedPiece = nullptr;
+    pieceFollowingMouse = nullptr;
+    highlightTiles.clear();
+    selectedBut = nullptr;
 }
 
 //Save game
