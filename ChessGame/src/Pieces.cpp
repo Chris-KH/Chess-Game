@@ -30,8 +30,7 @@ Pieces::Pieces(const Pieces& piece) :
     originRow(piece.originRow),
     col(piece.col),
     row(piece.row)
-{
-}
+{}
 
 //isWhite
 bool Pieces::getColor() const {

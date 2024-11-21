@@ -41,8 +41,8 @@ private:
 
     // Undo operator
     // Stack lưu trạng thái bàn cờ
-    vector<Move> undoStack; //index 0, 1 for start position and 2,3 for destination position
-    vector<Move> redoStack;
+    vector<Move*> undoStack; //index 0, 1 for start position and 2,3 for destination position
+    vector<Move*> redoStack;
 
     // Buttons
     Button undoBut, redoBut, saveBut, newBut, surrenderBut, settingsBut;
@@ -50,6 +50,7 @@ private:
 public:
     // Constructor
     ChessBoard(RenderWindow* win, int currentBoardIndex = 0);
+    ~ChessBoard();
 
     // Update các kiểu
     bool loadBoardTexture(const string& filePath);

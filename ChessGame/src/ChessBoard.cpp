@@ -103,6 +103,13 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     settingsBut.setName("settings");
 }
 
+ChessBoard::~ChessBoard() {
+    for (int i = 0; i < (int)undoStack.size(); i++) delete undoStack[i];
+    for (int i = 0; i < (int)redoStack.size(); i++) delete redoStack[i];
+    undoStack.clear();
+    redoStack.clear();
+}
+
 void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
     //Dùng để khởi tạo quân cờ
     piece->setPosition(col, row, cellSize); // Đặt vị trí quân cờ
@@ -367,12 +374,16 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             }
 
             //Move
-            Move curMove(lastRow, lastCol, row, col);
-
+            Move* curMove = new Move(lastRow, lastCol, row, col);
             unique_ptr<Pieces> deletePiece = move(board[row][col]);
+            curMove->setPieceMoved(board[lastRow][lastCol]);
+            if (deletePiece) curMove->setPieceCaptured(deletePiece);
+
             board[row][col].reset();
             board[row][col] = move(board[lastRow][lastCol]);
             board[row][col]->setPosition(col, row);
+
+            undoStack.push_back(curMove);
 
             //Check enPassant
             if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1 && !deletePiece) {
@@ -491,6 +502,7 @@ void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
     if (selectedBut && selectedBut == lastBut) {
         if (selectedBut->getName() == "undo") {
             undoMove();
+            cout << "Undo..\n";
         }
         else if (selectedBut->getName() == "redo") {
             redoMove();
@@ -843,36 +855,42 @@ bool ChessBoard::isTie(void) {
 // Undo-feature
 void ChessBoard::undoMove() {
     if (undoStack.empty()) return;
-    Move move = undoStack.back();
+    Move* move = undoStack.back();
     undoStack.pop_back();
     redoStack.push_back(move);
-    
+    cout << "Undo\n";
     //Processing when press undo
-    if (move.getPromotion() == true) {
+    if (move->getPromotion() == true) {
 
     }
-    else if (move.getEnPassant() == true) {
+    else if (move->getEnPassant() == true) {
 
     }
-    else if (move.getCastling() == true) {
+    else if (move->getCastling() == true) {
 
     }
     else {
-        pair<int, int> fromPosition = move.getFrom();
-        pair<int, int> toPosition = move.getTo();
-        board[fromPosition.first][fromPosition.second] = move.getPieceMoved()->clone();
+        pair<int, int> fromPosition = move->getFrom();
+        pair<int, int> toPosition = move->getTo();
+        
+        board[fromPosition.first][fromPosition.second].reset();
+        board[fromPosition.first][fromPosition.second] = move->getPieceMoved()->clone();
         board[fromPosition.first][fromPosition.second]->setPosition(fromPosition.second, fromPosition.first);
-        if (move.getPieceCaptured()) {
-            board[toPosition.first][toPosition.second] = move.getPieceCaptured()->clone();
+
+        board[toPosition.first][toPosition.second].reset();
+        if (move->getPieceCaptured()) {
+            board[toPosition.first][toPosition.second] = move->getPieceCaptured()->clone();
             board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
             this->numPieces++;
         }
+
+        whiteTurn = board[fromPosition.first][fromPosition.second]->getColor();
     }
 }
 
 void ChessBoard::redoMove() {
     if (redoStack.empty()) return;
-    Move move = redoStack.back();
+    Move* move = redoStack.back();
     redoStack.pop_back();
     undoStack.push_back(move);
 
@@ -945,8 +963,13 @@ void ChessBoard::newtGame() {
     // Game Over
     gameOver = false;
 
+    // Clear stack
+    for (int i = 0; i < (int)undoStack.size(); i++) delete undoStack[i];
+    for (int i = 0; i < (int)redoStack.size(); i++) delete redoStack[i];
     undoStack.clear();
     redoStack.clear();
+
+    //
     justMovePiece = nullptr;
     selectedPiece = nullptr;
     pieceFollowingMouse = nullptr;
