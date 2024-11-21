@@ -223,7 +223,7 @@ void ChessBoard::update(const Event& event) {
                 gameOver = true; // Tie state
             }
         }
-        isCheck(1 - whiteTurn, true);
+        // isCheck(1 - whiteTurn, true);
     }
 
     if (pieceFollowingMouse != nullptr) {
@@ -487,8 +487,23 @@ void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
     else if (settingsBut.contain(mouseX, mouseY)) selectedBut = &settingsBut;
     // If the button clicked the same with the button released then do operation(s) on this
     if (selectedBut && selectedBut == lastBut) {
-        if (selectedBut->getName() == "settings") {
-            GUI::settingChoice();
+        if (selectedBut->getName() == "undo") {
+            undoMove();
+        }
+        else if (selectedBut->getName() == "redo") {
+            redoMove();
+        }
+        else if (selectedBut->getName() == "save") {
+            saveGame();
+        }
+        else if (selectedBut->getName() == "new") {
+            newtGame();
+        }
+        else if (selectedBut->getName() == "surrender") {
+            gameOver = true;
+        }
+        else if (selectedBut->getName() == "settings") {
+            GUI::settingChoice(*this);
         }
     }
 }
