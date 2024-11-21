@@ -27,10 +27,10 @@ public:
 	static unique_ptr<Pieces> promoteChoice(unique_ptr<Pieces>& piece);
 
 	//Setting window
-	static void settingChoice(ChessBoard &chessboard);
+	static void settingChoice(ChessBoard &chessBoard);
 
 	//Game Over window
-	static void gameOver(void);
+	static void gameOver(ChessBoard &chessBoard);
 
 	/*
 		New game window

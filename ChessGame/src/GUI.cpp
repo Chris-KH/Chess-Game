@@ -116,7 +116,7 @@ unique_ptr<Pieces> GUI::promoteChoice(unique_ptr<Pieces>& piece) {
     return nullptr;
 }
 
-void GUI::settingChoice(ChessBoard &chessboard) {
+void GUI::settingChoice(ChessBoard &chessBoard) {
     /*
     * @Brief: Open a new setting choice, no close, resize button or title bar
     * @How to close: Click "Save" button to exit
@@ -178,14 +178,68 @@ void GUI::settingChoice(ChessBoard &chessboard) {
         save.drawText(settingWD);
         settingWD.display();
     }
-
-    cout << "Window has been closed!\n";
 }
 
-void GUI::gameOver(void) {
+void GUI::gameOver(ChessBoard& chessBoard) {
     /*
-    * Display text: "White won", "Black won", or "Tied" to announce that the game is over with the corresponding state.
+    * Display text: "White won", "Black won", or "Tied" to announce
+    * that the game was over with the corresponding state.
+    * 
+    * After turning off this window, game reset
     */
+    int windowWidth = 300, windowHeight = 200;
+    float rW, rH;
 
+    // Sprite for game over
+    Font fontGO;
+    if (!fontGO.loadFromFile("../assets/fonts/Vogue.ttf")) {
+        throw runtime_error("Font for Game Over cannot be loaded!\n");
+    }
+    Text textGO;
+    textGO.setFont(fontGO);
+    textGO.setString("GAME OVER");
+    textGO.setCharacterSize(50);
+    textGO.setPosition(windowWidth / 2.0 - textGO.getGlobalBounds().width / 2.0, 25);
+    textGO.setFillColor(Color::Black);
 
+    // Text for statement
+    Font fontS;
+    if (!fontS.loadFromFile("../assets/fonts/Holen Vintage.otf")) {
+        throw runtime_error("Font for Game Over Statement cannot be loaded!\n");
+    }
+    Text textS;
+    textS.setFont(fontS);
+    switch (chessBoard.isOver()) {
+    case 0:
+        throw runtime_error("??? The game should have been ended! ???");
+        break;
+    case 1:
+        textS.setString("White won!");
+        break;
+    case 2:
+        textS.setString("Black won!");
+        break;
+    case 3:
+        textS.setString("Tie!");
+    }
+    textS.setCharacterSize(25);
+    textS.setPosition(windowWidth / 2.0 - textS.getGlobalBounds().width / 2.0, 100);
+    textS.setFillColor(Color::Black);
+    
+    RenderWindow gameOverWD(VideoMode(windowWidth, windowHeight), "Game Over", Style::Titlebar | Style::Close);
+    Event event;
+
+    while (gameOverWD.isOpen()) {
+        while (gameOverWD.pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                gameOverWD.close();
+                chessBoard.newtGame();
+            }
+        }
+
+        gameOverWD.clear(Color(200, 200, 200, 255));
+        gameOverWD.draw(textGO);
+        gameOverWD.draw(textS);
+        gameOverWD.display();
+    }
 }

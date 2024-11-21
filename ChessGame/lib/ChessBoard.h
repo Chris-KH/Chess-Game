@@ -31,7 +31,13 @@ private:
     vector<RectangleShape> checkTiles[2];
 
     // Game over
-    bool gameOver;
+    /*
+    * gameOver = 0: the game is not over
+    * gameOver = 1: white won
+    * gameOver = 2: black won
+    * gameOver = 3: taiwan
+    */
+    int gameOver;
 
     // Undo operator
     // Stack lưu trạng thái bàn cờ
@@ -72,7 +78,7 @@ public:
     bool isCheck(bool color, bool save); // To check if current player is in check
     bool cannotMove(void); // To check if current player is in checkmate
     bool isTie(void); // To check if current player is in draw
-    bool isOver(void) const { return gameOver; }
+    int isOver(void) const { return gameOver; }
 
     // Undo-feature
     void undoMove();

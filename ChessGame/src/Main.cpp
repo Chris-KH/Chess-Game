@@ -43,27 +43,16 @@ int main() {
                 if (event.type == Event::Closed) {
                     window.close();
                 }
-                if (!chessBoard.isOver()) {
+                if (chessBoard.isOver() == 0) {
                     chessBoard.update(event);
+                }
+                else {
+                    GUI::gameOver(chessBoard);
                 }
             }
 
             window.clear();
             chessBoard.draw();
-            if (chessBoard.isOver()) {
-                Texture GO;
-                GO.loadFromFile("../assets/gameover.png");
-                RectangleShape colorRect(sf::Vector2f(200, 150));
-                colorRect.setFillColor(sf::Color(200, 200, 200, 255)); 
-                colorRect.setPosition(365, 385);
-                colorRect.setOutlineThickness(10);
-                colorRect.setOutlineColor(Color::Black);
-                window.draw(colorRect);
-                Sprite GameOver;
-                GameOver.setTexture(GO);
-                GameOver.setPosition(347, 347);
-                window.draw(GameOver);
-            }
             window.display();
         }
     }
