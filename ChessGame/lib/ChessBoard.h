@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "GUI.h"
 #include "Move.h"
+#include "Button.h"
 
 class ChessBoard {
 private:
@@ -38,9 +39,8 @@ private:
     vector<Move> redoStack;
 
     // Buttons
-    RectangleShape undoRect, redoRect, ngRect, sgRect;
-    Font undoFont, redoFont, ngFont, sgFont;
-    Text undoTxt, redoTxt, ngTxt, sgTxt;
+    Button undoBut, redoBut, saveBut, newBut, surrenderBut, settingsBut;
+    Button* selectedBut = nullptr;
 public:
     // Constructor
     ChessBoard(RenderWindow* win, int currentBoardIndex = 0);
@@ -61,6 +61,8 @@ public:
     void handleMousePress(int mouseX, int mouseY);
     void handleMouseRelease(int mouseX, int mouseY);
     void highlightPossibleMove(Pieces* clickedPiece);
+    void handleButtonPress(int mouseX, int mouseY);
+    void handleButtonRelease(int mouseX, int mouseY);
 
     // Player turn
     bool isWhiteTurn(void) const { return this->whiteTurn; }

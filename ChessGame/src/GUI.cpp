@@ -108,3 +108,62 @@ unique_ptr<Pieces> GUI::promoteChoice(unique_ptr<Pieces>& piece) {
 
     return nullptr;
 }
+
+void GUI::settingChoice(void) {
+    /*
+    * @Brief: Open a new setting choice, no close, resize button or title bar
+    * @How to close: Click "Save" button to exit
+    */
+
+    // Text
+    Font font;
+    if (!font.loadFromFile("../assets/fonts/Vogue.ttf")) {
+        throw runtime_error("Cannot load text font in GUI::settingChoice!\n");
+    }
+
+    // Save button
+    Button save;
+    save.setSize(100, 40);
+    save.setPosition(350, 700);
+    save.setText("Save", font);
+    save.setName("save");
+
+    // Open setting window
+    RenderWindow settingWD(sf::VideoMode(500, 800), "Setting", Style::None);
+    Event event;
+    Button* selectedButton = nullptr;
+
+    while (settingWD.isOpen()) {
+        while (settingWD.pollEvent(event)) {
+            Event::MouseButtonEvent mouse = event.mouseButton;
+            if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+                // handle press
+                selectedButton = nullptr;
+                if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
+
+                if (selectedButton) cout << "Press " << selectedButton->getName() << "\n";
+            }
+            else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+                // handle release
+                Button* lastSelectedButton = selectedButton;
+                selectedButton = nullptr;
+                if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
+                
+                if (selectedButton) cout << "Release " << selectedButton->getName() << "\n";
+
+                // If click (press and release) on a button then do operations
+                if(selectedButton && selectedButton == lastSelectedButton) {
+                    if (selectedButton->getName() == "save") {
+                        settingWD.close();
+                    }
+                }
+            }
+        }
+
+        settingWD.clear(Color::Cyan);
+        save.drawText(settingWD);
+        settingWD.display();
+    }
+
+    cout << "Window has been closed!\n";
+}

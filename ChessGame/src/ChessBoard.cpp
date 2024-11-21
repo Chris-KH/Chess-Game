@@ -75,51 +75,32 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     // Game Over
     gameOver = false;
 
-    // Undo
-    // Button (970, 40, 1350, 100)
-    undoRect.setSize(Vector2f(380, 60));
-    undoRect.setFillColor(Color::White);
-    undoRect.setPosition(Vector2f(970, 40));
-    undoRect.setOutlineThickness(5);
-    undoRect.setOutlineColor(Color::Blue);
-    // Text (should be center) ~ (
-    if (!undoFont.loadFromFile("../assets/fonts/Holen Vintage.otf")) {
-        throw runtime_error("Cannot load font for undo button\n");
-    }
-    undoTxt.setFont(undoFont);
-    undoTxt.setFillColor(Color::Black);
-    undoTxt.setString("UNDO");
-    undoTxt.setPosition(Vector2f(1120, 50)); // intuitive cordinates
+    // Buttons
+    undoBut.setSize(50, 50);
+    undoBut.setPosition(950, 30);
+    undoBut.loadTexture("../assets/Button/undo.png");
+    undoBut.setName("undo");
+    redoBut.setSize(50, 50);
+    redoBut.setPosition(1050, 30);
+    redoBut.loadTexture("../assets/Button/redo.png");
+    redoBut.setName("redo");
+    saveBut.setSize(50, 50);
+    saveBut.setPosition(1150, 30);
+    saveBut.loadTexture("../assets/Button/save.png");
+    saveBut.setName("save");
 
-    // Redo
-    // Button (970, 120, 1350, 180)
-    redoRect = undoRect;
-    redoRect.setPosition(Vector2f(970, 120));
-    redoFont = undoFont;
-    redoTxt.setFont(redoFont);
-    redoTxt.setFillColor(Color::Black);
-    redoTxt.setString("REDO");
-    redoTxt.setPosition(Vector2f(1120, 130));
-
-    // New game
-    // Button (970, 200, 1350, 260)
-    ngRect = undoRect;
-    ngRect.setPosition(Vector2f(970, 200));
-    ngFont = undoFont;
-    ngTxt.setFont(ngFont);
-    ngTxt.setFillColor(Color::Black);
-    ngTxt.setString("NEW GAME");
-    ngTxt.setPosition(Vector2f(1070, 210));
-
-    // Save game
-    // Button (970, 280, 1350, 340)
-    sgRect = undoRect;
-    sgRect.setPosition(Vector2f(970, 280));
-    sgFont = undoFont;
-    sgTxt.setFont(sgFont);
-    sgTxt.setFillColor(Color::Black);
-    sgTxt.setString("SAVE GAME");
-    sgTxt.setPosition(Vector2f(1070, 290));
+    newBut.setSize(50, 50);
+    newBut.setPosition(950, 130);
+    newBut.loadTexture("../assets/Button/new.png");
+    newBut.setName("new");
+    surrenderBut.setSize(50, 50);
+    surrenderBut.setPosition(1050, 130);
+    surrenderBut.loadTexture("../assets/Button/surrender.png");
+    surrenderBut.setName("surrender");
+    settingsBut.setSize(50, 50);
+    settingsBut.setPosition(1150, 130);
+    settingsBut.loadTexture("../assets/Button/settings.png");
+    settingsBut.setName("settings");
 }
 
 void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
@@ -224,12 +205,14 @@ void ChessBoard::update(const Event& event) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMousePress(mouseX, mouseY);
+        handleButtonPress(mouseX, mouseY);
     }
     // Nếu thả chuột trái
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMouseRelease(mouseX, mouseY);
+        handleButtonRelease(mouseX, mouseY);
         if (isCheck(whiteTurn, true)) {
             if (cannotMove()) {
                 gameOver = true; // Checkmate
@@ -267,14 +250,13 @@ void ChessBoard::draw() {
     }
 
     // Buttons
-    window->draw(undoRect);
-    window->draw(undoTxt);
-    window->draw(redoRect);
-    window->draw(redoTxt);
-    window->draw(ngRect);
-    window->draw(ngTxt);
-    window->draw(sgRect);
-    window->draw(sgTxt);
+    undoBut.drawSprite(*window);
+    redoBut.drawSprite(*window);
+    saveBut.drawSprite(*window);
+
+    newBut.drawSprite(*window);
+    surrenderBut.drawSprite(*window);
+    settingsBut.drawSprite(*window);
 }
 
 size_t ChessBoard::countPieces() {
@@ -479,6 +461,36 @@ void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
     highlightTile.setPosition(65 + selectedPiece->getCol() * 100, 65 + selectedPiece->getRow() * 100); // Đặt vị trí ô tô màu với viền
     highlightTile.setFillColor(Color(100, 255, 100, 128)); // Màu xanh
     highlightTiles.push_back(highlightTile);
+}
+
+void ChessBoard::handleButtonPress(int mouseX, int mouseY) {
+    // Find which button did the mouse press
+    selectedBut = nullptr;
+    if (undoBut.contain(mouseX, mouseY)) selectedBut = &undoBut;
+    else if (redoBut.contain(mouseX, mouseY)) selectedBut = &redoBut;
+    else if (saveBut.contain(mouseX, mouseY)) selectedBut = &saveBut;
+    else if (newBut.contain(mouseX, mouseY)) selectedBut = &newBut;
+    else if (surrenderBut.contain(mouseX, mouseY)) selectedBut = &surrenderBut;
+    else if (settingsBut.contain(mouseX, mouseY)) selectedBut = &settingsBut;
+}
+
+void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
+    // Record the last button pressed
+    Button* lastBut = selectedBut;
+    // Find which button did the mouse release
+    selectedBut = nullptr;
+    if (undoBut.contain(mouseX, mouseY)) selectedBut = &undoBut;
+    else if (redoBut.contain(mouseX, mouseY)) selectedBut = &redoBut;
+    else if (saveBut.contain(mouseX, mouseY)) selectedBut = &saveBut;
+    else if (newBut.contain(mouseX, mouseY)) selectedBut = &newBut;
+    else if (surrenderBut.contain(mouseX, mouseY)) selectedBut = &surrenderBut;
+    else if (settingsBut.contain(mouseX, mouseY)) selectedBut = &settingsBut;
+    // If the button clicked the same with the button released then do operation(s) on this
+    if (selectedBut && selectedBut == lastBut) {
+        if (selectedBut->getName() == "settings") {
+            GUI::settingChoice();
+        }
+    }
 }
 
 // Player turn

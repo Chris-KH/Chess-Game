@@ -17,13 +17,16 @@ using namespace sf;
 #include "Rook.h"
 #include "Knight.h"
 #include "Bishop.h"
-#include "ChessBoard.h"
+#include "Button.h"
 
 class GUI {
 	friend class ChessBoard;
 public:
 	//Promotion window
 	static unique_ptr<Pieces> promoteChoice(unique_ptr<Pieces>& piece);
+
+	//Setting window
+	static void settingChoice(void);
 
 	/*
 		New game window
