@@ -16,7 +16,7 @@ void Button::setSpriteButton(std::string name, std::string imagePath, int width,
 	// Set back rectangle
 	rectangle.setOutlineThickness(5);
 	rectangle.setFillColor(Color::White);
-	rectangle.setOutlineColor(Color(100, 100, 100, 255));
+	rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64));
 	rectangle.setSize(Vector2f(width + 20, height + 20)); // Rectangle's thickness is 20 / 2 = 10
 	rectangle.setPosition(posX - 10, posY - 10); // Minus rectangle's thickness: -10
 }
@@ -42,7 +42,7 @@ void Button::setTextButton(std::string name, std::string content, std::string fo
 	// Set back rectangle
 	rectangle.setOutlineThickness(5);
 	rectangle.setFillColor(Color::White);
-	rectangle.setOutlineColor(Color(100, 100, 100, 255));
+	rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64));
 	rectangle.setSize(Vector2f(width + 20, height + 20));
 	rectangle.setPosition(posX + (float)text.getGlobalBounds().width / 2.0 - width / 2.0 - 10,
 						  posY + (float)text.getGlobalBounds().height / 2.0 - height / 2.0 - 10);

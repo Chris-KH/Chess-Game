@@ -51,7 +51,7 @@ int main() {
                 }
             }
 
-            window.clear();
+            window.clear(Color(60, 60, 60, 255));
             chessBoard.draw();
             window.display();
         }
