@@ -104,10 +104,8 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
 }
 
 ChessBoard::~ChessBoard() {
-    for (int i = 0; i < (int)undoStack.size(); i++) delete undoStack[i];
-    for (int i = 0; i < (int)redoStack.size(); i++) delete redoStack[i];
-    undoStack.clear();
-    redoStack.clear();
+    freeUndoStack();
+    freeRedoStack();
 }
 
 void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
@@ -386,12 +384,14 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             //Check enPassant
             if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1 && !deletePiece) {
                 if (board[row][col]->getColor()) {
-                    board[row + 1][col].reset();
+                    curMove->setPieceCaptured(board[row + 1][col]);
                     curMove->setEnPassant(true);
+                    board[row + 1][col].reset();
                 }
                 if (!board[row][col]->getColor()) {
-                    board[row - 1][col].reset();
+                    curMove->setPieceCaptured(board[row - 1][col]);
                     curMove->setEnPassant(true);
+                    board[row - 1][col].reset();
                 }
             }
 
@@ -432,6 +432,7 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             }
 
             undoStack.push_back(curMove);
+            freeRedoStack();
             if (justMovePiece) justMovePiece->setJustMove(false);
             this->justMovePiece = board[row][col].get();
             if (justMovePiece) justMovePiece->setJustMove(true);
@@ -869,7 +870,7 @@ bool ChessBoard::isTie(void) {
 
 // Undo-feature
 void ChessBoard::undoMove() {
-    if (undoStack.empty()) return;
+    if (undoStack.empty() == true) return;
     Move* move = undoStack.back();
     undoStack.pop_back();
     redoStack.push_back(move);
@@ -878,35 +879,64 @@ void ChessBoard::undoMove() {
     pair<int, int> fromPosition = move->getFrom();
     pair<int, int> toPosition = move->getTo();
 
-    //Undo pieceMoved position
-    board[fromPosition.first][fromPosition.second].reset();
-    board[fromPosition.first][fromPosition.second] = move->getPieceMoved()->clone();
-    board[fromPosition.first][fromPosition.second]->setPosition(fromPosition.second, fromPosition.first);
+    if (move->getPromotion() == true) {
+        board[toPosition.first][toPosition.second].reset();
+        board[toPosition.first][toPosition.second] = move->getPieceCaptured()->clone();
+        board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
+
+        board[fromPosition.first][fromPosition.second] = move->getPieceMoved()->clone();
+        board[fromPosition.first][fromPosition.second]->setPosition(fromPosition.second, fromPosition.first);
+    }
+    else if (move->getEnPassant() == true) {
+        board[fromPosition.first][fromPosition.second] = std::move(board[toPosition.first][toPosition.second]);
+        board[fromPosition.first][fromPosition.second]->setPosition(fromPosition.second, fromPosition.first);
+        if (board[fromPosition.first][fromPosition.second]->getColor()) {
+            board[toPosition.first + 1][toPosition.second] = move->getPieceCaptured()->clone();
+            board[toPosition.first + 1][toPosition.second]->setPosition(toPosition.second, toPosition.first + 1);
+        }
+        else if (!board[fromPosition.first][fromPosition.second]->getColor()) {
+            board[toPosition.first - 1][toPosition.second] = move->getPieceCaptured()->clone();
+            board[toPosition.first - 1][toPosition.second]->setPosition(toPosition.second, toPosition.first - 1);
+        }
+    }
+    else if (move->getCastling() == true) {
+        int castlingRow = (move->getPieceMoved()->getColor() ? 7 : 0);
+        if (move->getIsKingSide() == true) {
+            //Reset rook move
+            board[castlingRow][7] = std::move(board[castlingRow][5]);
+            board[castlingRow][7]->setPosition(7, castlingRow);
+
+            //Reset king move
+            board[castlingRow][4] = std::move(board[castlingRow][6]);
+            board[castlingRow][4]->setPosition(4, castlingRow);
+        }
+        else {
+            //Reset rook move
+            board[castlingRow][0] = std::move(board[castlingRow][3]);
+            board[castlingRow][0]->setPosition(0, castlingRow);
+
+            //Reset king move
+            board[castlingRow][4] = std::move(board[castlingRow][2]);
+            board[castlingRow][4]->setPosition(4, castlingRow);
+        }
+    }
+    else {
+        board[fromPosition.first][fromPosition.second] = std::move(board[toPosition.first][toPosition.second]);
+        board[fromPosition.first][fromPosition.second]->setPosition(fromPosition.second, fromPosition.first);
+        if (move->getPieceCaptured()) {
+            board[toPosition.first][toPosition.second] = move->getPieceCaptured()->clone();
+            board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
+        }
+    }
 
     //Set turn
     whiteTurn = board[fromPosition.first][fromPosition.second]->getColor();
 
-    if (move->getPromotion() == true) {
-        board[toPosition.first][toPosition.second].reset();
-    }
-    else if (move->getEnPassant() == true) {
-
-    }
-    else if (move->getCastling() == true) {
-
-    }
-    else {
-        board[toPosition.first][toPosition.second].reset();
-        if (move->getPieceCaptured()) {
-            board[toPosition.first][toPosition.second] = move->getPieceCaptured()->clone();
-            board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
-            this->numPieces++;
-        }    
-    }
+    this->numPieces = countPieces();
 }
 
 void ChessBoard::redoMove() {
-    if (redoStack.empty()) return;
+    if (redoStack.empty() == true) return;
     Move* move = redoStack.back();
     redoStack.pop_back();
     undoStack.push_back(move);
@@ -917,31 +947,64 @@ void ChessBoard::redoMove() {
     pair<int, int> toPosition = move->getTo();
 
     //Undo pieceMoved position
-    board[fromPosition.first][fromPosition.second].reset();
     
     if (move->getPromotion() == true) {
+        board[fromPosition.first][fromPosition.second].reset();
         board[toPosition.first][toPosition.second].reset();
         board[toPosition.first][toPosition.second] = move->getPromotionPiece()->clone();
         board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
     }
     else if (move->getEnPassant() == true) {
-
+        board[toPosition.first][toPosition.second] = std::move(board[fromPosition.first][fromPosition.second]);
+        board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
+        if (board[toPosition.first][toPosition.second]->getColor()) {
+            board[toPosition.first + 1][toPosition.second].reset();
+        }
+        if (!board[toPosition.first][toPosition.second]->getColor()) {
+            board[toPosition.first - 1][toPosition.second].reset();
+        }
     }
     else if (move->getCastling() == true) {
+        int castlingRow = (move->getPieceMoved()->getColor() ? 7 : 0);
+        if (move->getIsKingSide() == true) {
+            //Make rook move
+            board[castlingRow][5] = std::move(board[castlingRow][7]);
+            board[castlingRow][5]->setPosition(5, castlingRow);
 
+            //Make king move
+            board[castlingRow][6] = std::move(board[castlingRow][4]);
+            board[castlingRow][6]->setPosition(6, castlingRow);
+        }
+        else {
+            //Make rook move
+            board[castlingRow][3] = std::move(board[castlingRow][0]);
+            board[castlingRow][3]->setPosition(3, castlingRow);
+
+            //Make king move
+            board[castlingRow][2] = std::move(board[castlingRow][4]);
+            board[castlingRow][2]->setPosition(2, castlingRow);
+        }
     }
     else {
         board[toPosition.first][toPosition.second].reset();
-        board[toPosition.first][toPosition.second] = move->getPieceMoved()->clone();
+        board[toPosition.first][toPosition.second] = std::move(board[fromPosition.first][fromPosition.second]);
         board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
     }
 
     //Set turn
     whiteTurn = !board[toPosition.first][toPosition.second]->getColor();
 
-    if (move->getPieceCaptured()) {
-        this->numPieces--;
-    }
+    this->numPieces = countPieces();
+}
+
+void ChessBoard::freeUndoStack() {
+    for (int i = 0; i < (int)undoStack.size(); i++) delete undoStack[i];
+    undoStack.clear();
+}
+
+void ChessBoard::freeRedoStack() {
+    for (int i = 0; i < (int)redoStack.size(); i++) delete redoStack[i];
+    redoStack.clear();
 }
 
 //Reset game (new game)
@@ -1007,10 +1070,8 @@ void ChessBoard::newtGame() {
     gameOver = false;
 
     // Clear stack
-    for (int i = 0; i < (int)undoStack.size(); i++) delete undoStack[i];
-    for (int i = 0; i < (int)redoStack.size(); i++) delete redoStack[i];
-    undoStack.clear();
-    redoStack.clear();
+    freeUndoStack();
+    freeRedoStack();
 
     //
     justMovePiece = nullptr;
@@ -1022,7 +1083,10 @@ void ChessBoard::newtGame() {
 
 //Save game
 void ChessBoard::saveGame() {
-
+    /*
+        This feature i think we will use Algebraic Notation to store the current chess board
+        Information about castling, promotion, en passant...
+    */
 }
 
 //Load game
