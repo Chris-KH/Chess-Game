@@ -45,7 +45,7 @@ private:
     vector<Move*> redoStack;
 
     // Buttons
-    Button undoBut, redoBut, saveBut, newBut, surrenderBut, settingsBut;
+    Button undoBut, redoBut, saveBut, newBut, surrenderBut, settingBut;
     Button* selectedBut = nullptr;
 public:
     // Constructor

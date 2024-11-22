@@ -130,10 +130,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
 
     // Save button
     Button save;
-    save.setSize(100, 40);
-    save.setPosition(350, 700);
-    save.setText("Save", font);
-    save.setName("save");
+    save.setTextButton("save", "Save", "../assets/fonts/Vogue.ttf", 100, 40, 350, 700);
 
     // Open setting window
     RenderWindow settingWD(sf::VideoMode(500, 800), "Setting", Style::Close | Style::Titlebar);
@@ -252,15 +249,16 @@ void GUI::gameOver(ChessBoard& chessBoard) {
 }
 
 void GUI::newGame(void) {
-    Button onePButton, twoPButton;
+    /*Button onePButton, twoPButton;
     onePButton.setName("oneP");
     onePButton.setPosition(25, 25);
     onePButton.setSize(50, 50);
-    onePButton.loadTexture("../assets/New Game/onePlayer.png");
+    onePButton.setSpriteButton("../assets/New Game/onePlayer.png");
+
     twoPButton.setName("twoP");
     twoPButton.setPosition(25, 125);
     twoPButton.setSize(50, 50);
-    twoPButton.loadTexture("../assets/New Game/twoPlayer.png");
+    twoPButton.setSpriteButton("../assets/New Game/twoPlayer.png");
     
 
     Image icon;
@@ -284,5 +282,5 @@ void GUI::newGame(void) {
         onePButton.drawSprite(newGameWD);
         twoPButton.drawSprite(newGameWD);
         newGameWD.display();
-    }
+    }*/
 }
