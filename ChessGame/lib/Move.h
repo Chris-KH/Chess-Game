@@ -20,7 +20,7 @@ private:
     castlingRights[1][0]: Black's king-side castling right (short castling).
     castlingRights[1][1]: Black's queen-side castling right (long castling).
     */
-    bool castlingRights[2][2];     
+    bool isKingSide;     
 public:
     Move();
     Move(int fromRow, int fromCol, int toRow, int toCol);
@@ -30,9 +30,11 @@ public:
     void setCastling(bool isCastling);
     void setPromotion(bool isPromotion);
     void setEnPassant(bool isEnPassant);
+    void setIsKingSide(bool isKingSide);
     bool getCastling() const;
     bool getPromotion() const;
     bool getEnPassant() const;
+    bool getIsKingSide() const;
 
     void setPieceMoved(unique_ptr<Pieces>& pieceMoved);
     void setPieceCaptured(unique_ptr<Pieces>& pieceCaptured);
