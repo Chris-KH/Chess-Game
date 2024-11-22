@@ -84,6 +84,8 @@ public:
     // Undo-feature
     void undoMove();
     void redoMove();
+    void freeUndoStack();
+    void freeRedoStack();
 
     //Reset game (new game)
     void newtGame();
