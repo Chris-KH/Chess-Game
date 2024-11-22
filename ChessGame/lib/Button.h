@@ -23,7 +23,8 @@ private:
 public:
 	Button() { width = height = posX = posY = 0; }
 	void setSpriteButton(std::string name, std::string imagePath, int width, int height, int posX, int posY); // Set sprite with background rectangle
-	void setTextButton(std::string name, std::string text, std::string fontPath, int width, int height, int posX, int posY); // Set text with background rectangle
+	void setTextButton(std::string name, std::string text, std::string fontPath, int width, int height, int posX, int posY, int textX, int textY); // Set text with background rectangle
+	void setSpriteAndTextButton(std::string name, std::string imagePath, std::string content, std::string fontPath, int width, int height, int posX, int posY, int spriteWidth, int spriteHeight, int spriteX, int spriteY, int textWidth, int textHeight, int textX, int textY); // Set sprite, text, and a background rectangle
 	std::string getName(void) { return name; }
 	void drawSprite(RenderWindow& window); // Draw sprite
 	void drawText(RenderWindow& window); // Draw text
