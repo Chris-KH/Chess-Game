@@ -1014,7 +1014,6 @@ void ChessBoard::newtGame() {
         Another setting
     */
 
-
     // CLear old pieces
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
@@ -1087,7 +1086,10 @@ void ChessBoard::newtGame() {
 
 //Save game
 void ChessBoard::saveGame() {
-
+    /*
+        This feature i think we will use Algebraic Notation to store the current chess board
+        Information about castling, promotion, en passant...
+    */
 }
 
 //Load game
