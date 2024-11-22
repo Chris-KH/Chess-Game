@@ -36,6 +36,6 @@ public:
 		New game window
 		Two option, AI or Human
 	*/
-	static void newGame(void);
+	static void newGame(ChessBoard& chessBoard);
 };
 

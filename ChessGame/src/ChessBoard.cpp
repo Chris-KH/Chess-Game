@@ -991,7 +991,7 @@ void ChessBoard::freeRedoStack() {
 
 //Reset game (new game)
 void ChessBoard::newtGame() {
-    GUI::newGame();
+    GUI::newGame(*this);
 
     // CLear old pieces
     for (int i = 0; i < 8; i++) {

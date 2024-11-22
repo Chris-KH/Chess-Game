@@ -130,7 +130,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
 
     // Save button
     Button save;
-    save.setTextButton("save", "Save", "../assets/fonts/Vogue.ttf", 100, 40, 350, 700);
+    save.setTextButton("save", "Save", "../assets/fonts/Vogue.ttf", 90, 25, 350, 700, 350, 687.5);
 
     // Open setting window
     RenderWindow settingWD(sf::VideoMode(500, 800), "Setting", Style::Close | Style::Titlebar);
@@ -248,18 +248,10 @@ void GUI::gameOver(ChessBoard& chessBoard) {
     }
 }
 
-void GUI::newGame(void) {
-    /*Button onePButton, twoPButton;
-    onePButton.setName("oneP");
-    onePButton.setPosition(25, 25);
-    onePButton.setSize(50, 50);
-    onePButton.setSpriteButton("../assets/New Game/onePlayer.png");
-
-    twoPButton.setName("twoP");
-    twoPButton.setPosition(25, 125);
-    twoPButton.setSize(50, 50);
-    twoPButton.setSpriteButton("../assets/New Game/twoPlayer.png");
-    
+void GUI::newGame(ChessBoard& chessBoard) {
+    Button onePButton, twoPButton;
+    onePButton.setSpriteAndTextButton("playerVersusAI", "../assets/Button/playerVersusAI.png", "Player vs. AI", "../assets/fonts/CherryBombOne.ttf", 420, 50, 40, 40, 50, 50, 40, 40, 350, 30, 110, 32.5);
+    twoPButton.setSpriteAndTextButton("playerVersusPlayer", "../assets/Button/playerVersusPlayer.png", "Player vs. Player", "../assets/fonts/CherryBombOne.ttf", 420, 50, 40, 170, 50, 50, 40, 170, 350, 30, 110, 162.5);
 
     Image icon;
     if (!icon.loadFromFile("../assets/NewGameIcon.png")) {
@@ -267,20 +259,44 @@ void GUI::newGame(void) {
         return;
     }
 
-    int wdWidth = 500, wdHeight = 500;
+    int wdWidth = 500, wdHeight = 270; // can be modified later
     RenderWindow newGameWD(VideoMode(wdWidth, wdHeight), "New Game", Style::Titlebar | Style::Close);
     newGameWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     Event event;
+    Event::MouseButtonEvent mouse;
+    Button* selectedButton = nullptr;
 
     while (newGameWD.isOpen()) {
         while (newGameWD.pollEvent(event)) {
+            mouse = event.mouseButton;
             if (event.type == Event::Closed) {
                 newGameWD.close();
             }
+            else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+                selectedButton = nullptr;
+                if (onePButton.contain(mouse.x, mouse.y)) selectedButton = &onePButton;
+                else if (twoPButton.contain(mouse.x, mouse.y)) selectedButton = &twoPButton;
+            }
+            else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+                Button* lastSelectedButton = selectedButton;
+                selectedButton = nullptr;
+                if (onePButton.contain(mouse.x, mouse.y)) selectedButton = &onePButton;
+                else if (twoPButton.contain(mouse.x, mouse.y)) selectedButton = &twoPButton;
+                if (selectedButton && lastSelectedButton == selectedButton) {
+                    if (selectedButton->getName() == "playerVersusAI") {
+                        // Start player vs. AI mode
+                        newGameWD.close();
+                    }
+                    else if(selectedButton->getName() == "playerVersusPlayer") {
+                        // Start player vs. player mode
+                        newGameWD.close();
+                    }
+                }
+            }
         }
         newGameWD.clear();
-        onePButton.drawSprite(newGameWD);
-        twoPButton.drawSprite(newGameWD);
+        onePButton.drawAll(newGameWD);
+        twoPButton.drawAll(newGameWD);
         newGameWD.display();
-    }*/
+    }
 }
