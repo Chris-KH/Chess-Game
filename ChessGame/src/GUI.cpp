@@ -250,3 +250,39 @@ void GUI::gameOver(ChessBoard& chessBoard) {
         gameOverWD.display();
     }
 }
+
+void GUI::newGame(void) {
+    Button onePButton, twoPButton;
+    onePButton.setName("oneP");
+    onePButton.setPosition(25, 25);
+    onePButton.setSize(50, 50);
+    onePButton.loadTexture("../assets/New Game/onePlayer.png");
+    twoPButton.setName("twoP");
+    twoPButton.setPosition(25, 125);
+    twoPButton.setSize(50, 50);
+    twoPButton.loadTexture("../assets/New Game/twoPlayer.png");
+    
+
+    Image icon;
+    if (!icon.loadFromFile("../assets/NewGameIcon.png")) {
+        cerr << "Failed to load icon!" << '\n';
+        return;
+    }
+
+    int wdWidth = 500, wdHeight = 500;
+    RenderWindow newGameWD(VideoMode(wdWidth, wdHeight), "New Game", Style::Titlebar | Style::Close);
+    newGameWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+    Event event;
+
+    while (newGameWD.isOpen()) {
+        while (newGameWD.pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                newGameWD.close();
+            }
+        }
+        newGameWD.clear();
+        onePButton.drawSprite(newGameWD);
+        twoPButton.drawSprite(newGameWD);
+        newGameWD.display();
+    }
+}

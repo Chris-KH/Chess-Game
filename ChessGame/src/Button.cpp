@@ -46,6 +46,12 @@ void Button::drawText(RenderWindow& window) {
 	window.draw(text);
 }
 
+void Button::drawAll(RenderWindow& window) {
+	window.draw(rectangle);
+	window.draw(sprite);
+	window.draw(text);
+}
+
 bool Button::contain(int x, int y) {
 	return rectangle.getGlobalBounds().contains(x, y);
 }

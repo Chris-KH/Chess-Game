@@ -946,11 +946,7 @@ void ChessBoard::redoMove() {
 
 //Reset game (new game)
 void ChessBoard::newtGame() {
-    /*
-        Call GUI to show a window to choose mode for new game (AI or Human). 
-        Another setting
-    */
-
+    GUI::newGame();
 
     // CLear old pieces
     for (int i = 0; i < 8; i++) {
@@ -1003,7 +999,7 @@ void ChessBoard::newtGame() {
 
     // Player turn
     whiteTurn = true;
-
+        
     // Check
     inCheck[0] = inCheck[1] = false;
 

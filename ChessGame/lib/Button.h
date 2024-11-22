@@ -30,5 +30,6 @@ public:
 	string getName(void) { return name; }
 	void drawSprite(RenderWindow& window); // Draw sprite
 	void drawText(RenderWindow& window); // Draw text
+	void drawAll(RenderWindow& window);
 	bool contain(int x, int y); // Check if point(x, y) lie in the button area
 };

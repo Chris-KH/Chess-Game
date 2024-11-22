@@ -36,5 +36,6 @@ public:
 		New game window
 		Two option, AI or Human
 	*/
+	static void newGame(void);
 };
 
