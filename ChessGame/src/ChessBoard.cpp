@@ -381,6 +381,17 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             board[row][col] = move(board[lastRow][lastCol]);
             board[row][col]->setPosition(col, row);
 
+            //Lưu quân tốt này có thể bắt tốt qua đường bắt ở bên nào bên nào không
+            if (board[row][col]->getType() == "pawn" && (lastRow == 3 || lastRow == 4)) {
+                int direct = (board[row][col]->getColor() ? -1 : 1);
+                if ((lastCol - 1) >= 0 && !board[lastRow + direct][lastCol - 1] && find(possibleMoves.begin(), possibleMoves.end(), make_pair(lastRow + direct, lastCol - 1)) != possibleMoves.end()) {
+                    curMove->setEnPassantLeft('l');
+                }
+                else if ((lastCol + 1) < 8 && !board[lastRow + direct][lastCol + 1] && find(possibleMoves.begin(), possibleMoves.end(), make_pair(lastRow + direct, lastCol + 1)) != possibleMoves.end()) {
+                    curMove->setEnPassantLeft('r');
+                }
+            }
+
             //Check enPassant
             if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1 && !deletePiece) {
                 if (board[row][col]->getColor()) {
@@ -518,7 +529,6 @@ void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
     if (selectedBut && selectedBut == lastBut) {
         if (selectedBut->getName() == "undo") {
             undoMove();
-            cout << "Undo..\n";
         }
         else if (selectedBut->getName() == "redo") {
             redoMove();
@@ -874,7 +884,15 @@ void ChessBoard::undoMove() {
     Move* move = undoStack.back();
     undoStack.pop_back();
     redoStack.push_back(move);
-    cout << "Undo\n";
+    
+    highlightTiles.clear();
+    window->clear();
+    draw();    
+    window->display();
+
+    if (justMovePiece) justMovePiece->setJustMove(false);
+    justMovePiece = nullptr;
+
     //Processing when press undo
     pair<int, int> fromPosition = move->getFrom();
     pair<int, int> toPosition = move->getTo();
@@ -929,6 +947,17 @@ void ChessBoard::undoMove() {
         }
     }
 
+    if (move->getEnPassantLeft() != '0') {
+        if (move->getEnPassantLeft() == 'l') {
+            justMovePiece = board[fromPosition.first][fromPosition.second - 1].get();
+            if (justMovePiece) justMovePiece->setJustMove(true);
+        }
+        else {
+            justMovePiece = board[fromPosition.first][fromPosition.second + 1].get();
+            if (justMovePiece) justMovePiece->setJustMove(true);
+        }
+    }
+
     //Set turn
     whiteTurn = board[fromPosition.first][fromPosition.second]->getColor();
 
@@ -940,7 +969,14 @@ void ChessBoard::redoMove() {
     Move* move = redoStack.back();
     redoStack.pop_back();
     undoStack.push_back(move);
-    cout << "Redo\n";
+    
+    highlightTiles.clear();
+    window->clear();
+    draw();  
+    window->display();
+
+    if (justMovePiece) justMovePiece->setJustMove(false);
+    justMovePiece = nullptr;
 
     //Processing when press redo
     pair<int, int> fromPosition = move->getFrom();

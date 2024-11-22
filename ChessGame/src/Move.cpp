@@ -1,10 +1,12 @@
 ﻿#include"../lib/Move.h"
 
-Move::Move() : fromRow(0), fromCol(0), toRow(0), toCol(0), pieceMoved(nullptr), pieceCaptured(nullptr), promotionPiece(nullptr) {         
+Move::Move() 
+    : fromRow(0), fromCol(0), toRow(0), toCol(0), pieceMoved(nullptr), pieceCaptured(nullptr), promotionPiece(nullptr) {         
     isCastling = false;
     isPromotion = false;                     
     isEnPassant = false;              
     isKingSide = false;
+    enPassantLeft = '0';
 
 }
 
@@ -14,10 +16,11 @@ Move::Move(int fromRow, int fromCol, int toRow, int toCol)
     isPromotion = false;
     isEnPassant = false;
     isKingSide = false;
+    enPassantLeft = '0';
 }
 
 Move::Move(const Move& move)
-    : fromRow(move.fromRow), fromCol(move.fromCol), toRow(move.toRow), toCol(move.toCol), isCastling(move.isCastling), isPromotion(move.isPromotion), isEnPassant(move.isEnPassant), isKingSide(move.isKingSide) {
+    : fromRow(move.fromRow), fromCol(move.fromCol), toRow(move.toRow), toCol(move.toCol), isCastling(move.isCastling), isPromotion(move.isPromotion), isEnPassant(move.isEnPassant), isKingSide(move.isKingSide), enPassantLeft(move.enPassantLeft) {
     pieceMoved = move.pieceMoved->clone();
     pieceCaptured = move.pieceCaptured->clone();
     promotionPiece = move.promotionPiece->clone();
@@ -47,6 +50,10 @@ void Move::setIsKingSide(bool isKingSide) {
     this->isKingSide = isKingSide;
 }
 
+void Move::setEnPassantLeft(char enPassantLeft) {
+    this->enPassantLeft = enPassantLeft;
+}
+
 bool Move::getCastling() const {
     return this->isCastling;
 }
@@ -61,6 +68,10 @@ bool Move::getEnPassant() const {
 
 bool Move::getIsKingSide() const {
     return this->isKingSide;
+}
+
+char Move::getEnPassantLeft() const {
+    return this->enPassantLeft;
 }
 
 void Move::setPieceMoved(unique_ptr<Pieces>& pieceMoved) {
