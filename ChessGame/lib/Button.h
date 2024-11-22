@@ -12,23 +12,21 @@ using namespace sf;
 
 class Button {
 private:
-	int targetWidth = 50, targetHeight = 50;
-	int targetX = 500, targetY = 500;
+	int width, height;
+	int posX, posY;
 	Texture texture;
 	Sprite sprite;
 	Font font;
 	Text text;
 	RectangleShape rectangle;
-	string name;
+	std::string name;
 public:
-	Button() {}
-	void setSize(int w, int h) { targetWidth = w, targetHeight = h; } // Set size
-	void setPosition(int x, int y) { targetX = x, targetY = y; } // Set position
-	void loadTexture(string path); // Set texture, sprite, position, and size
-	void setName(string s) { name = s; }
-	void setText(string s, Font font);
-	string getName(void) { return name; }
+	Button() { width = height = posX = posY = 0; }
+	void setSpriteButton(std::string name, std::string imagePath, int width, int height, int posX, int posY); // Set sprite with background rectangle
+	void setTextButton(std::string name, std::string text, std::string fontPath, int width, int height, int posX, int posY); // Set text with background rectangle
+	std::string getName(void) { return name; }
 	void drawSprite(RenderWindow& window); // Draw sprite
 	void drawText(RenderWindow& window); // Draw text
+	void drawAll(RenderWindow& window);
 	bool contain(int x, int y); // Check if point(x, y) lie in the button area
 };

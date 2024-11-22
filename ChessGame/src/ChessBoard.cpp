@@ -76,31 +76,13 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     gameOver = 0;
 
     // Buttons
-    undoBut.setSize(50, 50);
-    undoBut.setPosition(950, 30);
-    undoBut.loadTexture("../assets/Button/undo.png");
-    undoBut.setName("undo");
-    redoBut.setSize(50, 50);
-    redoBut.setPosition(1050, 30);
-    redoBut.loadTexture("../assets/Button/redo.png");
-    redoBut.setName("redo");
-    saveBut.setSize(50, 50);
-    saveBut.setPosition(1150, 30);
-    saveBut.loadTexture("../assets/Button/save.png");
-    saveBut.setName("save");
+    undoBut.setSpriteButton("undo", "../assets/Button/undo.png", 50, 50, 950, 30);
+    redoBut.setSpriteButton("redo", "../assets/Button/redo.png", 50, 50, 1050, 30);
+    saveBut.setSpriteButton("save", "../assets/Button/save.png", 50, 50, 1150, 30);
 
-    newBut.setSize(50, 50);
-    newBut.setPosition(950, 130);
-    newBut.loadTexture("../assets/Button/new.png");
-    newBut.setName("new");
-    surrenderBut.setSize(50, 50);
-    surrenderBut.setPosition(1050, 130);
-    surrenderBut.loadTexture("../assets/Button/surrender.png");
-    surrenderBut.setName("surrender");
-    settingsBut.setSize(50, 50);
-    settingsBut.setPosition(1150, 130);
-    settingsBut.loadTexture("../assets/Button/settings.png");
-    settingsBut.setName("settings");
+    newBut.setSpriteButton("new", "../assets/Button/new.png", 50, 50, 950, 130);
+    surrenderBut.setSpriteButton("surrender", "../assets/Button/surrender.png", 50, 50, 1050, 130);
+    settingBut.setSpriteButton("setting", "../assets/Button/settings.png", 50, 50, 1150, 130);
 }
 
 ChessBoard::~ChessBoard() {
@@ -261,7 +243,7 @@ void ChessBoard::draw() {
 
     newBut.drawSprite(*window);
     surrenderBut.drawSprite(*window);
-    settingsBut.drawSprite(*window);
+    settingBut.drawSprite(*window);
 }
 
 size_t ChessBoard::countPieces() {
@@ -511,7 +493,7 @@ void ChessBoard::handleButtonPress(int mouseX, int mouseY) {
     else if (saveBut.contain(mouseX, mouseY)) selectedBut = &saveBut;
     else if (newBut.contain(mouseX, mouseY)) selectedBut = &newBut;
     else if (surrenderBut.contain(mouseX, mouseY)) selectedBut = &surrenderBut;
-    else if (settingsBut.contain(mouseX, mouseY)) selectedBut = &settingsBut;
+    else if (settingBut.contain(mouseX, mouseY)) selectedBut = &settingBut;
 }
 
 void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
@@ -524,7 +506,7 @@ void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
     else if (saveBut.contain(mouseX, mouseY)) selectedBut = &saveBut;
     else if (newBut.contain(mouseX, mouseY)) selectedBut = &newBut;
     else if (surrenderBut.contain(mouseX, mouseY)) selectedBut = &surrenderBut;
-    else if (settingsBut.contain(mouseX, mouseY)) selectedBut = &settingsBut;
+    else if (settingBut.contain(mouseX, mouseY)) selectedBut = &settingBut;
     // If the button clicked the same with the button released then do operation(s) on this
     if (selectedBut && selectedBut == lastBut) {
         if (selectedBut->getName() == "undo") {
@@ -542,7 +524,7 @@ void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
         else if (selectedBut->getName() == "surrender") {
             gameOver = whiteTurn + 1;
         }
-        else if (selectedBut->getName() == "settings") {
+        else if (selectedBut->getName() == "setting") {
             GUI::settingChoice(*this);
         }
     }
@@ -1045,10 +1027,7 @@ void ChessBoard::freeRedoStack() {
 
 //Reset game (new game)
 void ChessBoard::newtGame() {
-    /*
-        Call GUI to show a window to choose mode for new game (AI or Human). 
-        Another setting
-    */
+    GUI::newGame();
 
     // CLear old pieces
     for (int i = 0; i < 8; i++) {
@@ -1101,7 +1080,7 @@ void ChessBoard::newtGame() {
 
     // Player turn
     whiteTurn = true;
-
+        
     // Check
     inCheck[0] = inCheck[1] = false;
 
