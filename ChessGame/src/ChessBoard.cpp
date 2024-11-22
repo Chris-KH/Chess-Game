@@ -435,10 +435,6 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             if (justMovePiece) justMovePiece->setJustMove(false);
             this->justMovePiece = board[row][col].get();
             if (justMovePiece) justMovePiece->setJustMove(true);
-
-            if (curMove != nullptr) {
-                delete curMove;
-            }
         }
 
         // Bỏ chọn quân cờ này
