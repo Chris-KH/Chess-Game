@@ -76,12 +76,12 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     gameOver = 0;
 
     // Buttons
-    newBut.setSpriteButton("new", "../assets/Button/new.png", 30, 30, 960, 30);
-    undoBut.setSpriteButton("undo", "../assets/Button/undo.png", 30, 30, 1030, 30);
-    redoBut.setSpriteButton("redo", "../assets/Button/redo.png", 30, 30, 1100, 30);
-    surrenderBut.setSpriteButton("surrender", "../assets/Button/surrender.png", 30, 30, 1170, 30);
-    saveBut.setSpriteButton("save", "../assets/Button/save.png", 30, 30, 1240, 30);
-    settingBut.setSpriteButton("setting", "../assets/Button/settings.png", 30, 30, 1310, 30);
+    newBut.setSpriteButton("new", "../assets/Button/new.png", 35, 35, 960, 30);
+    undoBut.setSpriteButton("undo", "../assets/Button/undo.png", 35, 35, 1035, 30);
+    redoBut.setSpriteButton("redo", "../assets/Button/redo.png", 35, 35, 1110, 30);
+    surrenderBut.setSpriteButton("surrender", "../assets/Button/surrender.png", 35, 35, 1185, 30);
+    saveBut.setSpriteButton("save", "../assets/Button/save.png", 35, 35, 1260, 30);
+    settingBut.setSpriteButton("setting", "../assets/Button/settings.png", 35, 35, 1335, 30);
 }
 
 ChessBoard::~ChessBoard() {
