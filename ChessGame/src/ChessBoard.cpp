@@ -855,7 +855,7 @@ bool ChessBoard::isTie(void) {
         }
     }
 
-    // III. Threefold Repetitin
+    // III. Threefold Repetition
 
     // IV. 50-Move Rule
 
