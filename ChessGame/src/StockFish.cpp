@@ -68,7 +68,6 @@ string Stockfish::getResponse() {
     char buffer[256];
     DWORD dwRead;
     string response;
-    int retryCount = 0;  // Giới hạn số lần thử đọc dữ liệu
 
     while (true) {
         if (ReadFile(hStdoutRead, buffer, sizeof(buffer) - 1, &dwRead, NULL) && dwRead > 0) {
@@ -80,13 +79,6 @@ string Stockfish::getResponse() {
                 response.find("bestmove") != string::npos) {
                 break;
             }
-        }
-        else {
-            retryCount++;
-            if (retryCount > 10) {  // Sau 10 lần không nhận được gì thì dừng
-                break;
-            }
-            Sleep(100);  // Tạm dừng 100ms trước khi thử lại
         }
     }
     cout << response << '\n';

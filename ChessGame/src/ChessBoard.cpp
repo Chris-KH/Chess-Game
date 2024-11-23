@@ -11,7 +11,7 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
             "../assets/Chess Board/ChessBoard4.png",
             "../assets/Chess Board/ChessBoard5.png"
     };
-    currentBoardIndex = currentBoardIndex;
+    this->currentBoardIndex = currentBoardIndex;
 
     // Set texture for chess board
     // Load first texture
@@ -76,13 +76,12 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     gameOver = 0;
 
     // Buttons
-    undoBut.setSpriteButton("undo", "../assets/Button/undo.png", 50, 50, 950, 30);
-    redoBut.setSpriteButton("redo", "../assets/Button/redo.png", 50, 50, 1050, 30);
-    saveBut.setSpriteButton("save", "../assets/Button/save.png", 50, 50, 1150, 30);
-
-    newBut.setSpriteButton("new", "../assets/Button/new.png", 50, 50, 950, 130);
-    surrenderBut.setSpriteButton("surrender", "../assets/Button/surrender.png", 50, 50, 1050, 130);
-    settingBut.setSpriteButton("setting", "../assets/Button/settings.png", 50, 50, 1150, 130);
+    newBut.setSpriteButton("new", "../assets/Button/new.png", 35, 35, 960, 30);
+    undoBut.setSpriteButton("undo", "../assets/Button/undo.png", 35, 35, 1035, 30);
+    redoBut.setSpriteButton("redo", "../assets/Button/redo.png", 35, 35, 1110, 30);
+    surrenderBut.setSpriteButton("surrender", "../assets/Button/surrender.png", 35, 35, 1185, 30);
+    saveBut.setSpriteButton("save", "../assets/Button/save.png", 35, 35, 1260, 30);
+    settingBut.setSpriteButton("setting", "../assets/Button/settings.png", 35, 35, 1335, 30);
 }
 
 ChessBoard::~ChessBoard() {

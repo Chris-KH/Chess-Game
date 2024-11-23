@@ -171,7 +171,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
             }
         }
 
-        settingWD.clear(Color(50, 50, 50, 255));
+        settingWD.clear(Color(60, 60, 60, 255));
         save.drawText(settingWD);
         settingWD.display();
     }

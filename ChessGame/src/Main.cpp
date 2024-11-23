@@ -14,9 +14,10 @@ using namespace sf;
 //Header include
 //#include "../lib/Game.h"
 #include "../lib/ChessBoard.h"
+#include "../lib/StockFish.h"
 
 int main() {
-    // Khởi động Stockfish
+    Stockfish stockfish;
     
     try {
         //Game GameEngine;
@@ -36,7 +37,7 @@ int main() {
 
         //Stockfish stockfish;
 
-        // Vòng lặp chính của chương trình
+        //Main loop
         while (window.isOpen()) {
             Event event;
             while (window.pollEvent(event)) {
@@ -51,7 +52,7 @@ int main() {
                 }
             }
 
-            window.clear();
+            window.clear(Color(60, 60, 60, 255));
             chessBoard.draw();
             window.display();
         }
