@@ -4,6 +4,7 @@ Queen::Queen(bool isWhite, int originCol, int originRow) : Pieces(isWhite, origi
 	vector<string> texturePaths;
 	string color = (isWhite ? "white-" : "black-");
 	this->type = "queen";
+    this->typeKey = (isWhite ? 'Q' : 'q');
 	texturePaths.push_back("../assets/Standard Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Cartoon Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Pixel Theme/" + color + this->type + ".png");
@@ -14,6 +15,10 @@ Queen::Queen(bool isWhite, int originCol, int originRow) : Pieces(isWhite, origi
 
 string Queen::getType() const {
 	return this->type;
+}
+
+char Queen::getTypeKey() const {
+    return this->typeKey;
 }
 
 vector<pair<int, int>> Queen::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {

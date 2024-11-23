@@ -3,8 +3,12 @@
 #include "Move.h"
 #include "Button.h"
 
+#include"Stockfish.h"
+
 class ChessBoard {
 private:
+    Stockfish* stockfish;
+
     RenderWindow* window; // Cửa sổ SFML
     Texture boardTexture; // Texture của bàn cờ
     Sprite boardSprite;   // Sprite để vẽ bàn cờ
@@ -23,9 +27,6 @@ private:
     Pieces* selectedPiece = nullptr;
     Pieces* pieceFollowingMouse = nullptr;
     vector<RectangleShape> highlightTiles; // Danh sách ô cần tô màu
-
-    // Player turn
-    bool whiteTurn;
 
     // Indicate checks
     bool inCheck[2];
@@ -48,9 +49,21 @@ private:
     // Buttons
     Button undoBut, redoBut, saveBut, newBut, surrenderBut, settingBut;
     Button* selectedBut = nullptr;
+
+    //Chess board state
+    bool whiteTurn;
+    int fullMoveNumber;
+    int haftMoveClock;
+    /* 
+        [0] for white
+        [1] for black
+    */
+    bool castlingAvailability[2]; 
+    string enPassantTargetSquare;
+
 public:
     // Constructor
-    ChessBoard(RenderWindow* win, int currentBoardIndex = 0);
+    ChessBoard(RenderWindow* win, Stockfish* stockfish, int currentBoardIndex = 0);
     ~ChessBoard();
 
     // Update các kiểu
@@ -93,11 +106,17 @@ public:
     void freeRedoStack();
 
     //Reset game (new game)
-    void newtGame();
+    void newGame();
 
     //Save game
     void saveGame();
 
     //Load game
     void loadGame();
+
+    //In ChessBoard2.cpp
+    //Move notation
+    //string generateMoveNotation();
+    string generateFEN();
+    //void makeMove();
 };

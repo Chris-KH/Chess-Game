@@ -4,6 +4,7 @@ Bishop::Bishop(bool isWhite, int originCol, int originRow) : Pieces(isWhite, ori
 	vector<string> texturePaths;
 	string color = (isWhite ? "white-" : "black-");
 	this->type = "bishop";
+    this->typeKey = (isWhite ? 'B' : 'b');
 	texturePaths.push_back("../assets/Standard Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Cartoon Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Pixel Theme/" + color + this->type + ".png");
@@ -14,6 +15,10 @@ Bishop::Bishop(bool isWhite, int originCol, int originRow) : Pieces(isWhite, ori
 
 string Bishop::getType() const {
 	return this->type;
+}
+
+char Bishop::getTypeKey() const {
+    return this->typeKey;
 }
 
 vector<pair<int, int>> Bishop::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {

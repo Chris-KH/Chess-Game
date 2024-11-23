@@ -4,6 +4,7 @@ King::King(bool isWhite, int originCol, int originRow) : Pieces(isWhite, originC
 	vector<string> texturePaths;
 	string color = (isWhite ? "white-" : "black-");
 	this->type = "king";
+    this->typeKey = (isWhite ? 'K' : 'k');
 	texturePaths.push_back("../assets/Standard Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Cartoon Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Pixel Theme/" + color + this->type + ".png");
@@ -14,6 +15,10 @@ King::King(bool isWhite, int originCol, int originRow) : Pieces(isWhite, originC
 
 string King::getType() const {
 	return this->type;
+}
+
+char King::getTypeKey() const {
+    return this->typeKey;
 }
 
 vector<pair<int, int>> King::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {

@@ -1,9 +1,10 @@
 ﻿#include"../lib/ChessBoard.h"
 
 // Thiết lập các thứ
-ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
+ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoardIndex) {
     // Khởi tạo
     window = win;
+    this->stockfish = stockfish;
     boardFiles = {
             "../assets/Chess Board/ChessBoard1.png",
             "../assets/Chess Board/ChessBoard2.png",
@@ -75,6 +76,10 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
 
     // Player turn
     whiteTurn = true;
+    fullMoveNumber = 1;
+    haftMoveClock = 0;
+    for (int i = 0; i < 2; i++) castlingAvailability[i] = true;
+    enPassantTargetSquare = "";
 
     // Check
     inCheck[0] = inCheck[1] = false;
@@ -89,6 +94,8 @@ ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
     surrenderBut.setSpriteButton("surrender", "../assets/Button/surrender.png", 35, 35, 1185, 30);
     saveBut.setSpriteButton("save", "../assets/Button/save.png", 35, 35, 1260, 30);
     settingBut.setSpriteButton("setting", "../assets/Button/settings.png", 35, 35, 1335, 30);
+
+    cout << generateFEN() << '\n';
 }
 
 ChessBoard::~ChessBoard() {
@@ -472,7 +479,7 @@ void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
         int targetCol = move.second;
 
         RectangleShape highlightTile(Vector2f(100, 100)); // Kích thước ô là 100x100
-        highlightTile.setPosition(65 + targetCol * 100, 65 + targetRow * 100); // Đặt vị trí ô tô màu với viền
+        highlightTile.setPosition(float(65 + targetCol * 100), float(65 + targetRow * 100)); // Đặt vị trí ô tô màu với viền
 
         // Nếu ô chứa quân địch, tô màu đỏ; nếu không, tô màu xanh
         if (board[targetRow][targetCol] && board[targetRow][targetCol]->getColor() != selectedPiece->getColor()) {
@@ -486,7 +493,7 @@ void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
     }
     // Tô cả ô đang đứng
     RectangleShape highlightTile(Vector2f(100, 100)); // Kích thước ô là 100x100
-    highlightTile.setPosition(65 + selectedPiece->getCol() * 100, 65 + selectedPiece->getRow() * 100); // Đặt vị trí ô tô màu với viền
+    highlightTile.setPosition(float(65 + selectedPiece->getCol() * 100), float(65 + selectedPiece->getRow() * 100)); // Đặt vị trí ô tô màu với viền
     highlightTile.setFillColor(Color(100, 255, 100, 128)); // Màu xanh
     highlightTiles.push_back(highlightTile);
 }
@@ -525,7 +532,7 @@ void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
             saveGame();
         }
         else if (selectedBut->getName() == "new") {
-            newtGame();
+            newGame();
         }
         else if (selectedBut->getName() == "surrender") {
             gameOver = whiteTurn + 1;
@@ -643,7 +650,7 @@ bool ChessBoard::isCheck(bool color, bool save) {
                 if (curCheck) {
                     if (save) {
                         inCheck[color] = true;
-                        tile.setPosition(Vector2f(65 + j * 100, 65 + i * 100));
+                        tile.setPosition(Vector2f(float(65 + j * 100), float(65 + i * 100)));
                         checkTiles[color].push_back(tile);
                     }
                     else {
@@ -1032,7 +1039,7 @@ void ChessBoard::freeRedoStack() {
 }
 
 //Reset game (new game)
-void ChessBoard::newtGame() {
+void ChessBoard::newGame() {
     GUI::newGame(*this);
 
     // CLear old pieces
@@ -1086,6 +1093,10 @@ void ChessBoard::newtGame() {
 
     // Player turn
     whiteTurn = true;
+    fullMoveNumber = 1;
+    haftMoveClock = 0;
+    for (int i = 0; i < 2; i++) castlingAvailability[i] = true;
+    enPassantTargetSquare = "";
         
     // Check
     inCheck[0] = inCheck[1] = false;

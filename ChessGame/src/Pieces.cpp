@@ -3,6 +3,7 @@
 Pieces::Pieces() {
     this->currentTextureIndex = 0;
     this->type = "";
+    this->typeKey = '0';
     this->isWhite = true;
     this->chosen = false;
 }
@@ -13,11 +14,13 @@ Pieces::Pieces(bool isWhite, int originCol, int originRow) {
     this->originRow = originRow;
     this->originCol = originCol;
     this->chosen = false;
+    this->typeKey = '0';
 }
 
 Pieces::Pieces(const Pieces& piece) :
     sprite(piece.sprite),
     type(piece.type),
+    typeKey(piece.typeKey),
     currentTextureIndex(piece.currentTextureIndex),
     textures(piece.textures),
     isWhite(piece.isWhite),
@@ -97,18 +100,14 @@ void Pieces::draw(RenderWindow& window) {
     window.draw(sprite);
 }
 
-string Pieces::getType() const {
-    return type;
-}
-
 void Pieces::setInitialPosition(const Vector2f& position) {
     this->initialPosition = position;
 }
 
 // Drag a piece
 void Pieces::followMouse(Vector2i mousePos) {
-    float x = mousePos.x - sprite.getGlobalBounds().width / 2.0;
-    float y = mousePos.y - sprite.getGlobalBounds().height / 2.0;
+    float x = mousePos.x - sprite.getGlobalBounds().width / 2.0f;
+    float y = mousePos.y - sprite.getGlobalBounds().height / 2.0f;
     sprite.setPosition(x, y);
 }
 

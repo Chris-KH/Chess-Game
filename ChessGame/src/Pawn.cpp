@@ -4,6 +4,7 @@ Pawn::Pawn(bool isWhite, int originCol, int originRow) : Pieces(isWhite, originC
 	vector<string> texturePaths;
 	string color = (isWhite ? "white-" : "black-");
 	this->type = "pawn";
+    this->typeKey = (isWhite ? 'P' : 'p');
 	texturePaths.push_back("../assets/Standard Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Cartoon Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Pixel Theme/" + color + this->type + ".png");
@@ -14,6 +15,10 @@ Pawn::Pawn(bool isWhite, int originCol, int originRow) : Pieces(isWhite, originC
 
 string Pawn::getType() const {
 	return this->type;
+}
+
+char Pawn::getTypeKey() const {
+    return this->typeKey;
 }
 
 vector<pair<int, int>> Pawn::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {
