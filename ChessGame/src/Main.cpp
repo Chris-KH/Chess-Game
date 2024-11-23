@@ -17,11 +17,12 @@ using namespace sf;
 #include "../lib/StockFish.h"
 
 int main() {
-    Stockfish stockfish;
+    
     
     try {
         //Game GameEngine;
         //GameEngine.startGame();
+        Stockfish stockfish;
         RenderWindow window(VideoMode(1400, 930), "Chess Game", Style::Close | Style::Titlebar);
         Image icon;
         if (!icon.loadFromFile("../assets/ChessGameIcon.png")) {
@@ -32,7 +33,7 @@ int main() {
         // Set icon for window
         window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-        ChessBoard chessBoard(&window, 0);
+        ChessBoard chessBoard(&window, &stockfish);
         cout << "Created a chessboard\n";
 
         //Stockfish stockfish;

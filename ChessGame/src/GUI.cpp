@@ -130,7 +130,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
 
     // Save button
     Button save;
-    save.setTextButton("save", "Save", "../assets/fonts/Vogue.ttf", 90, 25, 350, 700, 350, 687.5);
+    save.setTextButton("save", "Save", "../assets/fonts/Vogue.ttf", 90, 25, 350, 700, 355, 688);
 
     // Open setting window
     RenderWindow settingWD(sf::VideoMode(500, 800), "Setting", Style::Close | Style::Titlebar);
@@ -220,7 +220,7 @@ void GUI::gameOver(ChessBoard& chessBoard) {
         textS.setString("Tie!");
     }
     textS.setCharacterSize(25);
-    textS.setPosition(windowWidth / 2.0 - textS.getGlobalBounds().width / 2.0, 100);
+    textS.setPosition(windowWidth / 2.0f - textS.getGlobalBounds().width / 2.0f, 100);
     textS.setFillColor(Color::Black);
     
     RenderWindow gameOverWD(VideoMode(windowWidth, windowHeight), "Game Over", Style::Titlebar | Style::Close);
@@ -250,8 +250,8 @@ void GUI::gameOver(ChessBoard& chessBoard) {
 
 void GUI::newGame(ChessBoard& chessBoard) {
     Button onePButton, twoPButton;
-    onePButton.setSpriteAndTextButton("playerVersusAI", "../assets/Button/playerVersusAI.png", "Player vs. AI", "../assets/fonts/CherryBombOne.ttf", 420, 50, 40, 40, 50, 50, 40, 40, 350, 30, 110, 32.5);
-    twoPButton.setSpriteAndTextButton("playerVersusPlayer", "../assets/Button/playerVersusPlayer.png", "Player vs. Player", "../assets/fonts/CherryBombOne.ttf", 420, 50, 40, 170, 50, 50, 40, 170, 350, 30, 110, 162.5);
+    onePButton.setSpriteAndTextButton("playerVersusAI", "../assets/Button/playerVersusAI.png", "Player vs. AI", "../assets/fonts/CherryBombOne.ttf", 420, 50, 40, 40, 50, 50, 40, 40, 350, 30, 110, 32);
+    twoPButton.setSpriteAndTextButton("playerVersusPlayer", "../assets/Button/playerVersusPlayer.png", "Player vs. Player", "../assets/fonts/CherryBombOne.ttf", 420, 50, 40, 170, 50, 50, 40, 170, 350, 30, 110, 162);
 
     Image icon;
     if (!icon.loadFromFile("../assets/NewGameIcon.png")) {

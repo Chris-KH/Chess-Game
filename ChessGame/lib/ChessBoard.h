@@ -3,8 +3,12 @@
 #include "Move.h"
 #include "Button.h"
 
+#include"Stockfish.h"
+
 class ChessBoard {
 private:
+    Stockfish* stockfish;
+
     RenderWindow* window; // Cửa sổ SFML
     Texture boardTexture; // Texture của bàn cờ
     Sprite boardSprite;   // Sprite để vẽ bàn cờ
@@ -49,7 +53,7 @@ private:
     Button* selectedBut = nullptr;
 public:
     // Constructor
-    ChessBoard(RenderWindow* win, int currentBoardIndex = 0);
+    ChessBoard(RenderWindow* win, Stockfish* stockfish, int currentBoardIndex = 0);
     ~ChessBoard();
 
     // Update các kiểu

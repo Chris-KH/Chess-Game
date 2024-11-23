@@ -1,9 +1,10 @@
 ﻿#include"../lib/ChessBoard.h"
 
 // Thiết lập các thứ
-ChessBoard::ChessBoard(RenderWindow* win, int currentBoardIndex) {
+ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoardIndex) {
     // Khởi tạo
     window = win;
+    this->stockfish = stockfish;
     boardFiles = {
             "../assets/Chess Board/ChessBoard1.png",
             "../assets/Chess Board/ChessBoard2.png",
@@ -465,7 +466,7 @@ void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
         int targetCol = move.second;
 
         RectangleShape highlightTile(Vector2f(100, 100)); // Kích thước ô là 100x100
-        highlightTile.setPosition(65 + targetCol * 100, 65 + targetRow * 100); // Đặt vị trí ô tô màu với viền
+        highlightTile.setPosition(float(65 + targetCol * 100), float(65 + targetRow * 100)); // Đặt vị trí ô tô màu với viền
 
         // Nếu ô chứa quân địch, tô màu đỏ; nếu không, tô màu xanh
         if (board[targetRow][targetCol] && board[targetRow][targetCol]->getColor() != selectedPiece->getColor()) {
@@ -479,7 +480,7 @@ void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
     }
     // Tô cả ô đang đứng
     RectangleShape highlightTile(Vector2f(100, 100)); // Kích thước ô là 100x100
-    highlightTile.setPosition(65 + selectedPiece->getCol() * 100, 65 + selectedPiece->getRow() * 100); // Đặt vị trí ô tô màu với viền
+    highlightTile.setPosition(float(65 + selectedPiece->getCol() * 100), float(65 + selectedPiece->getRow() * 100)); // Đặt vị trí ô tô màu với viền
     highlightTile.setFillColor(Color(100, 255, 100, 128)); // Màu xanh
     highlightTiles.push_back(highlightTile);
 }
@@ -636,7 +637,7 @@ bool ChessBoard::isCheck(bool color, bool save) {
                 if (curCheck) {
                     if (save) {
                         inCheck[color] = true;
-                        tile.setPosition(Vector2f(65 + j * 100, 65 + i * 100));
+                        tile.setPosition(Vector2f(float(65 + j * 100), float(65 + i * 100)));
                         checkTiles[color].push_back(tile);
                     }
                     else {
