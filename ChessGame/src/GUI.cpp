@@ -118,15 +118,14 @@ unique_ptr<Pieces> GUI::promoteChoice(unique_ptr<Pieces>& piece) {
 
 void GUI::settingChoice(ChessBoard &chessBoard) {
     /*
-    * @Brief: Open a new setting choice, no close, resize button or title bar
+    * @Brief: Open a new setting window
     * @How to close: Click "Save" button to exit
     */
 
-    // Text
-    Font font;
-    if (!font.loadFromFile("../assets/fonts/Vogue.ttf")) {
-        throw runtime_error("Cannot load text font in GUI::settingChoice!\n");
-    }
+    // Change board button
+    // indentation: Left = 40, Top = 40
+    // size: width = 200, height = 25
+    DropDownButton board("Chessboard", 200, 25, 40, 40, chessBoard.getBoardList());
 
     // Save button
     Button save;
@@ -143,6 +142,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     settingWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     Event event;
     Button* selectedButton = nullptr;
+    DropDownButton* selectedDDBut = nullptr;
 
     while (settingWD.isOpen()) {
         while (settingWD.pollEvent(event)) {
@@ -155,6 +155,10 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
                 // handle press
                 selectedButton = nullptr;
                 if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
+
+                if(selectedDDBut) selectedDDBut->setClicked(0);
+                selectedDDBut = nullptr;
+                if (board.contain(mouse.x, mouse.y)) selectedDDBut = &board;
             }
             else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                 // handle release
@@ -162,16 +166,27 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
                 selectedButton = nullptr;
                 if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
 
+                DropDownButton* lastDDBut = selectedDDBut;
+                selectedDDBut = nullptr;
+                if (board.contain(mouse.x, mouse.y)) selectedDDBut = &board;
+
                 // If click (press and release) on a button then do operations
                 if(selectedButton && selectedButton == lastSelectedButton) {
                     if (selectedButton->getName() == "save") {
                         settingWD.close();
                     }
                 }
+                
+                if (selectedDDBut && selectedDDBut == lastDDBut) {
+                    if (selectedDDBut->getName() == "Chessboard") {
+                        selectedDDBut->setClicked(1);
+                    }
+                }
             }
         }
 
         settingWD.clear(Color(60, 60, 60, 255));
+        board.draw(settingWD);
         save.drawText(settingWD);
         settingWD.display();
     }

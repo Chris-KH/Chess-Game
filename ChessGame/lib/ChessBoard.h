@@ -9,6 +9,7 @@ private:
     Texture boardTexture; // Texture của bàn cờ
     Sprite boardSprite;   // Sprite để vẽ bàn cờ
     vector<string> boardFiles; // Danh sách đường dẫn bàn cờ
+    vector<string> boardName; // Name of each corresponding board
     int currentBoardIndex; // Chỉ số bàn cờ hiện tại
 
     size_t numPieces;
@@ -60,6 +61,12 @@ public:
     void addPiece(unique_ptr<Pieces> piece, int col, int row);
     size_t countPieces();
 
+    // Get
+    vector<std::string>& getBoardList(void) { return boardName; }
+    bool isWhiteTurn(void) const { return this->whiteTurn; }
+    int isOver(void) const { return gameOver; }
+
+    // Draw
     void update(const Event& ev);
     void draw();
 
@@ -72,14 +79,12 @@ public:
     void handleButtonRelease(int mouseX, int mouseY);
 
     // Player turn
-    bool isWhiteTurn(void) const { return this->whiteTurn; }
     void alterTurn(void); // Đổi lượt
 
     // Detect check, checkmate, draw
     bool isCheck(bool color, bool save); // To check if current player is in check
     bool cannotMove(void); // To check if current player is in checkmate
     bool isTie(void); // To check if current player is in draw
-    int isOver(void) const { return gameOver; }
 
     // Undo-feature
     void undoMove();
