@@ -21,16 +21,30 @@ string ChessBoard::generateFEN() {
     }
 
     //Side to move
-    fen += " ";
+    fen += ' ';
     fen += (whiteTurn ? 'w' : 'b');
 
     //Castling availability
+    fen += ' ';
+    string castling = "";
+    for (int i = 0; i < 2; i++) {
+        if (castlingAvailability[i] == true) {
+            castling += (i == 0 ? "KQ" : "kq");
+        }
+    }
+    fen += (castling.empty() ? "-" : castling);
 
     //En passant target square
+    fen += ' ';
+    fen += (enPassantTargetSquare.empty() ? "-" : enPassantTargetSquare);
 
     //Halfmove clock
+    fen += ' ';
+    fen += to_string(haftMoveClock);
 
     //Fullmove number
+    fen += ' ';
+    fen += to_string(fullMoveNumber);
 
     return fen;
 }

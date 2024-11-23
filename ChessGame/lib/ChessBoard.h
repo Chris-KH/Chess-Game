@@ -27,9 +27,6 @@ private:
     Pieces* pieceFollowingMouse = nullptr;
     vector<RectangleShape> highlightTiles; // Danh sách ô cần tô màu
 
-    // Player turn
-    bool whiteTurn;
-
     // Indicate checks
     bool inCheck[2];
     vector<RectangleShape> checkTiles[2];
@@ -51,6 +48,18 @@ private:
     // Buttons
     Button undoBut, redoBut, saveBut, newBut, surrenderBut, settingBut;
     Button* selectedBut = nullptr;
+
+    //Chess board state
+    bool whiteTurn;
+    int fullMoveNumber;
+    int haftMoveClock;
+    /* 
+        [0] for white
+        [1] for black
+    */
+    bool castlingAvailability[2]; 
+    string enPassantTargetSquare;
+
 public:
     // Constructor
     ChessBoard(RenderWindow* win, Stockfish* stockfish, int currentBoardIndex = 0);
@@ -92,7 +101,7 @@ public:
     void freeRedoStack();
 
     //Reset game (new game)
-    void newtGame();
+    void newGame();
 
     //Save game
     void saveGame();

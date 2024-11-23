@@ -69,6 +69,10 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
 
     // Player turn
     whiteTurn = true;
+    fullMoveNumber = 1;
+    haftMoveClock = 0;
+    for (int i = 0; i < 2; i++) castlingAvailability[i] = true;
+    enPassantTargetSquare = "";
 
     // Check
     inCheck[0] = inCheck[1] = false;
@@ -521,7 +525,7 @@ void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
             saveGame();
         }
         else if (selectedBut->getName() == "new") {
-            newtGame();
+            newGame();
         }
         else if (selectedBut->getName() == "surrender") {
             gameOver = whiteTurn + 1;
@@ -1028,7 +1032,7 @@ void ChessBoard::freeRedoStack() {
 }
 
 //Reset game (new game)
-void ChessBoard::newtGame() {
+void ChessBoard::newGame() {
     GUI::newGame(*this);
 
     // CLear old pieces
@@ -1082,6 +1086,10 @@ void ChessBoard::newtGame() {
 
     // Player turn
     whiteTurn = true;
+    fullMoveNumber = 1;
+    haftMoveClock = 0;
+    for (int i = 0; i < 2; i++) castlingAvailability[i] = true;
+    enPassantTargetSquare = "";
         
     // Check
     inCheck[0] = inCheck[1] = false;

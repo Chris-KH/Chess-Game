@@ -237,7 +237,7 @@ void GUI::gameOver(ChessBoard& chessBoard) {
         while (gameOverWD.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 gameOverWD.close();
-                chessBoard.newtGame();
+                chessBoard.newGame();
             }
         }
 
