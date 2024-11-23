@@ -99,4 +99,10 @@ public:
 
     //Load game
     void loadGame();
+
+    //In ChessBoard2.cpp
+    //Move notation
+    //string generateMoveNotation();
+    string generateFEN();
+    //void makeMove();
 };

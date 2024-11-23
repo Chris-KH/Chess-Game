@@ -8,6 +8,7 @@ public:
         changeTexture(currentTextureIndex);
     };
     string getType() const override;
+    char getTypeKey() const override;
     vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board);
     bool checkPromote() const override;
     bool canCastleKingside(const vector<vector<unique_ptr<Pieces>>>& board);

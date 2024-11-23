@@ -83,6 +83,8 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
     surrenderBut.setSpriteButton("surrender", "../assets/Button/surrender.png", 35, 35, 1185, 30);
     saveBut.setSpriteButton("save", "../assets/Button/save.png", 35, 35, 1260, 30);
     settingBut.setSpriteButton("setting", "../assets/Button/settings.png", 35, 35, 1335, 30);
+
+    cout << generateFEN() << '\n';
 }
 
 ChessBoard::~ChessBoard() {

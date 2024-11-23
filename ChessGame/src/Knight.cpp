@@ -4,6 +4,7 @@ Knight::Knight(bool isWhite, int originCol, int originRow) : Pieces(isWhite, ori
 	vector<string> texturePaths;
 	string color = (isWhite ? "white-" : "black-");
 	this->type = "knight";
+    this->typeKey = (isWhite ? 'N' : 'n');
 	texturePaths.push_back("../assets/Standard Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Cartoon Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Pixel Theme/" + color + this->type + ".png");
@@ -14,6 +15,10 @@ Knight::Knight(bool isWhite, int originCol, int originRow) : Pieces(isWhite, ori
 
 string Knight::getType() const {
 	return this->type;
+}
+
+char Knight::getTypeKey() const {
+    return this->typeKey;
 }
 
 vector<pair<int, int>> Knight::getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) {

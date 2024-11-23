@@ -17,6 +17,7 @@ protected:
     // Texture texture; // Texture cho quân cờ
     Sprite sprite;   // Sprite để vẽ quân cờ
     string type;    // Loại quân cờ (vd: "pawn", "rook", "knight", ...)
+    char typeKey;
 
     // Theme
     size_t currentTextureIndex;
@@ -56,6 +57,7 @@ public:
     void setPosition(int col, int row, float cellSize = 100);
     void draw(RenderWindow& window);
     virtual string getType() const = 0;
+    virtual char getTypeKey() const = 0;
 
     // Drag/click a piece
     void setInitialPosition(const Vector2f& position);
