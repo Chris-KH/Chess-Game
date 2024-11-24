@@ -3,7 +3,6 @@
 // Constructor
 DropDownButton::DropDownButton(std::string _name, float _width, float _height, float _posX, float _posY, const vector<std::string>& _list, int _curBut) :
 	name(_name), width(_width), height(_height), posX(_posX), posY(_posY), isClicked(0), curBut(_curBut) {
-	cerr << curBut << '\n';
 	// Make the list
 	for (const std::string& s : _list) {
 		list.push_back(make_unique<Button>());

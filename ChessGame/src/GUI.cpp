@@ -122,6 +122,19 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     * @How to close: Click "Save" button to exit
     */
 
+    const static float wdWidth = 600, wdHeight = 800;
+    const static float topSpace = 30, leftSpace = 50, rightSpace = 50;
+    const static float lineSpace = 30;
+
+    // Save old data(s)
+    int initBoard = chessBoard.getBoardIndex();
+
+    // Board preview
+    Sprite reviewBoard(chessBoard.getBoardSprite());
+    reviewBoard.setPosition(leftSpace, topSpace);
+    reviewBoard.setTextureRect(IntRect(65, 65, 500, 200));
+    const static float previewSpace = topSpace + reviewBoard.getGlobalBounds().height;
+
     // Change board button
     Font fontBoard;
     if (!fontBoard.loadFromFile("../assets/fonts/ZenOldMincho.ttf")) {
@@ -131,42 +144,56 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     textBoard.setFont(fontBoard);
     textBoard.setCharacterSize(25);
     textBoard.setFillColor(Color::White);
-    textBoard.setPosition(50, 30);
-    textBoard.setString("Chessboard :");
-    DropDownButton board("Chessboard", 225, 9, 225, 40, chessBoard.getBoardList(), chessBoard.getBoardIndex());
+    textBoard.setPosition(leftSpace, previewSpace + lineSpace - 10);
+    textBoard.setString("Board");
+    DropDownButton board("Board", 225, 9, wdWidth - rightSpace - 225 - 13, previewSpace + lineSpace, chessBoard.getBoardList(), chessBoard.getBoardIndex());
 
     // Cancel button
     Button cancel;
     cancel.setTextButton("cancel", "Cancel", "../assets/fonts/Holen Vintage.otf", 115, 14, 50, 750, 50, 737.5);
 
     // Save button
-    Button save;
-    save.setTextButton("save", "Save", "../assets/fonts/Holen Vintage.otf", 115, 14, 335, 750, 355, 737.5);
+    Button apply;
+    apply.setTextButton("apply", "Apply", "../assets/fonts/Holen Vintage.otf", 115, 14, 335, 750, 335, 737.5);
 
     // Open setting window
-    RenderWindow settingWD(sf::VideoMode(500, 800), "Setting", Style::Close | Style::Titlebar);
+    RenderWindow settingWD(sf::VideoMode(600, 800), "Setting", Style::Close | Style::Titlebar);
+
+    // Set icon for window
     Image icon;
     if (!icon.loadFromFile("../assets/SettingIcon.png")) {
         std::cerr << "Failed to load icon!" << '\n';
         return;
     }
-    // Set icon for window
     settingWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     Event event;
     Button* selectedButton = nullptr;
     DropDownButton* selectedDDBut = nullptr;
+    
+    //// Set view for window: enable scrolling in window
+    //Vector2f viewCenter(settingWD.getSize().x / 2.f, settingWD.getSize().y / 2.f);
+    //View view(viewCenter, Vector2f(500.f, 800.f));
+
+    //// Set scroll bar
+    //RectangleShape scrollbar(Vector2f(10.f, 800.f));
+    //scrollbar.setPosition(490.f, 0.f);
+    //scrollbar.setFillColor(Color::White);
+    //RectangleShape scrollKnob(Vector2f(10.f, 10.f));
+    //scrollKnob.setPosition(490.f, 0.f);
+    //scrollKnob.setFillColor(Color::Blue);
 
     while (settingWD.isOpen()) {
         while (settingWD.pollEvent(event)) {
             Event::MouseButtonEvent mouse = event.mouseButton;
             if (event.type == Event::Closed) {
+                chessBoard.changeBoard(initBoard);
                 settingWD.close();
-                return;
             }
             else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                 // handle press
                 selectedButton = nullptr;
-                if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
+                if (apply.contain(mouse.x, mouse.y)) selectedButton = &apply;
+                else if (cancel.contain(mouse.x, mouse.y)) selectedButton = &cancel;
                 else {
                     if (board.getClick()) {
                         chessBoard.changeBoard(board.eventOption(mouse.x, mouse.y));
@@ -188,22 +215,43 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
                 // handle release
                 Button* lastSelectedButton = selectedButton;
                 selectedButton = nullptr;
-                if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
+                if (apply.contain(mouse.x, mouse.y)) selectedButton = &apply;
+                else if (cancel.contain(mouse.x, mouse.y)) selectedButton = &cancel;
 
                 // If click (press and release) on a button then do operations
                 if(selectedButton && selectedButton == lastSelectedButton) {
-                    if (selectedButton->getName() == "save") {
+                    if (selectedButton->getName() == "apply") {
+                        settingWD.close();
+                    }
+                    else if (selectedButton->getName() == "cancel") {
+                        chessBoard.changeBoard(initBoard);
                         settingWD.close();
                     }
                 }
             }
+
+            //if (Keyboard::isKeyPressed(Keyboard::Down)) {
+            //    viewCenter.y += 3.f;
+            //}
+            //else if (Keyboard::isKeyPressed(Keyboard::Up)) {
+            //    viewCenter.y -= 3.f;
+            //}
         }
 
         settingWD.clear(Color(60, 60, 60, 255));
+        
+        //view.setCenter(viewCenter);
+        //settingWD.setView(view);
+        settingWD.draw(reviewBoard);
         settingWD.draw(textBoard);
         board.draw(settingWD);
         cancel.drawText(settingWD);
-        save.drawText(settingWD);
+        apply.drawText(settingWD);
+        
+        //settingWD.setView(settingWD.getDefaultView());
+        //settingWD.draw(scrollbar);
+        //settingWD.draw(scrollKnob);
+
         settingWD.display();
     }
 }
