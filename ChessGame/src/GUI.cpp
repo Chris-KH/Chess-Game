@@ -123,7 +123,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     */
 
     // Change board button
-    DropDownButton board("Chessboard", 200, 25, 40, 40, chessBoard.getBoardList());
+    DropDownButton board("Chessboard", 275, 12, 40, 40, chessBoard.getBoardList(), chessBoard.getBoardIndex());
 
     // Save button
     Button save;

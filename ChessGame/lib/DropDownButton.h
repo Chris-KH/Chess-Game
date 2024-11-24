@@ -12,7 +12,7 @@ private:
 public:
 	// Constructor and destructor
 	//DropDownButton() {}
-	DropDownButton(std::string _name, float _width, float _height, float _posX, float _posY, const vector<std::string> &_list);
+	DropDownButton(std::string _name, float _width, float _height, float _posX, float _posY, const vector<std::string> &_list, int _curBut);
 	~DropDownButton() {}
 
 	void setClick(int val) { isClicked = val; }
