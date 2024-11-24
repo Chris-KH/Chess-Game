@@ -123,13 +123,15 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     */
 
     // Change board button
-    // indentation: Left = 40, Top = 40
-    // size: width = 200, height = 25
-    DropDownButton board("Chessboard", 200, 25, 40, 40, chessBoard.getBoardList());
+    DropDownButton board("Chessboard", 275, 12, 40, 40, chessBoard.getBoardList(), chessBoard.getBoardIndex());
+
+    // Cancel button
+    Button cancel;
+    cancel.setTextButton("cancel", "Cancel", "../assets/fonts/Holen Vintage.otf", 125, 20, 150, 700, 150, 687.5);
 
     // Save button
     Button save;
-    save.setTextButton("save", "Save", "../assets/fonts/Vogue.ttf", 90, 25, 350, 700, 355, 688);
+    save.setTextButton("save", "Save", "../assets/fonts/Holen Vintage.otf", 125, 20, 350, 700, 350, 687.5);
 
     // Open setting window
     RenderWindow settingWD(sf::VideoMode(500, 800), "Setting", Style::Close | Style::Titlebar);
@@ -155,12 +157,17 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
                 // handle press
                 selectedButton = nullptr;
                 if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
+                else {
+                    if (board.getClick()) {
+                        chessBoard.changeBoard(board.eventOption(mouse.x, mouse.y));
+                    }
+                }
 
                 DropDownButton* lastDDBut = selectedDDBut;
                 selectedDDBut = nullptr;
                 if (board.contain(mouse.x, mouse.y)) selectedDDBut = &board;
                 if (lastDDBut && lastDDBut != selectedDDBut) {
-                    lastDDBut->setClicked(0);
+                    lastDDBut->setClick(0);
                 }
                 if (selectedDDBut) {
                     selectedDDBut->click();
@@ -184,6 +191,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
 
         settingWD.clear(Color(60, 60, 60, 255));
         board.draw(settingWD);
+        cancel.drawText(settingWD);
         save.drawText(settingWD);
         settingWD.display();
     }
