@@ -123,8 +123,6 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     */
 
     // Change board button
-    // indentation: Left = 40, Top = 40
-    // size: width = 200, height = 25
     DropDownButton board("Chessboard", 200, 25, 40, 40, chessBoard.getBoardList());
 
     // Save button
@@ -155,12 +153,17 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
                 // handle press
                 selectedButton = nullptr;
                 if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
+                else {
+                    if (board.getClick()) {
+                        chessBoard.changeBoard(board.eventOption(mouse.x, mouse.y));
+                    }
+                }
 
                 DropDownButton* lastDDBut = selectedDDBut;
                 selectedDDBut = nullptr;
                 if (board.contain(mouse.x, mouse.y)) selectedDDBut = &board;
                 if (lastDDBut && lastDDBut != selectedDDBut) {
-                    lastDDBut->setClicked(0);
+                    lastDDBut->setClick(0);
                 }
                 if (selectedDDBut) {
                     selectedDDBut->click();

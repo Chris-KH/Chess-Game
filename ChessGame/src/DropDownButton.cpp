@@ -28,3 +28,15 @@ void DropDownButton::draw(RenderWindow &window) {
 bool DropDownButton::contain(int x, int y) {
 	return list[0]->contain(x, y);
 }
+
+int DropDownButton::eventOption(int x, int y) {
+	if (list[curBut]->contain(x, y)) return curBut;
+	for (int i = 0; i < (int)list.size(); i++) {
+		bool ok = false;
+		list[i]->move(0, (i + 1) * (height + 26));
+		if (list[i]->contain(x, y)) curBut = i, ok = true;
+		list[i]->move(0, -(i + 1) * (height + 26));
+		if (ok) break;
+	}
+	return curBut;
+}

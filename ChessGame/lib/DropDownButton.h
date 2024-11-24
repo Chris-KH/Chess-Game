@@ -14,12 +14,15 @@ public:
 	DropDownButton(std::string _name, float _width, float _height, float _posX, float _posY, const vector<std::string> &_list);
 	~DropDownButton() {}
 
-	void setClicked(int val) { isClicked = val; }
-	void click(void) { isClicked ^= 1; }
+	void setClick(int val) { isClicked = val; }
+	void click(void) { isClicked = (isClicked == 0 ? 1 : 0); }
 
 	// Draw
 	void draw(RenderWindow &window);
 	
-	std::string getName(void) { return name; }
+	std::string getName(void) const { return name; }
+	int getClick(void) const { return isClicked; }
+	int getNumOption(void) const { return (int)list.size(); }
 	bool contain(int x, int y);
+	int eventOption(int x, int y);
 };
