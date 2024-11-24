@@ -39,7 +39,7 @@ unique_ptr<Pieces> GUI::promoteChoice(unique_ptr<Pieces>& piece) {
     RenderWindow window(VideoMode(600, 200), "Choose Promotion Piece");
     Image icon;
     if (!icon.loadFromFile("../assets/PromotionIcon.png")) {
-        std::cerr << "Failed to load icon!" << '\n';
+        cerr << "Failed to load icon!" << '\n';
         return nullptr;
     }
     // Set icon for window
@@ -157,12 +157,12 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     apply.setTextButton("apply", "Apply", "../assets/fonts/Holen Vintage.otf", 115, 14, 335, 750, 335, 737.5);
 
     // Open setting window
-    RenderWindow settingWD(sf::VideoMode(600, 800), "Setting", Style::Close | Style::Titlebar);
+    RenderWindow settingWD(VideoMode(600, 800), "Setting", Style::Close | Style::Titlebar);
 
     // Set icon for window
     Image icon;
     if (!icon.loadFromFile("../assets/SettingIcon.png")) {
-        std::cerr << "Failed to load icon!" << '\n';
+        cerr << "Failed to load icon!" << '\n';
         return;
     }
     settingWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
@@ -310,7 +310,7 @@ void GUI::gameOver(ChessBoard& chessBoard) {
     RenderWindow gameOverWD(VideoMode(windowWidth, windowHeight), "Game Over", Style::Titlebar | Style::Close);
     Image icon;
     if (!icon.loadFromFile("../assets/GameOVerIcon.png")) {
-        std::cerr << "Failed to load icon!" << '\n';
+        cerr << "Failed to load icon!" << '\n';
         return;
     }
     // Set icon for window
@@ -382,5 +382,136 @@ void GUI::newGame(ChessBoard& chessBoard) {
         onePButton.drawAll(newGameWD);
         twoPButton.drawAll(newGameWD);
         newGameWD.display();
+    }
+}
+
+void GUI::saveGame(ChessBoard* chessBoard) {
+    bool isSave = false;
+
+    RenderWindow window(VideoMode(800, 400), "Save Game", Style::Close | Style::Titlebar);
+
+    // Font để hiển thị văn bản
+    Font font;
+    if (!font.loadFromFile("../assets/fonts/Holen Vintage.otf")) {
+        throw exception("Failed to load font file.\n");
+    }
+
+    // Khai báo biến để nhập tên tệp
+    string filename;
+    Text filenameText("", font, 30);
+    filenameText.setFillColor(Color::Black);
+    filenameText.setPosition(110, window.getSize().y / 2.0f + 3);  // Vị trí chữ nhập vào
+
+    // Tạo background cho textbox
+    RectangleShape textbox(Vector2f(window.getSize().x - 200.0f, 50.0f));
+    textbox.setFillColor(Color::White);  // Màu nền của hộp nhập liệu
+    textbox.setOutlineColor(Color(0xA6, 0x8A, 0x64));  // Viền hộp
+    textbox.setOutlineThickness(5);  // Độ dày viền
+    textbox.setPosition(100, window.getSize().y / 2.0f);  // Vị trí của hộp nhập liệu
+
+    // Con trỏ nhập liệu
+    RectangleShape cursor(Vector2f(2, 44));  // Định nghĩa con trỏ nhập liệu
+    cursor.setFillColor(Color::Black);
+    cursor.setPosition(110, window.getSize().y / 2.0f + 3);  // Vị trí bắt đầu của con trỏ
+
+    // Thông báo yêu cầu nhập tên tệp
+    Text instruction("Enter filename and press Enter to save:", font, 25);
+    instruction.setFillColor(Color::White);
+    instruction.setPosition((window.getSize().x - instruction.getLocalBounds().width) / 2, window.getSize().y / 4.0f);
+
+    Text notification;
+    bool notify = false;
+
+    bool cursorVisible = true;  // Để kiểm soát việc hiển thị con trỏ
+    Clock clock;  // Dùng để thay đổi trạng thái con trỏ (hiện/ẩn) mỗi giây
+
+    // Giới hạn chiều dài tên tệp (dựa trên chiều rộng của textbox)
+    const float maxWidth = textbox.getSize().x - 30; // Khoảng cách giữa viền và văn bản
+    const size_t maxChars = 50; // Giới hạn ký tự (có thể thay đổi)
+
+    while (window.isOpen()) {
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                window.close();
+            }
+
+            if (event.type == Event::KeyPressed) {
+                notify = false; 
+            }
+
+            // Xử lý nhập liệu từ bàn phím
+            if (event.type == Event::TextEntered) {
+                if (event.text.unicode < 128) {
+                    char enteredChar = static_cast<char>(event.text.unicode);
+                    if (enteredChar == '\b' && !filename.empty()) {
+                        filename.pop_back();  // Xóa ký tự cuối nếu nhấn Backspace
+                    }
+                    else if (enteredChar != '\r') {
+                        // Kiểm tra nếu thêm ký tự không vượt quá giới hạn ký tự
+                        if (filename.length() < maxChars) {
+                            filename += enteredChar;  // Thêm ký tự vào tên tệp
+                        }
+                        if (filenameText.getLocalBounds().width > maxWidth) {
+                            filename.pop_back();
+                        }
+                    }
+                }
+            }
+
+            // Kiểm tra nếu người dùng nhấn Enter
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
+                notify = true;
+                if (isSave) {
+                    notification.setString("THIS GAME IS SAVED");
+                    notification.setFont(font);
+                    notification.setCharacterSize(25);
+                    notification.setFillColor(Color::Yellow);
+                    notification.setPosition((window.getSize().x - notification.getLocalBounds().width) / 2, 3 * (window.getSize().y / 4.0f));
+                }
+                else if (!filename.empty()) {
+                    if (chessBoard->saveGame(filename)) {
+                        //Save successful
+                    }
+                    cout << filename << '\n';
+                    notification.setString("SAVE GAME SUCCESSFULLY");
+                    notification.setFont(font);
+                    notification.setCharacterSize(25);
+                    notification.setFillColor(Color::Green);
+                    notification.setPosition((window.getSize().x - notification.getLocalBounds().width) / 2, 3 * (window.getSize().y / 4.0f));
+                    isSave = true;
+                }
+                else {
+                    notification.setString("EMPTY FILE NAME IS NOT ALLOWED");
+                    notification.setFont(font);
+                    notification.setCharacterSize(25);
+                    notification.setFillColor(Color::Red);
+                    notification.setPosition((window.getSize().x - notification.getLocalBounds().width) / 2, 3 * (window.getSize().y / 4.0f));
+                }
+            }
+        }
+
+        // Cập nhật vị trí con trỏ nhập liệu (sau mỗi 0.5 giây, đổi trạng thái hiển thị)
+        if (clock.getElapsedTime().asSeconds() > 0.5f) {
+            cursorVisible = !cursorVisible;  // Đổi trạng thái con trỏ
+            clock.restart();
+        }
+
+        // Cập nhật văn bản hiển thị
+        filenameText.setString(filename);
+
+        // Cập nhật vị trí con trỏ
+        cursor.setPosition(110 + filenameText.getLocalBounds().width, window.getSize().y / 2.0f + 3);  // Vị trí con trỏ ở cuối văn bản
+
+        // Vẽ lên cửa sổ
+        window.clear(Color(80, 80, 80, 255));
+        window.draw(instruction);
+        window.draw(textbox);  // Vẽ background của textbox
+        window.draw(filenameText);  // Vẽ tên tệp người dùng nhập vào
+        if (cursorVisible) window.draw(cursor);  // Vẽ con trỏ nếu đang visible
+        if (notify) {
+            window.draw(notification);
+        }
+        window.display();
     }
 }

@@ -10,6 +10,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <stdexcept>
+#include <filesystem>
 
 using namespace std;
 using namespace sf;

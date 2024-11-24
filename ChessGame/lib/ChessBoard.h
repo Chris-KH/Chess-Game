@@ -112,10 +112,10 @@ public:
     void newGame();
 
     //Save game
-    void saveGame();
+    bool saveGame(const string& path);
 
     //Load game
-    void loadGame();
+    void loadGame(const string& path);
 
     //Move notation
     string generateLongAlgebraicNotation(Move*& moved);

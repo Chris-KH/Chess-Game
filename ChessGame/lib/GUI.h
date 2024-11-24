@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
@@ -38,5 +38,7 @@ public:
 		Two option, AI or Human
 	*/
 	static void newGame(ChessBoard& chessBoard);
-};
 
+	//Get name of file to save game
+	static void saveGame(ChessBoard* chessBoard);
+};
