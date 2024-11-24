@@ -125,9 +125,13 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     // Change board button
     DropDownButton board("Chessboard", 275, 12, 40, 40, chessBoard.getBoardList(), chessBoard.getBoardIndex());
 
+    // Cancel button
+    Button cancel;
+    cancel.setTextButton("cancel", "Cancel", "../assets/fonts/Holen Vintage.otf", 125, 20, 150, 700, 150, 687.5);
+
     // Save button
     Button save;
-    save.setTextButton("save", "Save", "../assets/fonts/Vogue.ttf", 90, 25, 350, 700, 355, 688);
+    save.setTextButton("save", "Save", "../assets/fonts/Holen Vintage.otf", 125, 20, 350, 700, 350, 687.5);
 
     // Open setting window
     RenderWindow settingWD(sf::VideoMode(500, 800), "Setting", Style::Close | Style::Titlebar);
@@ -187,6 +191,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
 
         settingWD.clear(Color(60, 60, 60, 255));
         board.draw(settingWD);
+        cancel.drawText(settingWD);
         save.drawText(settingWD);
         settingWD.display();
     }
