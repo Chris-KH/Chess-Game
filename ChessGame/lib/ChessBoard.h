@@ -75,7 +75,7 @@ public:
     size_t countPieces();
 
     // Get
-    vector<std::string>& getBoardList(void) { return boardName; }
+    vector<string>& getBoardList(void) { return boardName; }
     bool isWhiteTurn(void) const { return this->whiteTurn; }
     int isOver(void) const { return gameOver; }
 
@@ -99,14 +99,13 @@ public:
     bool cannotMove(void); // To check if current player is in checkmate
     bool isTie(void); // To check if current player is in draw
 
+    //In ChessBoard2.cpp
     // Undo-feature
     void undoMove();
     void redoMove();
     void freeUndoStack();
     void freeRedoStack();
 
-
-    //In ChessBoard2.cpp
     //Reset game (new game)
     void newGame();
 
