@@ -88,7 +88,6 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
     saveBut.setSpriteButton("save", "../assets/Button/save.png", 35, 35, 1260, 30);
     settingBut.setSpriteButton("setting", "../assets/Button/settings.png", 35, 35, 1335, 30);
 
-    cout << generateFEN() << '\n';
 }
 
 ChessBoard::~ChessBoard() {
@@ -350,18 +349,20 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
 
     if (find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
         // Cập nhật lượt tiếp theo
+        cout << generateFEN() << '\n';
+        if (whiteTurn == false) fullMoveNumber++;
         alterTurn();
 
         // Đặt quân cờ từ ô cũ đến ô hiện tại
         {
-            // Nếu ở ô hiện tại đang có quân cờ khác nghĩa là quân cờ này sẽ bị ăn
-            if (selectedPiece) {
-                // ... (to be continued)
-            }
 
             //Move
             Move* curMove = new Move(lastRow, lastCol, row, col);
             unique_ptr<Pieces> deletePiece = move(board[row][col]);
+
+            if (board[lastRow][lastCol]->getType() == "pawn" || deletePiece) haftMoveClock = 0;
+            else haftMoveClock++;
+
             curMove->setPieceMoved(board[lastRow][lastCol]);
             if (deletePiece) curMove->setPieceCaptured(deletePiece);
 
@@ -401,11 +402,13 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
                     curMove->setCastling(true);
                     curMove->setIsKingSide(true);
                     board[row][col]->attemptCastling(board, true);
+                    castlingAvailability[!board[row][col]->getColor()] = false;
                 }
                 else if (moveDisplacement == -2) {
                     curMove->setCastling(true);
                     curMove->setIsKingSide(false);
                     board[row][col]->attemptCastling(board, false);
+                    castlingAvailability[!board[row][col]->getColor()] = false;
                 }
             }
 
