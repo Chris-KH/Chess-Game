@@ -16,6 +16,9 @@ void DropDownButton::draw(RenderWindow &window) {
 		throw runtime_error("List in a drop down button is empty!");
 	}
 	list[curBut]->drawText(window);
+}
+
+void DropDownButton::drawOptions(RenderWindow &window) {
 	if (isClicked) {
 		for (int i = 0; i < (int)list.size(); i++) {
 			list[i]->move(0, (i + 1) * (height + 23)); // (Free area = 20) + (Border = 6 / 2) -> 23

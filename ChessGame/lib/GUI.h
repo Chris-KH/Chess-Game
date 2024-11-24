@@ -31,7 +31,7 @@ public:
 	static void settingChoice(ChessBoard &chessBoard);
 	static void handlePressSetting(Button *&selectedButton, DropDownButton *&selectedDropDownButton, Event::MouseButtonEvent &mouse, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList, ChessBoard &chessBoard);
 	static void handleReleaseSetting(Button*& selectedButton, DropDownButton*& selectedDropDownButton, Event::MouseButtonEvent &mouse, vector<Button*>& buttonList, vector<DropDownButton*>& dropDownButtonList, int initBoard, ChessBoard &chessBoard, RenderWindow &window);
-	static void drawSetting(RenderWindow& window, vector<Sprite*>& spriteList, vector<Text*>& textList, vector<Button*>& buttonList, vector<DropDownButton*>& dropDownButtonList);
+	static void drawSetting(RenderWindow& window, DropDownButton* selectedDropDownButton, vector<Sprite*>& spriteList, vector<Text*>& textList, vector<Button*>& buttonList, vector<DropDownButton*>& dropDownButtonList);
 
 	//Game Over window
 	static void gameOver(ChessBoard &chessBoard);

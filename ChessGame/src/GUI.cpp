@@ -122,9 +122,11 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     * @How to close: Click "Save" button to exit
     */
 
-    const static float wdWidth = 600, wdHeight = 800;
-    const static float topSpace = 30, botSpace = 30, leftSpace = 50, rightSpace = 50;
-    const static float lineSpace = 30;
+    const float wdWidth = 600.f, wdHeight = 800.f;
+    const float topSpace = 30.f, botSpace = 30.f, leftSpace = 50.f, rightSpace = 50.f;
+    const float lineSpace = 30.f;
+    const float dropDownButtonWidth = 225.f;
+    const float dropDownButtonSpace = 50.f;
 
     // Save old data(s)
     const int initBoard = chessBoard.getBoardIndex();
@@ -133,20 +135,25 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     Sprite reviewBoard(chessBoard.getBoardSprite());
     reviewBoard.setPosition(leftSpace, topSpace);
     reviewBoard.setTextureRect(IntRect(65, 65, 500, 200));
-    const static float previewSpace = topSpace + reviewBoard.getGlobalBounds().height;
+    const float previewSpace = topSpace + reviewBoard.getGlobalBounds().height;
 
     // Change board button
     Font fontBoard;
     if (!fontBoard.loadFromFile("../assets/fonts/ZenOldMincho.ttf")) {
         throw runtime_error("Cannot load ZenOldMincho for GUI::settingChoice");
     }
-    Text textBoard;
-    textBoard.setFont(fontBoard);
-    textBoard.setCharacterSize(25);
+    Text textBoard("Board", fontBoard, 25);
     textBoard.setFillColor(Color::White);
     textBoard.setPosition(leftSpace, previewSpace + lineSpace - 10);
-    textBoard.setString("Board");
-    DropDownButton board("Board", 225, 9, wdWidth - rightSpace - 225 - 13, previewSpace + lineSpace, chessBoard.getBoardList(), chessBoard.getBoardIndex());
+    DropDownButton board("Board", dropDownButtonWidth, 9, wdWidth - rightSpace - dropDownButtonWidth - 13, previewSpace + lineSpace, chessBoard.getBoardList(), chessBoard.getBoardIndex());
+    const float boardSpace = previewSpace + dropDownButtonSpace;
+
+    // Change piece button
+    Text textPiece("Pieces", fontBoard, 25);
+    textPiece.setFillColor(Color::White);
+    textPiece.setPosition(leftSpace, boardSpace + lineSpace - 10);
+    DropDownButton piece("Pieces", dropDownButtonWidth, 9, wdWidth - rightSpace - dropDownButtonWidth - 13, boardSpace + lineSpace, chessBoard.getPieceList(), chessBoard.getBoardIndex());
+    const float pieceSpace = previewSpace + dropDownButtonSpace * 2;
 
     // Cancel button
     Button cancel;
@@ -170,9 +177,9 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     Button* selectedButton = nullptr;
     DropDownButton* selectedDropDownButton = nullptr;
     vector<Sprite*> spriteList = { &reviewBoard };
-    vector<Text*> textList = { &textBoard };
+    vector<Text*> textList = { &textBoard, &textPiece };
     vector<Button*> buttonList = { &apply, &cancel };
-    vector<DropDownButton*> dropDownButtonList = { &board };
+    vector<DropDownButton*> dropDownButtonList = { &board, &piece };
 
     while (settingWD.isOpen()) {
         while (settingWD.pollEvent(event)) {
@@ -189,7 +196,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
             }
         }
 
-        drawSetting(settingWD, spriteList, textList, buttonList, dropDownButtonList);
+        drawSetting(settingWD, selectedDropDownButton, spriteList, textList, buttonList, dropDownButtonList);
     }
 }
 
@@ -201,12 +208,20 @@ void GUI::handlePressSetting(Button *&selectedButton, DropDownButton *&selectedD
             break;
         }
     }
-    if (dropDownButtonList[0]->getClick()) {
-        chessBoard.changeBoard(dropDownButtonList[0]->eventOption(mouse.x, mouse.y));
-    }
 
     DropDownButton* lastDropDownButton = selectedDropDownButton;
     selectedDropDownButton = nullptr;
+    if (lastDropDownButton && lastDropDownButton->getClick()) {
+        int optionVal = lastDropDownButton->eventOption(mouse.x, mouse.y);
+        if (lastDropDownButton->getName() == "Board") {
+            chessBoard.changeBoard(optionVal);
+        }
+        else if (lastDropDownButton->getName() == "Pieces") {
+            chessBoard.changePieces(optionVal);
+        }
+        lastDropDownButton->setClick(0);
+        return;
+    }
     for (DropDownButton*& button : dropDownButtonList) {
         if (button->contain(mouse.x, mouse.y)) {
             selectedDropDownButton = button;
@@ -242,7 +257,7 @@ void GUI::handleReleaseSetting(Button *&selectedButton, DropDownButton *&selecte
     }
 }
 
-void GUI::drawSetting(RenderWindow& window, vector<Sprite*> &spriteList, vector<Text*> &textList, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList) {
+void GUI::drawSetting(RenderWindow& window, DropDownButton* selectedDropDownButton, vector<Sprite*> &spriteList, vector<Text*> &textList, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList) {
     RectangleShape background(Vector2f((float)window.getSize().x, 100.0f));
     background.setFillColor(Color::Black);
     background.setPosition(Vector2f(0.0f, window.getSize().y - 100.0f));
@@ -259,6 +274,9 @@ void GUI::drawSetting(RenderWindow& window, vector<Sprite*> &spriteList, vector<
     }
     for(DropDownButton* button : dropDownButtonList) {
         button->draw(window);
+    }
+    if (selectedDropDownButton && selectedDropDownButton->getClick()) {
+        selectedDropDownButton->drawOptions(window);
     }
     window.display();
 }

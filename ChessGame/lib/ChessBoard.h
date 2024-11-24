@@ -14,7 +14,9 @@ private:
     Sprite boardSprite;   // Sprite of chessBoard
     vector<string> boardFiles; // Path list of chessBoard
     vector<string> boardName; // Name of each corresponding board
+    vector<string> pieceName; // Name of each corresponding board
     int currentBoardIndex; // board indexing
+    int currentPieceIndex; // piece index
 
     size_t numPieces;
     vector<vector<unique_ptr<Pieces>>> board;
@@ -76,9 +78,11 @@ public:
 
     // Get
     vector<string>& getBoardList(void) { return boardName; }
+    vector<string>& getPieceList(void) { return pieceName; }
     bool isWhiteTurn(void) const { return this->whiteTurn; }
     int isOver(void) const { return gameOver; }
     int getBoardIndex(void) const { return currentBoardIndex; }
+    int getPieceIndex(void) const { return currentPieceIndex; }
     Sprite getBoardSprite(void) const { return boardSprite; }
 
     // Draw

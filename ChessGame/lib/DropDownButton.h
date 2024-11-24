@@ -20,6 +20,7 @@ public:
 
 	// Draw
 	void draw(RenderWindow &window);
+	void drawOptions(RenderWindow &window);
 	
 	std::string getName(void) const { return name; }
 	int getClick(void) const { return isClicked; }

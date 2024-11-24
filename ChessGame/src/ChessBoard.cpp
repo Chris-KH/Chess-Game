@@ -13,13 +13,20 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
             "../assets/Chess Board/ChessBoard5.png"
     };
     boardName = {
-        "Gray chessboard",
-        "Blue chessboard",
-        "Brown chessboard",
-        "Night owl chessboard",
-        "Wooden chessboard"
+        "Gray",
+        "Blue",
+        "Brown",
+        "Night owl",
+        "Wood"
+    };
+    pieceName = {
+        "Standard",
+        "Cartoon",
+        "Pixel",
+        "Neo"
     };
     this->currentBoardIndex = currentBoardIndex;
+    this->currentPieceIndex = currentBoardIndex;
 
     // Set texture for chess board
     // Load first texture
