@@ -409,7 +409,7 @@ void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
             redoMove();
         }
         else if (selectedBut->getName() == "save") {
-            saveGame();
+            GUI::saveGame(this);
         }
         else if (selectedBut->getName() == "new") {
             newGame();

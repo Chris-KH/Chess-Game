@@ -9,24 +9,24 @@ class ChessBoard {
 private:
     Stockfish* stockfish;
 
-    RenderWindow* window; // Cửa sổ SFML
-    Texture boardTexture; // Texture của bàn cờ
-    Sprite boardSprite;   // Sprite để vẽ bàn cờ
-    vector<string> boardFiles; // Danh sách đường dẫn bàn cờ
+    RenderWindow* window; // SFML window
+    Texture boardTexture; // Texture of chessBoard
+    Sprite boardSprite;   // Sprite of chessBoard
+    vector<string> boardFiles; // Path list of chessBoard
     vector<string> boardName; // Name of each corresponding board
-    int currentBoardIndex; // Chỉ số bàn cờ hiện tại
+    int currentBoardIndex; // board indexing
 
     size_t numPieces;
     vector<vector<unique_ptr<Pieces>>> board;
     Pieces* justMovePiece = nullptr;
 
-    float cellSize = 100; // Kích thước mỗi ô
+    float cellSize = 100; // Size of each square
 
-    Font font; // Phông chữ để vẽ chữ và số
+    Font font; // Font of text and number
 
     Pieces* selectedPiece = nullptr;
     Pieces* pieceFollowingMouse = nullptr;
-    vector<RectangleShape> highlightTiles; // Danh sách ô cần tô màu
+    vector<RectangleShape> highlightTiles; // List of squares need to highlight
 
     // Indicate checks
     bool inCheck[2];
@@ -42,7 +42,7 @@ private:
     int gameOver;
 
     // Undo operator
-    // Stack lưu trạng thái bàn cờ
+    // Stack store piece move
     vector<Move*> undoStack; //index 0, 1 for start position and 2,3 for destination position
     vector<Move*> redoStack;
 
@@ -112,10 +112,10 @@ public:
     void newGame();
 
     //Save game
-    void saveGame();
+    bool saveGame(const string& path);
 
     //Load game
-    void loadGame();
+    void loadGame(const string& path);
 
     //Move notation
     string generateLongAlgebraicNotation(Move*& moved);
