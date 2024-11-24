@@ -389,7 +389,14 @@ void GUI::saveGame(ChessBoard* chessBoard) {
     bool isSave = false;
 
     RenderWindow window(VideoMode(800, 400), "Save Game", Style::Close | Style::Titlebar);
-
+    Image icon;
+    if (!icon.loadFromFile("../assets/saveGameIcon.png")) {
+        cerr << "Failed to load icon!" << '\n';
+        return;
+    }
+    // Set icon for window
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+    
     // Font để hiển thị văn bản
     Font font;
     if (!font.loadFromFile("../assets/fonts/Holen Vintage.otf")) {
@@ -472,14 +479,20 @@ void GUI::saveGame(ChessBoard* chessBoard) {
                 else if (!filename.empty()) {
                     if (chessBoard->saveGame(filename)) {
                         //Save successful
+                        notification.setString("SAVE GAME SUCCESSFULLY");
+                        notification.setFont(font);
+                        notification.setCharacterSize(25);
+                        notification.setFillColor(Color::Green);
+                        notification.setPosition((window.getSize().x - notification.getLocalBounds().width) / 2, 3 * (window.getSize().y / 4.0f));
+                        isSave = true;
                     }
-                    cout << filename << '\n';
-                    notification.setString("SAVE GAME SUCCESSFULLY");
-                    notification.setFont(font);
-                    notification.setCharacterSize(25);
-                    notification.setFillColor(Color::Green);
-                    notification.setPosition((window.getSize().x - notification.getLocalBounds().width) / 2, 3 * (window.getSize().y / 4.0f));
-                    isSave = true;
+                    else {
+                        notification.setString("FILE ALREADY EXISTS");
+                        notification.setFont(font);
+                        notification.setCharacterSize(25);
+                        notification.setFillColor(Color::Yellow);
+                        notification.setPosition((window.getSize().x - notification.getLocalBounds().width) / 2, 3 * (window.getSize().y / 4.0f));
+                    }
                 }
                 else {
                     notification.setString("EMPTY FILE NAME IS NOT ALLOWED");

@@ -247,21 +247,16 @@ void ChessBoard::newGame() {
 
 //Save game
 bool ChessBoard::saveGame(const string& path) {
-    /*
-        This feature i think we will use Algebraic Notation to store the current chess board
-        Information about castling, promotion, en passant...
-
-        Reply:
-            Yes, digitalize the pieces: 1 = king, 2 = queen, 3 = bishop, 4 = knight, 5 = rook, and 6 = pawn
-            Castling, promotion, en passant -> No idea yet
-    */
-
-    string srcPath = "../save/" + path;
-    //if (srcPath.substr(srcPath.length() - 1 - 4, 4) != ".txt")
+    //Check file existing
+    string srcPath = "../save/" + path + ".txt";
     if (filesystem::exists(srcPath)) return false;
+
+    //Create file
+    ofstream fout(srcPath);
 
     //Get FEN (Forsyth-Edwards Notation)
     string FEN = generateFEN();
+    fout << FEN << '\n';
 
     //Get Algebraic Notation
     /*  
