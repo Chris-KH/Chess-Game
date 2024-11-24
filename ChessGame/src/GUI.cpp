@@ -156,9 +156,16 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
                 selectedButton = nullptr;
                 if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
 
-                if(selectedDDBut) selectedDDBut->setClicked(0);
+                DropDownButton* lastDDBut = selectedDDBut;
                 selectedDDBut = nullptr;
                 if (board.contain(mouse.x, mouse.y)) selectedDDBut = &board;
+                if (lastDDBut && lastDDBut != selectedDDBut) {
+                    lastDDBut->setClicked(0);
+                }
+                if (selectedDDBut) {
+                    selectedDDBut->click();
+                }
+
             }
             else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                 // handle release
@@ -166,20 +173,10 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
                 selectedButton = nullptr;
                 if (save.contain(mouse.x, mouse.y)) selectedButton = &save;
 
-                DropDownButton* lastDDBut = selectedDDBut;
-                selectedDDBut = nullptr;
-                if (board.contain(mouse.x, mouse.y)) selectedDDBut = &board;
-
                 // If click (press and release) on a button then do operations
                 if(selectedButton && selectedButton == lastSelectedButton) {
                     if (selectedButton->getName() == "save") {
                         settingWD.close();
-                    }
-                }
-                
-                if (selectedDDBut && selectedDDBut == lastDDBut) {
-                    if (selectedDDBut->getName() == "Chessboard") {
-                        selectedDDBut->setClicked(1);
                     }
                 }
             }

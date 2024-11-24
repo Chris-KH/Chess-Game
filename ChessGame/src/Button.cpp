@@ -103,16 +103,16 @@ void Button::drawAll(RenderWindow& window) {
 	window.draw(text);
 }
 
-void Button::move(int addX, int addY) {
+void Button::move(float addX, float addY) {
 	Vector2f rect = rectangle.getPosition();
 	rect.x += addX, rect.y += addY;
 	rectangle.setPosition(rect);
 	Vector2f sp = sprite.getPosition();
 	sp.x += addX, sp.y += addY;
-	sprite.setPosition(rect);
+	sprite.setPosition(sp);
 	Vector2f txt = text.getPosition();
 	txt.x += addX, txt.y += addY;
-	text.setPosition(rect);
+	text.setPosition(txt);
 }
 
 bool Button::contain(int x, int y) {
