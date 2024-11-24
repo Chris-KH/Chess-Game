@@ -16,6 +16,7 @@ public:
 	~DropDownButton() {}
 
 	void setClicked(int val) { isClicked = val; }
+	void click(void) { isClicked ^= 1; }
 
 	// Draw
 	void draw(RenderWindow &window);

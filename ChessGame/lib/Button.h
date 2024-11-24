@@ -28,6 +28,7 @@ public:
 	void drawSprite(RenderWindow& window); // Draw sprite
 	void drawText(RenderWindow& window); // Draw text
 	void drawAll(RenderWindow& window); // Draw sprite, text, and rectangle
-	void move(int addX, int addY); // Shift from (posX, posY) to (posX + addX, posY + addY)
+	void move(float addX, float addY); // Shift from (posX, posY) to (posX + addX, posY + addY)
+	void printPosText(void) { cout << text.getPosition().x << ' ' << text.getPosition().y << '\n'; }
 	bool contain(int x, int y); // Check if point(x, y) lie in the button area
 };
