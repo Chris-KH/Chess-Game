@@ -5,12 +5,13 @@
 class DropDownButton {
 private:
 	std::string name;
-	float curBut, width, height, posX, posY;
+	float width, height, posX, posY;
+	size_t curBut;
 	int isClicked; // = 0 if is not clicked, != o if is clicked
 	vector<unique_ptr<Button>> list;
 public:
 	// Constructor and destructor
-	DropDownButton() {}
+	//DropDownButton() {}
 	DropDownButton(std::string _name, float _width, float _height, float _posX, float _posY, const vector<std::string> &_list);
 	~DropDownButton() {}
 
