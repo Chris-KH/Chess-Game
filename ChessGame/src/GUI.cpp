@@ -132,7 +132,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     textBoard.setCharacterSize(25);
     textBoard.setFillColor(Color::White);
     textBoard.setPosition(50, 30);
-    textBoard.setString("Chessboard :");
+    textBoard.setString("Board");
     DropDownButton board("Chessboard", 225, 9, 225, 40, chessBoard.getBoardList(), chessBoard.getBoardIndex());
 
     // Cancel button
