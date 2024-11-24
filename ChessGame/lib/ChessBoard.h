@@ -117,7 +117,8 @@ public:
     void loadGame();
 
     //Move notation
-    string generateMoveNotation();
+    string generateLongAlgebraicNotation(Move*& moved);
+    string generateMoveNotation(Move*& moved);
     string generateFEN();
-    void makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves);
+    void makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove);
 };

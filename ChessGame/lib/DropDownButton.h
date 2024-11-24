@@ -6,7 +6,7 @@ class DropDownButton {
 private:
 	std::string name;
 	float width, height, posX, posY;
-	size_t curBut;
+	int curBut;
 	int isClicked; // = 0 if is not clicked, != o if is clicked
 	vector<unique_ptr<Button>> list;
 public:

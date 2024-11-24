@@ -22,6 +22,10 @@ private:
     */
     bool isKingSide;     
     char enPassantLeft;
+
+    //algebraic notation
+    string moveNotation;
+    string LAN;
 public:
     Move();
     Move(int fromRow, int fromCol, int toRow, int toCol);
@@ -33,11 +37,15 @@ public:
     void setEnPassant(bool isEnPassant);
     void setIsKingSide(bool isKingSide);
     void setEnPassantLeft(char enPassantLeft);
+    void setMoveNotation(const string& moveNotation);
+    void setLongAlgebraicNotation(const string& LAN);
     bool getCastling() const;
     bool getPromotion() const;
     bool getEnPassant() const;
     bool getIsKingSide() const;
     char getEnPassantLeft() const;
+    string getMoveNotation() const;
+    string getLongAlgebraicNotation() const;
 
     void setPieceMoved(unique_ptr<Pieces>& pieceMoved);
     void setPieceCaptured(unique_ptr<Pieces>& pieceCaptured);

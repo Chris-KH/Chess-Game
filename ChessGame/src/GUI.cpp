@@ -131,7 +131,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
 
     // Save button
     Button save;
-    save.setTextButton("save", "Save", "../assets/fonts/Holen Vintage.otf", 125, 20, 350, 700, 350, 687.5);
+    save.setTextButton("save", "Save", "../assets/fonts/Holen Vintage.otf", 125, 20, 350, 700, 370, 687.5);
 
     // Open setting window
     RenderWindow settingWD(sf::VideoMode(500, 800), "Setting", Style::Close | Style::Titlebar);

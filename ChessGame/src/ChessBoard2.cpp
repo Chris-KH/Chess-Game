@@ -262,8 +262,56 @@ void ChessBoard::loadGame() {
 
 }
 
-string ChessBoard::generateMoveNotation() {
-    return "";
+string ChessBoard::generateLongAlgebraicNotation(Move*& moved) {
+    string LAN = "";
+    const char x[9] = "abcdefgh";
+    const char y[9] = "12345678";
+
+    pair<int, int> fromPosition = moved->getFrom();
+    pair<int, int> toPosition = moved->getTo();
+
+    LAN += x[fromPosition.second];
+    LAN += y[fromPosition.first];
+    LAN += x[toPosition.second];
+    LAN += y[toPosition.first];
+
+    if (moved->getPromotion()) {
+        LAN += tolower(moved->getPromotionPiece()->getTypeKey());
+    }
+
+    return LAN;
+}
+
+string ChessBoard::generateMoveNotation(Move*& moved) {
+    string moveNotation = "";
+    const char x[9] = "abcdefgh";
+    const char y[9] = "12345678";
+
+    pair<int, int> fromPosition = moved->getFrom();
+    pair<int, int> toPosition = moved->getTo();
+
+    if (moved->getPromotion()) {
+        if (moved->getPieceCaptured()) {
+            moveNotation += x[fromPosition.second] + 'x';
+        }
+        moveNotation += x[toPosition.second] + y[toPosition.first] + '=' + toupper(moved->getPromotionPiece()->getTypeKey());
+    }
+    else if (moved->getCastling()) {
+        if (moved->getIsKingSide()) {
+            moveNotation = "O-O";
+        }
+        else {
+            moveNotation = "O-O-O";
+        }
+    }
+    else if (moved->getEnPassant()) {
+
+    }
+    else {
+
+    }
+
+    return moveNotation;
 }
 
 string ChessBoard::generateFEN() {
@@ -315,17 +363,15 @@ string ChessBoard::generateFEN() {
     return fen;
 }
 
-
-void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves) {
-    cout << generateFEN() << '\n';
+void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove) {
+    //cout << generateFEN() << '\n';
     if (whiteTurn == false) fullMoveNumber++;
     alterTurn();
 
     // Đặt quân cờ từ ô cũ đến ô hiện tại
     {
-
         //Move
-        Move* curMove = new Move(lastRow, lastCol, row, col);
+        curMove = new Move(lastRow, lastCol, row, col);
         unique_ptr<Pieces> deletePiece = move(board[row][col]);
 
         if (board[lastRow][lastCol]->getType() == "pawn" || deletePiece) haftMoveClock = 0;

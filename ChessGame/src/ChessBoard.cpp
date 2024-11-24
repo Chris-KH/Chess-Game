@@ -169,38 +169,8 @@ void ChessBoard::changePieces(int newIndex) {
 
 void ChessBoard::update(const Event& event) {
     //Update các sự kiện xảy ra trên bàn cờ
-    // Nhấn số [1..5] để thay đổi bàn cờ
-    if (event.type == Event::KeyPressed) {
-        if (event.key.code == Keyboard::Num1) {
-            changeBoard(0); // Thay đổi sang bàn cờ 1
-        }
-        else if (event.key.code == Keyboard::Num2) {
-            changeBoard(1); // Thay đổi sang bàn cờ 2
-        }
-        else if (event.key.code == Keyboard::Num3) {
-            changeBoard(2); // Thay đổi sang bàn cờ 3
-        }
-        else if (event.key.code == Keyboard::Num4) {
-            this->changeBoard(3); // Thay đổi sang bàn cờ 4
-        }
-        else if (event.key.code == Keyboard::Num5) {
-            this->changeBoard(4); // Thay đổi sang bàn cờ 5
-        }
-        else if (event.key.code == Keyboard::Num6) {
-            this->changePieces(0); 
-        }
-        else if (event.key.code == Keyboard::Num7) {
-            this->changePieces(1); 
-        }
-        else if (event.key.code == Keyboard::Num8) {
-            this->changePieces(2); 
-        }
-        else if (event.key.code == Keyboard::Num9) {
-            this->changePieces(3);
-        }
-    }
     // Nhấn chuột trái
-    else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+    if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMousePress(mouseX, mouseY);
@@ -355,7 +325,10 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
     getPossibleMoves(lastPiece, possibleMoves);
 
     if (find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
-        makeMove(lastRow, lastCol, row, col, possibleMoves);
+        Move* curMove = nullptr;
+        makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
+        string LAN = generateLongAlgebraicNotation(curMove);
+        cout << LAN << '\n';
     }
     // Nếu nhấn vào ô trước đó
     else if (selectedPiece == lastPiece) {
