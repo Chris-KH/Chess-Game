@@ -123,15 +123,25 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     */
 
     // Change board button
-    DropDownButton board("Chessboard", 275, 12, 40, 40, chessBoard.getBoardList(), chessBoard.getBoardIndex());
+    Font fontBoard;
+    if (!fontBoard.loadFromFile("../assets/fonts/ZenOldMincho.ttf")) {
+        throw runtime_error("Cannot load ZenOldMincho for GUI::settingChoice");
+    }
+    Text textBoard;
+    textBoard.setFont(fontBoard);
+    textBoard.setCharacterSize(25);
+    textBoard.setFillColor(Color::White);
+    textBoard.setPosition(50, 30);
+    textBoard.setString("Chessboard :");
+    DropDownButton board("Chessboard", 225, 9, 225, 40, chessBoard.getBoardList(), chessBoard.getBoardIndex());
 
     // Cancel button
     Button cancel;
-    cancel.setTextButton("cancel", "Cancel", "../assets/fonts/Holen Vintage.otf", 125, 20, 150, 700, 150, 687.5);
+    cancel.setTextButton("cancel", "Cancel", "../assets/fonts/Holen Vintage.otf", 115, 14, 50, 750, 50, 737.5);
 
     // Save button
     Button save;
-    save.setTextButton("save", "Save", "../assets/fonts/Holen Vintage.otf", 125, 20, 350, 700, 350, 687.5);
+    save.setTextButton("save", "Save", "../assets/fonts/Holen Vintage.otf", 115, 14, 335, 750, 355, 737.5);
 
     // Open setting window
     RenderWindow settingWD(sf::VideoMode(500, 800), "Setting", Style::Close | Style::Titlebar);
@@ -190,6 +200,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
         }
 
         settingWD.clear(Color(60, 60, 60, 255));
+        settingWD.draw(textBoard);
         board.draw(settingWD);
         cancel.drawText(settingWD);
         save.drawText(settingWD);
