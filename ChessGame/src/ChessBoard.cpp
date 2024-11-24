@@ -17,7 +17,7 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
         "Blue chessboard",
         "Brown chessboard",
         "Night owl chessboard",
-        "Wood chessboard"
+        "Wooden chessboard"
     };
     this->currentBoardIndex = currentBoardIndex;
 
@@ -115,7 +115,6 @@ bool ChessBoard::loadBoardTexture(const string& filePath) {
         return false; // Không thể load ảnh
     }
     boardSprite.setTexture(boardTexture);
-    boardSprite.setPosition(0, 0);
     updateBoardScale(); // Cập nhật tỉ lệ
     return true;
 }

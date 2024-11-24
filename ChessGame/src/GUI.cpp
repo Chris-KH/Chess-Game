@@ -123,11 +123,11 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     */
 
     const static float wdWidth = 600, wdHeight = 800;
-    const static float topSpace = 30, leftSpace = 50, rightSpace = 50;
+    const static float topSpace = 30, botSpace = 30, leftSpace = 50, rightSpace = 50;
     const static float lineSpace = 30;
 
     // Save old data(s)
-    int initBoard = chessBoard.getBoardIndex();
+    const int initBoard = chessBoard.getBoardIndex();
 
     // Board preview
     Sprite reviewBoard(chessBoard.getBoardSprite());
@@ -150,11 +150,11 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
 
     // Cancel button
     Button cancel;
-    cancel.setTextButton("cancel", "Cancel", "../assets/fonts/Holen Vintage.otf", 115, 14, 50, 750, 50, 737.5);
+    cancel.setTextButton("cancel", "Cancel", "../assets/fonts/Holen Vintage.otf", 115, 12, leftSpace, wdHeight - botSpace - 12 - 13, leftSpace, wdHeight - botSpace - 12 - 13 - 10);
 
     // Save button
     Button apply;
-    apply.setTextButton("apply", "Apply", "../assets/fonts/Holen Vintage.otf", 115, 14, 335, 750, 335, 737.5);
+    apply.setTextButton("apply", "Apply", "../assets/fonts/Holen Vintage.otf", 115, 12, wdWidth - rightSpace - 115 - 13, wdHeight - botSpace - 12 - 13, wdWidth - rightSpace - 115 - 13, wdHeight - botSpace - 12 - 13 - 10);
 
     // Open setting window
     RenderWindow settingWD(sf::VideoMode(600, 800), "Setting", Style::Close | Style::Titlebar);
@@ -168,97 +168,99 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     settingWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     Event event;
     Button* selectedButton = nullptr;
-    DropDownButton* selectedDDBut = nullptr;
-    
-    //// Set view for window: enable scrolling in window
-    //Vector2f viewCenter(settingWD.getSize().x / 2.f, settingWD.getSize().y / 2.f);
-    //View view(viewCenter, Vector2f(500.f, 800.f));
-
-    //// Set scroll bar
-    //RectangleShape scrollbar(Vector2f(10.f, 800.f));
-    //scrollbar.setPosition(490.f, 0.f);
-    //scrollbar.setFillColor(Color::White);
-    //RectangleShape scrollKnob(Vector2f(10.f, 10.f));
-    //scrollKnob.setPosition(490.f, 0.f);
-    //scrollKnob.setFillColor(Color::Blue);
+    DropDownButton* selectedDropDownButton = nullptr;
+    vector<Sprite*> spriteList = { &reviewBoard };
+    vector<Text*> textList = { &textBoard };
+    vector<Button*> buttonList = { &apply, &cancel };
+    vector<DropDownButton*> dropDownButtonList = { &board };
 
     while (settingWD.isOpen()) {
         while (settingWD.pollEvent(event)) {
-            Event::MouseButtonEvent mouse = event.mouseButton;
             if (event.type == Event::Closed) {
                 chessBoard.changeBoard(initBoard);
                 settingWD.close();
             }
             else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
-                // handle press
-                selectedButton = nullptr;
-                if (apply.contain(mouse.x, mouse.y)) selectedButton = &apply;
-                else if (cancel.contain(mouse.x, mouse.y)) selectedButton = &cancel;
-                else {
-                    if (board.getClick()) {
-                        chessBoard.changeBoard(board.eventOption(mouse.x, mouse.y));
-                    }
-                }
-
-                DropDownButton* lastDDBut = selectedDDBut;
-                selectedDDBut = nullptr;
-                if (board.contain(mouse.x, mouse.y)) selectedDDBut = &board;
-                if (lastDDBut && lastDDBut != selectedDDBut) {
-                    lastDDBut->setClick(0);
-                }
-                if (selectedDDBut) {
-                    selectedDDBut->click();
-                }
+                handlePressSetting(selectedButton, selectedDropDownButton, event.mouseButton, buttonList, dropDownButtonList, chessBoard);
 
             }
             else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
-                // handle release
-                Button* lastSelectedButton = selectedButton;
-                selectedButton = nullptr;
-                if (apply.contain(mouse.x, mouse.y)) selectedButton = &apply;
-                else if (cancel.contain(mouse.x, mouse.y)) selectedButton = &cancel;
-
-                // If click (press and release) on a button then do operations
-                if(selectedButton && selectedButton == lastSelectedButton) {
-                    if (selectedButton->getName() == "apply") {
-                        settingWD.close();
-                    }
-                    else if (selectedButton->getName() == "cancel") {
-                        chessBoard.changeBoard(initBoard);
-                        settingWD.close();
-                    }
-                }
+                handleReleaseSetting(selectedButton, selectedDropDownButton, event.mouseButton, buttonList, dropDownButtonList, initBoard, chessBoard, settingWD);
             }
-
-            //if (Keyboard::isKeyPressed(Keyboard::Down)) {
-            //    viewCenter.y += 3.f;
-            //}
-            //else if (Keyboard::isKeyPressed(Keyboard::Up)) {
-            //    viewCenter.y -= 3.f;
-            //}
         }
 
-        RectangleShape background(Vector2f((float)settingWD.getSize().x, 100.0f));
-        background.setFillColor(Color::Black);
-        background.setPosition(Vector2f(0.0f, settingWD.getSize().y - 100.0f));
-
-        settingWD.clear(Color(60, 60, 60, 255));
-        
-        //view.setCenter(viewCenter);
-        //settingWD.setView(view);
-        settingWD.draw(reviewBoard);
-        settingWD.draw(background);
-        settingWD.draw(textBoard);
-        board.draw(settingWD);
-        cancel.drawText(settingWD);
-        apply.drawText(settingWD);
-        
-        //settingWD.setView(settingWD.getDefaultView());
-        //settingWD.draw(scrollbar);
-        //settingWD.draw(scrollKnob);
-
-        settingWD.display();
+        drawSetting(settingWD, spriteList, textList, buttonList, dropDownButtonList);
     }
+}
+
+void GUI::handlePressSetting(Button *&selectedButton, DropDownButton *&selectedDropDownButton, Event::MouseButtonEvent &mouse, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList, ChessBoard& chessBoard) {
+    selectedButton = nullptr;
+    for (Button*& button : buttonList) {
+        if (button->contain(mouse.x, mouse.y)) {
+            selectedButton = button;
+            break;
+        }
+    }
+    if (dropDownButtonList[0]->getClick()) {
+        chessBoard.changeBoard(dropDownButtonList[0]->eventOption(mouse.x, mouse.y));
+    }
+
+    DropDownButton* lastDropDownButton = selectedDropDownButton;
+    selectedDropDownButton = nullptr;
+    for (DropDownButton*& button : dropDownButtonList) {
+        if (button->contain(mouse.x, mouse.y)) {
+            selectedDropDownButton = button;
+        }
+    }
+    if (lastDropDownButton && lastDropDownButton != selectedDropDownButton) {
+        lastDropDownButton->setClick(0);
+    }
+    if (selectedDropDownButton) {
+        selectedDropDownButton->click();
+    }
+}
+
+void GUI::handleReleaseSetting(Button *&selectedButton, DropDownButton *&selectedDropDownButton, Event::MouseButtonEvent &mouse, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList, int initBoard, ChessBoard &chessBoard, RenderWindow &window) {
+    Button* lastSelectedButton = selectedButton;
+    selectedButton = nullptr;
+    for (Button*& button : buttonList) {
+        if (button->contain(mouse.x, mouse.y)) {
+            selectedButton = button;
+            break;
+        }
+    }
+
+    // If click (press and release) on a button then do operations
+    if (selectedButton && selectedButton == lastSelectedButton) {
+        if (selectedButton->getName() == "apply") {
+            window.close();
+        }
+        else if (selectedButton->getName() == "cancel") {
+            chessBoard.changeBoard(initBoard);
+            window.close();
+        }
+    }
+}
+
+void GUI::drawSetting(RenderWindow& window, vector<Sprite*> &spriteList, vector<Text*> &textList, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList) {
+    RectangleShape background(Vector2f((float)window.getSize().x, 100.0f));
+    background.setFillColor(Color::Black);
+    background.setPosition(Vector2f(0.0f, window.getSize().y - 100.0f));
+    window.clear(Color(60, 60, 60, 255));
+    window.draw(background);
+    for (Sprite* sprite : spriteList) {
+        window.draw(*sprite);
+    }
+    for (Text* text : textList) {
+        window.draw(*text);
+    }
+    for (Button* button : buttonList) {
+        button->drawText(window);
+    }
+    for(DropDownButton* button : dropDownButtonList) {
+        button->draw(window);
+    }
+    window.display();
 }
 
 void GUI::gameOver(ChessBoard& chessBoard) {
