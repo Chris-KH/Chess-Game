@@ -199,7 +199,12 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
             }
         }
 
+        RectangleShape background(Vector2f((float)settingWD.getSize().x, 100.0f));
+        background.setFillColor(Color::Black);
+        background.setPosition(Vector2f(0.0f, settingWD.getSize().y - 100.0f));
+
         settingWD.clear(Color(60, 60, 60, 255));
+        settingWD.draw(background);
         settingWD.draw(textBoard);
         board.draw(settingWD);
         cancel.drawText(settingWD);
