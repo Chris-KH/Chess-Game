@@ -12,6 +12,13 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
             "../assets/Chess Board/ChessBoard4.png",
             "../assets/Chess Board/ChessBoard5.png"
     };
+    boardName = {
+        "Gray chessboard",
+        "Blue chessboard",
+        "Brown chessboard",
+        "Night owl chessboard",
+        "Wood chessboard"
+    };
     this->currentBoardIndex = currentBoardIndex;
 
     // Set texture for chess board
@@ -1117,6 +1124,10 @@ void ChessBoard::saveGame() {
     /*
         This feature i think we will use Algebraic Notation to store the current chess board
         Information about castling, promotion, en passant...
+
+        Reply: 
+            Yes, digitalize the pieces: 1 = king, 2 = queen, 3 = bishop, 4 = knight, 5 = rook, and 6 = pawn
+            Castling, promotion, en passant -> No idea yet
     */
 }
 

@@ -1,6 +1,10 @@
 #include "../lib/Button.h"
 
-void Button::setSpriteButton(std::string name, std::string imagePath, int width, int height, int posX, int posY) {
+Button::Button() : width(0), height(0), posX(0), posY(0) {
+	
+}
+
+void Button::setSpriteButton(std::string name, std::string imagePath, float width, float height, float posX, float posY) {
 	// Update name, width, height, posX, posY
 	this->name = name, this->width = width, this->height = height, this->posX = posX, this->posY = posY;
 	// Load the texture
@@ -21,7 +25,7 @@ void Button::setSpriteButton(std::string name, std::string imagePath, int width,
 	rectangle.setPosition(posX - 10, posY - 10); // Minus rectangle's thickness: -10
 }
 
-void Button::setTextButton(std::string name, std::string content, std::string fontPath, int width, int height, int posX, int posY, int textX, int textY) {
+void Button::setTextButton(std::string name, std::string content, std::string fontPath, float width, float height, float posX, float posY, float textX, float textY) {
 	// Update name, width, height, posX, posY
 	this->name = name, this->width = width, this->height = height, this->posX = posX, this->posY = posY;
 	//Load the font
@@ -47,7 +51,7 @@ void Button::setTextButton(std::string name, std::string content, std::string fo
 	rectangle.setPosition(posX - 10, posY - 10);
 }
 
-void Button::setSpriteAndTextButton(std::string name, std::string imagePath, std::string content, std::string fontPath, int width, int height, int posX, int posY, int spriteWidth, int spriteHeight, int spriteX, int spriteY, int textWidth, int textHeight, int textX, int textY) {
+void Button::setSpriteAndTextButton(std::string name, std::string imagePath, std::string content, std::string fontPath, float width, float height, float posX, float posY, float spriteWidth, float spriteHeight, float spriteX, float spriteY, float textWidth, float textHeight, float textX, float textY) {
 	// Update variables
 	this->name = name, this->width = width, this->height = height, this->posX = posX, this->posY = posY;
 	// Sprite: texture
@@ -97,6 +101,18 @@ void Button::drawAll(RenderWindow& window) {
 	window.draw(rectangle);
 	window.draw(sprite);
 	window.draw(text);
+}
+
+void Button::move(int addX, int addY) {
+	Vector2f rect = rectangle.getPosition();
+	rect.x += addX, rect.y += addY;
+	rectangle.setPosition(rect);
+	Vector2f sp = sprite.getPosition();
+	sp.x += addX, sp.y += addY;
+	sprite.setPosition(rect);
+	Vector2f txt = text.getPosition();
+	txt.x += addX, txt.y += addY;
+	text.setPosition(rect);
 }
 
 bool Button::contain(int x, int y) {

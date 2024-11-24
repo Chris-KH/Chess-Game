@@ -18,6 +18,7 @@ using namespace sf;
 #include "Knight.h"
 #include "Bishop.h"
 #include "Button.h"
+#include "DropDownButton.h"
 #include "ChessBoard.h"
 
 class GUI {
