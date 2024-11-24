@@ -79,6 +79,7 @@ public:
     bool isWhiteTurn(void) const { return this->whiteTurn; }
     int isOver(void) const { return gameOver; }
     int getBoardIndex(void) const { return currentBoardIndex; }
+    Sprite getBoardSprite(void) const { return boardSprite; }
 
     // Draw
     void update(const Event& ev);
