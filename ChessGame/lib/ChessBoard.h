@@ -66,6 +66,7 @@ private:
     //AI mode
     bool isAI;
     bool humanColor; //true = white, false = black
+    bool undoPress;
 public:
     // Constructor
     ChessBoard(RenderWindow* win, Stockfish* stockfish, int currentBoardIndex = 0, bool isAI = false);
@@ -136,6 +137,7 @@ public:
     bool getAI() const;
     void setHumanColor(bool humanColor);
     bool getHumanColor() const;
+    bool getUndoPress() const { return undoPress; };
     bool isAITurn() const;
     tuple<int, int, int ,int> processStockfishMove(const string& bestmove);
 };

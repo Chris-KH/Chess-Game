@@ -93,6 +93,7 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
     this->stockfish->setSkillLevel(20);
     this->stockfish->setBoardState(generateFEN());
     this->humanColor = true;
+    this->undoPress = false;
     
     // Check
     inCheck[0] = inCheck[1] = false;
@@ -358,7 +359,7 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
 
     if (find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
         Move* curMove = nullptr;
-        makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
+        if (undoPress == false) makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
     }
     // Nếu nhấn vào ô trước đó
     else if (selectedPiece == lastPiece) {
@@ -374,6 +375,8 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
     else {
         selectedPiece = lastPiece;
     }
+
+    undoPress = false;
 }
 
 void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
