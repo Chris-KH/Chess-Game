@@ -506,3 +506,18 @@ void ChessBoard::setHumanColor(bool humanColor) {
 bool ChessBoard::getHumanColor() const {
     return this->humanColor;
 }
+
+bool ChessBoard::isAITurn() const {
+    return this->whiteTurn != this->humanColor;
+}
+
+tuple<int, int, int, int> ChessBoard::processStockfishMove(const string& bestmove) {
+    if (bestmove.size() < 4) return { -1, -1, -1, -1 };
+
+    int lastCol = bestmove[0] - 'a';
+    int lastRow = '8' - bestmove[1];
+    int col = bestmove[2] - 'a';
+    int row = '8' - bestmove[3];
+
+    return { lastRow, lastCol, row, col };
+}

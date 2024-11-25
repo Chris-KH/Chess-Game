@@ -87,6 +87,7 @@ public:
     int getBoardIndex(void) const { return currentBoardIndex; }
     int getPieceIndex(void) const { return currentPieceIndex; }
     Sprite getBoardSprite(void) const { return boardSprite; }
+    Pieces* getPieceAtIndex(int row, int col);
 
     // Draw
     void update(const Event& ev);
@@ -135,4 +136,6 @@ public:
     bool getAI() const;
     void setHumanColor(bool humanColor);
     bool getHumanColor() const;
+    bool isAITurn() const;
+    tuple<int, int, int ,int> processStockfishMove(const string& bestmove);
 };
