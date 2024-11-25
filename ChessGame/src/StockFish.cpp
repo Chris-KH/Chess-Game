@@ -87,12 +87,16 @@ string Stockfish::getResponse() {
 
 string Stockfish::calculateBestMove(int timeLimit) {
     sendCommand("go movetime " + to_string(timeLimit) + "\n");
-    return getResponse();
+    string bestMove = getResponse();
+    //bestMove = bestMove.substr(bestMove.find("bestmove") + 9);
+    return bestMove;
 }
 
 string Stockfish::calculateBestMoveWithDepth(int depth, int timeLimit) {
     sendCommand("go depth " + to_string(depth) + " movetime " + to_string(timeLimit) + "\n");
-    return getResponse();
+    string bestMove = getResponse();
+    //bestMove = bestMove.substr(bestMove.find("bestmove") + 9);
+    return bestMove;
 }
 
 void Stockfish::setSkillLevel(int level) {
@@ -107,7 +111,7 @@ void Stockfish::newGame() {
 }
 
 void Stockfish::setBoardState(const string& fen) {
-    sendCommand("position fen " + fen + "\n");
+    sendCommand(fen + "\n");
 }
 
 void Stockfish::setTime(int whiteTime, int blackTime) {

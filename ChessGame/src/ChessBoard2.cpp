@@ -86,6 +86,8 @@ void ChessBoard::undoMove() {
     whiteTurn = board[fromPosition.first][fromPosition.second]->getColor();
 
     this->numPieces = countPieces();
+
+    stockfish->setBoardState(generateFEN());
 }
 
 void ChessBoard::redoMove() {
@@ -155,6 +157,8 @@ void ChessBoard::redoMove() {
     whiteTurn = !board[toPosition.first][toPosition.second]->getColor();
 
     this->numPieces = countPieces();
+
+    stockfish->setBoardState(generateFEN());
 }
 
 void ChessBoard::freeUndoStack() {
@@ -227,6 +231,10 @@ void ChessBoard::newGame() {
     for (int i = 0; i < 2; i++) castlingAvailability[i] = true;
     enPassantTargetSquare = "";
 
+    this->stockfish->newGame();
+    this->stockfish->setSkillLevel(20);
+    this->stockfish->setBoardState(generateFEN());
+
     // Check
     inCheck[0] = inCheck[1] = false;
 
@@ -276,7 +284,7 @@ void ChessBoard::loadGame(const string& path) {
 string ChessBoard::generateLongAlgebraicNotation(Move*& moved) {
     string LAN = "";
     const char x[9] = "abcdefgh";
-    const char y[9] = "12345678";
+    const char y[9] = "87654321";
 
     pair<int, int> fromPosition = moved->getFrom();
     pair<int, int> toPosition = moved->getTo();
@@ -395,11 +403,13 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         board[row][col] = move(board[lastRow][lastCol]);
         board[row][col]->setPosition(col, row);
 
+        enPassantTargetSquare = "";
         if (board[row][col]->getType() == "pawn" && abs(row - lastRow) == 2) {
+            
             unsigned num = (row + lastRow) / 2;
-            enPassantTargetSquare = char('a' + col) + char('1' + num);
+            enPassantTargetSquare += char('a' + col);
+            enPassantTargetSquare += char('8' - num);
         }
-        else enPassantTargetSquare = "";
 
         //Lưu quân tốt này có thể bắt tốt qua đường bắt ở bên nào bên nào không
         if (board[row][col]->getType() == "pawn" && (lastRow == 3 || lastRow == 4)) {
@@ -470,6 +480,8 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         this->justMovePiece = board[row][col].get();
         if (justMovePiece) justMovePiece->setJustMove(true);
     }
+
+    stockfish->setBoardState(generateFEN());
 
     // Bỏ chọn quân cờ này
     board[row][col]->resetNumPress();

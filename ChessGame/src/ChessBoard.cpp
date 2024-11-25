@@ -88,6 +88,11 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
     for (int i = 0; i < 2; i++) castlingAvailability[i] = true;
     enPassantTargetSquare = "";
 
+    //Set Stockfish
+    this->stockfish->newGame();
+    this->stockfish->setSkillLevel(20);
+    this->stockfish->setBoardState(generateFEN());
+    
     // Check
     inCheck[0] = inCheck[1] = false;
 
@@ -316,6 +321,8 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
     else if (lastPiece != nullptr && lastPiece->getColor() == whiteTurn) {
         selectedPiece = lastPiece;
     }
+    string bestmove = stockfish->calculateBestMoveWithDepth(10);
+    cout << bestmove << '\n';
 }
 
 void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
