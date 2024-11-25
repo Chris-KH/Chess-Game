@@ -66,8 +66,8 @@ int main() {
             chessBoard.draw();
             window.display();
 
-            if (chessBoard.getAI() && chessBoard.isAITurn()) {
-                string bestmove = stockfish.calculateBestMoveWithDepth(10, 1000);
+            if (chessBoard.getAI() && chessBoard.isAITurn() && !chessBoard.getUndoPress()) {
+                string bestmove = stockfish.calculateBestMoveWithDepth(10,1000);
                 tuple<int, int, int, int> movePos = chessBoard.processStockfishMove(bestmove);
                 int lastRow = get<0>(movePos);
                 int lastCol = get<1>(movePos);

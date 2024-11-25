@@ -7,6 +7,8 @@ void ChessBoard::undoMove() {
     undoStack.pop_back();
     redoStack.push_back(move);
 
+    this->undoPress = true;
+
     highlightTiles.clear();
     window->clear();
     draw();
@@ -95,6 +97,8 @@ void ChessBoard::redoMove() {
     Move* move = redoStack.back();
     redoStack.pop_back();
     undoStack.push_back(move);
+
+    this->undoPress = true;
 
     highlightTiles.clear();
     window->clear();
@@ -232,6 +236,8 @@ void ChessBoard::newGame() {
     haftMoveClock = 0;
     for (int i = 0; i < 2; i++) castlingAvailability[i] = true;
     enPassantTargetSquare = "";
+
+    this->undoPress = false;
 
     this->stockfish->newGame();
     this->stockfish->setSkillLevel(20);
