@@ -152,7 +152,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     Text textPiece("Pieces", fontBoard, 25);
     textPiece.setFillColor(Color::White);
     textPiece.setPosition(leftSpace, boardSpace + lineSpace - 10);
-    DropDownButton piece("Pieces", dropDownButtonWidth, 9, wdWidth - rightSpace - dropDownButtonWidth - 13, boardSpace + lineSpace, chessBoard.getPieceList(), chessBoard.getBoardIndex());
+    DropDownButton piece("Pieces", dropDownButtonWidth, 9, wdWidth - rightSpace - dropDownButtonWidth - 13, boardSpace + lineSpace, chessBoard.getPieceList(), chessBoard.getPieceIndex());
     const float pieceSpace = previewSpace + dropDownButtonSpace * 2;
 
     // Cancel button

@@ -25,8 +25,7 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
         "Pixel",
         "Neo"
     };
-    this->currentBoardIndex = currentBoardIndex;
-    this->currentPieceIndex = currentBoardIndex;
+    this->currentBoardIndex = this->currentPieceIndex = currentBoardIndex;
 
     // Set texture for chess board
     // Load first texture
@@ -164,6 +163,7 @@ bool ChessBoard::changeBoard(int newIndex) {
 }
 
 void ChessBoard::changePieces(int newIndex) {
+    currentPieceIndex = newIndex;
     for (auto& pieces : board) {
         for (auto& piece : pieces) {
             if (!piece) continue;
