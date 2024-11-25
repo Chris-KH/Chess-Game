@@ -41,6 +41,5 @@ int DropDownButton::eventOption(int x, int y) {
 		list[i]->move(0, -(i + 1) * (height + 23));
 		if (ok) break;
 	}
-	cout << name << " changes to " << curBut << '\n';
 	return curBut;
 }

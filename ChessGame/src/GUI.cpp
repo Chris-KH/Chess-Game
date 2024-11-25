@@ -130,12 +130,41 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
 
     // Save old data(s)
     const int initBoard = chessBoard.getBoardIndex();
+    const int initPiece = chessBoard.getPieceIndex();
+    const std::string color = chessBoard.isWhiteTurn() ? "white" : "black";
 
     // Board preview
     Sprite reviewBoard(chessBoard.getBoardSprite());
     reviewBoard.setPosition(leftSpace, topSpace);
     reviewBoard.setTextureRect(IntRect(65, 65, 500, 200));
     const float previewSpace = topSpace + reviewBoard.getGlobalBounds().height;
+    vector<std::string> pieceThemePath = {
+        "../assets/Standard Theme/",
+        "../assets/Cartoon Theme/",
+        "../assets/Pixel Theme/",
+        "../assets/Neo Theme/"
+    };
+    vector<std::string> piecePath = {
+        color + "-king.png",
+        color + "-queen.png",
+        color + "-bishop.png",
+        color + "-knight.png",
+        color + "-rook.png",
+        color + "-pawn.png",
+        color + "-pawn.png",
+        color + "-pawn.png",
+        color + "-pawn.png",
+        color + "-pawn.png",
+    };
+    vector<Texture> pieceTexture(10);
+    vector<Sprite> reviewPiece(10);
+    for (int i = 0; i < 10; i++) {
+        if (i < 5)
+            reviewPiece[i].setPosition(leftSpace + i * 100, topSpace);
+        else
+            reviewPiece[i].setPosition(leftSpace + (i - 5) * 100, topSpace + 100);
+    }
+    setPiece(initPiece, pieceThemePath, piecePath, pieceTexture, reviewPiece);
 
     // Change board button
     Font fontBoard;
@@ -177,6 +206,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     Button* selectedButton = nullptr;
     DropDownButton* selectedDropDownButton = nullptr;
     vector<Sprite*> spriteList = { &reviewBoard };
+    for (int i = 0; i < 10; i++) spriteList.push_back(&reviewPiece[i]);
     vector<Text*> textList = { &textBoard, &textPiece };
     vector<Button*> buttonList = { &apply, &cancel };
     vector<DropDownButton*> dropDownButtonList = { &board, &piece };
@@ -188,8 +218,10 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
                 settingWD.close();
             }
             else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+                int lastPieceIndex = chessBoard.getPieceIndex();
                 handlePressSetting(selectedButton, selectedDropDownButton, event.mouseButton, buttonList, dropDownButtonList, chessBoard);
-
+                if(lastPieceIndex != chessBoard.getPieceIndex()) 
+                    setPiece(chessBoard.getPieceIndex(), pieceThemePath, piecePath, pieceTexture, reviewPiece);
             }
             else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                 handleReleaseSetting(selectedButton, selectedDropDownButton, event.mouseButton, buttonList, dropDownButtonList, initBoard, chessBoard, settingWD);
@@ -197,6 +229,20 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
         }
 
         drawSetting(settingWD, selectedDropDownButton, spriteList, textList, buttonList, dropDownButtonList);
+    }
+}
+
+void GUI::setPiece(int num, const vector<std::string>& pieceThemePath, const vector<std::string>& piecePath, vector<Texture>& pieceTexture, vector<Sprite>& reviewPiece) {
+    for (int i = 0; i < 10; i++) {
+        if (!pieceTexture[i].loadFromFile(pieceThemePath[num] + piecePath[i])) {
+            throw runtime_error("Cannot load piece texture in GUI::setPiece");
+        }
+        float r = min(100.f / pieceTexture[i].getSize().x, 100.f / pieceTexture[i].getSize().y);
+        Sprite newSprite;
+        newSprite.setTexture(pieceTexture[i]);
+        newSprite.setScale(r, r);
+        newSprite.setPosition(reviewPiece[i].getPosition());
+        reviewPiece[i] = newSprite;
     }
 }
 

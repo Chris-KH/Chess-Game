@@ -177,8 +177,6 @@ bool Pieces::isThreatened(int row, int col, const vector<vector<unique_ptr<Piece
                         dx /= d, dy /= d;
                         int x = row + dx, y = col + dy;
                         while (x != r || y != c) {
-                            assert(0 <= x && x < 8);
-                            assert(0 <= y && y < 8);
                             if (board[x][y] != nullptr) {
                                 curCheck = false;
                                 break;
