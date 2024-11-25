@@ -38,7 +38,7 @@ unique_ptr<Pieces> GUI::promoteChoice(unique_ptr<Pieces>& piece) {
     // Create window and font
     RenderWindow window(VideoMode(600, 200), "Choose Promotion Piece");
     Image icon;
-    if (!icon.loadFromFile("../assets/PromotionIcon.png")) {
+    if (!icon.loadFromFile("../assets/Icon/PromotionIcon.png")) {
         cerr << "Failed to load icon!" << '\n';
         return nullptr;
     }
@@ -168,7 +168,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
 
     // Set icon for window
     Image icon;
-    if (!icon.loadFromFile("../assets/SettingIcon.png")) {
+    if (!icon.loadFromFile("../assets/Icon/SettingIcon.png")) {
         cerr << "Failed to load icon!" << '\n';
         return;
     }
@@ -329,7 +329,7 @@ void GUI::gameOver(ChessBoard& chessBoard) {
     
     RenderWindow gameOverWD(VideoMode(windowWidth, windowHeight), "Game Over", Style::Titlebar | Style::Close);
     Image icon;
-    if (!icon.loadFromFile("../assets/GameOVerIcon.png")) {
+    if (!icon.loadFromFile("../assets/Icon/GameOVerIcon.png")) {
         cerr << "Failed to load icon!" << '\n';
         return;
     }
@@ -352,15 +352,15 @@ void GUI::gameOver(ChessBoard& chessBoard) {
     }
 }
 
-void GUI::newGame(ChessBoard& chessBoard) {
+bool GUI::newGame(ChessBoard& chessBoard) {
     Button onePButton, twoPButton;
     onePButton.setSpriteAndTextButton("playerVersusAI", "../assets/Button/playerVersusAI.png", "Player vs. AI", "../assets/fonts/CherryBombOne.ttf", 420, 50, 40, 40, 50, 50, 40, 40, 350, 30, 110, 32);
     twoPButton.setSpriteAndTextButton("playerVersusPlayer", "../assets/Button/playerVersusPlayer.png", "Player vs. Player", "../assets/fonts/CherryBombOne.ttf", 420, 50, 40, 170, 50, 50, 40, 170, 350, 30, 110, 162);
 
     Image icon;
-    if (!icon.loadFromFile("../assets/NewGameIcon.png")) {
+    if (!icon.loadFromFile("../assets/Icon/NewGameIcon.png")) {
         cerr << "Failed to load icon!" << '\n';
-        return;
+        return false;
     }
 
     int wdWidth = 500, wdHeight = 270; // can be modified later
@@ -374,6 +374,7 @@ void GUI::newGame(ChessBoard& chessBoard) {
         while (newGameWD.pollEvent(event)) {
             mouse = event.mouseButton;
             if (event.type == Event::Closed) {
+                return false;
                 newGameWD.close();
             }
             else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
@@ -403,6 +404,8 @@ void GUI::newGame(ChessBoard& chessBoard) {
         twoPButton.drawAll(newGameWD);
         newGameWD.display();
     }
+
+    return true;
 }
 
 void GUI::saveGame(ChessBoard* chessBoard) {
@@ -410,7 +413,7 @@ void GUI::saveGame(ChessBoard* chessBoard) {
 
     RenderWindow window(VideoMode(800, 400), "Save Game", Style::Close | Style::Titlebar);
     Image icon;
-    if (!icon.loadFromFile("../assets/saveGameIcon.png")) {
+    if (!icon.loadFromFile("../assets/Icon/saveGameIcon.png")) {
         cerr << "Failed to load icon!" << '\n';
         return;
     }
@@ -546,5 +549,26 @@ void GUI::saveGame(ChessBoard* chessBoard) {
             window.draw(notification);
         }
         window.display();
+    }
+}
+
+void GUI::loadGame(ChessBoard& chessBoard) {
+    RenderWindow loadWD(VideoMode(500, 500), "Load game", Style::Close | Style::Titlebar);
+    Image icon;
+    if (!icon.loadFromFile("../assets/Icon/LoadGameIcon.png")) {
+        throw runtime_error("Cannot load 'LoadGameIcon.png'!\n");
+    }
+    loadWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+    Event event;
+
+    while (loadWD.isOpen()) {
+        while (loadWD.pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                loadWD.close();
+            }
+        }
+
+        loadWD.clear(Color(80, 80, 80, 255));
+        loadWD.display();
     }
 }

@@ -116,8 +116,7 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
     buttonList.push_back(move(settingBut));
     unique_ptr<Button> loadBut = make_unique<Button>();
     loadBut->setSpriteButton("load", "../assets/Button/LoadGame.png", 35, 35, 1110, 100);
-    buttonList.push_back(move(loadBut));
-    
+    buttonList.push_back(move(loadBut));   
 }
 
 ChessBoard::~ChessBoard() {
@@ -435,7 +434,7 @@ void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
             GUI::settingChoice(*this);
         }
         else if (selectedBut->getName() == "load") {
-            // loadGame(...);
+            loadGame();
         }
     }
 }
