@@ -397,7 +397,7 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
 
         if (board[row][col]->getType() == "pawn" && abs(row - lastRow) == 2) {
             unsigned num = (row + lastRow) / 2;
-            enPassantTargetSquare
+            // enPassantTargetSquare
         }
 
         //Lưu quân tốt này có thể bắt tốt qua đường bắt ở bên nào bên nào không

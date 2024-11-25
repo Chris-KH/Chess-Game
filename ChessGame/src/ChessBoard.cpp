@@ -95,21 +95,29 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
     gameOver = 0;
 
     // Buttons
-    Button newBut;
-    newBut.setSpriteButton("new", "../assets/Button/new.png", 35, 35, 960, 30);
-    Button undoBut;
-    undoBut.setSpriteButton("undo", "../assets/Button/undo.png", 35, 35, 1035, 30);
-    Button redoBut;
-    redoBut.setSpriteButton("redo", "../assets/Button/redo.png", 35, 35, 1110, 30);
-    Button surrenderBut;
-    surrenderBut.setSpriteButton("surrender", "../assets/Button/surrender.png", 35, 35, 1185, 30);
-    Button saveBut;
-    saveBut.setSpriteButton("save", "../assets/Button/save.png", 35, 35, 1260, 30);
-    Button settingBut;
-    settingBut.setSpriteButton("setting", "../assets/Button/settings.png", 35, 35, 1335, 30);
-    Button loadBut;
-    loadBut.setSpriteButton("load", "../assets/Button/LoadGame.png", 35, 35, 960, 80);
-    buttonList = { &newBut, &undoBut, &redoBut, &surrenderBut, &saveBut, &settingBut, &loadBut };
+    unique_ptr<Button> newBut = make_unique<Button>();
+    newBut->setSpriteButton("new", "../assets/Button/new.png", 35, 35, 960, 30);
+    buttonList.push_back(move(newBut));
+    unique_ptr<Button> undoBut = make_unique<Button>();
+    undoBut->setSpriteButton("undo", "../assets/Button/undo.png", 35, 35, 1035, 30);
+    buttonList.push_back(move(undoBut));
+    unique_ptr<Button> redoBut = make_unique<Button>();
+    redoBut->setSpriteButton("redo", "../assets/Button/redo.png", 35, 35, 1110, 30);
+    buttonList.push_back(move(redoBut));
+    unique_ptr<Button> surrenderBut = make_unique<Button>();
+    surrenderBut->setSpriteButton("surrender", "../assets/Button/surrender.png", 35, 35, 1185, 30);
+    buttonList.push_back(move(surrenderBut));
+
+    unique_ptr<Button> saveBut = make_unique<Button>();
+    saveBut->setSpriteButton("save", "../assets/Button/save.png", 35, 35, 960, 100);
+    buttonList.push_back(move(saveBut));
+    unique_ptr<Button> settingBut = make_unique<Button>();
+    settingBut->setSpriteButton("setting", "../assets/Button/settings.png", 35, 35, 1035, 100);
+    buttonList.push_back(move(settingBut));
+    unique_ptr<Button> loadBut = make_unique<Button>();
+    loadBut->setSpriteButton("load", "../assets/Button/LoadGame.png", 35, 35, 1110, 100);
+    buttonList.push_back(move(loadBut));
+    
 }
 
 ChessBoard::~ChessBoard() {
@@ -234,7 +242,7 @@ void ChessBoard::draw() {
     }
 
     // Buttons
-    for (Button*& button : buttonList) {
+    for (unique_ptr<Button> &button : buttonList) {
         button->drawSprite(*window);
     }
 }
@@ -393,8 +401,8 @@ void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
 void ChessBoard::handleButtonPress(int mouseX, int mouseY) {
     // Find which button the mouse pressed
     selectedBut = nullptr;
-    for (Button*& button : buttonList) {
-        if (button->contain(mouseX, mouseY)) selectedBut = button;
+    for (unique_ptr<Button> &button : buttonList) {
+        if (button->contain(mouseX, mouseY)) selectedBut = button.get();
     }
 }
 
@@ -403,8 +411,8 @@ void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
     Button* lastBut = selectedBut;
     // Find which button the mouse released
     selectedBut = nullptr;
-    for (Button*& button : buttonList) {
-        if (button->contain(mouseX, mouseY)) selectedBut = button;
+    for (unique_ptr<Button>& button : buttonList) {
+        if (button->contain(mouseX, mouseY)) selectedBut = button.get();
     }
     // If the button clicked the same with the button released then do operation(s) on this
     if (selectedBut && selectedBut == lastBut) {

@@ -49,7 +49,7 @@ private:
     vector<Move*> redoStack;
 
     // Buttons
-    vector<Button*> buttonList;
+    vector<unique_ptr<Button>> buttonList;
     Button* selectedBut = nullptr;
 
     //Chess board state
@@ -136,20 +136,3 @@ public:
     void setHumanColor(bool humanColor);
     bool getHumanColor() const;
 };
-
-
-void ChessBoard::setAI(bool isAI) {
-    this->isAI = isAI;
-}
-
-bool ChessBoard::getAI() const {
-    return this->isAI;
-}
-
-void ChessBoard::setHumanColor(bool humanColor) {
-    this->humanColor = humanColor;
-}
-
-bool ChessBoard::getHumanColor() const {
-    return this->humanColor;
-}
