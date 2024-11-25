@@ -33,7 +33,7 @@ int main() {
         // Set icon for window
         window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-        ChessBoard chessBoard(&window, &stockfish);
+        ChessBoard chessBoard(&window, &stockfish, 0, true);
         cout << "Created a chessboard\n";
 
         //Stockfish stockfish;
@@ -51,6 +51,28 @@ int main() {
                 else {
                     GUI::gameOver(chessBoard);
                 }
+            }
+
+            window.clear(Color(60, 60, 60, 255));
+            chessBoard.draw();
+            window.display();
+
+            if (chessBoard.getAI() && chessBoard.isAITurn()) {
+                string bestmove = stockfish.calculateBestMoveWithDepth(20, 1000);
+                tuple<int, int, int, int> movePos = chessBoard.processStockfishMove(bestmove);
+                int lastRow = get<0>(movePos);
+                int lastCol = get<1>(movePos);
+                int row = get<2>(movePos);
+                int col = get<3>(movePos);
+
+                Move* curMove = nullptr;
+
+                vector<pair<int, int>> possibleMoves;
+                chessBoard.getPossibleMoves(chessBoard.getPieceAtIndex(lastRow, lastCol), possibleMoves);
+
+                chessBoard.makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
+
+                Sleep(500);
             }
 
             window.clear(Color(60, 60, 60, 255));

@@ -81,21 +81,21 @@ string Stockfish::getResponse() {
             }
         }
     }
-    cout << response << '\n';
+    //cout << response << '\n';
     return response;
 }
 
 string Stockfish::calculateBestMove(int timeLimit) {
     sendCommand("go movetime " + to_string(timeLimit) + "\n");
     string bestMove = getResponse();
-    //bestMove = bestMove.substr(bestMove.find("bestmove") + 9);
+    bestMove = bestMove.substr(bestMove.find("bestmove") + 9);
     return bestMove;
 }
 
 string Stockfish::calculateBestMoveWithDepth(int depth, int timeLimit) {
     sendCommand("go depth " + to_string(depth) + " movetime " + to_string(timeLimit) + "\n");
     string bestMove = getResponse();
-    //bestMove = bestMove.substr(bestMove.find("bestmove") + 9);
+    bestMove = bestMove.substr(bestMove.find("bestmove") + 9);
     return bestMove;
 }
 

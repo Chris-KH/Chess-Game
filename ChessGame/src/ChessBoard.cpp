@@ -92,6 +92,7 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
     this->stockfish->newGame();
     this->stockfish->setSkillLevel(20);
     this->stockfish->setBoardState(generateFEN());
+    this->humanColor = true;
     
     // Check
     inCheck[0] = inCheck[1] = false;
@@ -291,6 +292,14 @@ void ChessBoard::getPossibleMoves(Pieces* clickedPiece, vector<pair<int, int>>& 
     swap(ret, vpii);
 }
 
+Pieces* ChessBoard::getPieceAtIndex(int row, int col) {
+    if (row < 0 || row >= 8 || col < 0 || col >= 8) return nullptr;
+
+    if (!board[row][col]) return nullptr;
+
+    return board[row][col].get();
+}
+
 void ChessBoard::handleMousePress(int mouseX, int mouseY) {
     int row = (mouseY - 65) / 100; // Kích thước ô là 100, trừ viền 65px
     int col = (mouseX - 65) / 100; // Kích thước ô là 100, trừ viền 65px
@@ -320,8 +329,6 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
     else if (lastPiece != nullptr && lastPiece->getColor() == whiteTurn) {
         selectedPiece = lastPiece;
     }
-    string bestmove = stockfish->calculateBestMoveWithDepth(10);
-    cout << bestmove << '\n';
 }
 
 void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
@@ -352,8 +359,6 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
     if (find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
         Move* curMove = nullptr;
         makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
-        string LAN = generateLongAlgebraicNotation(curMove);
-        cout << LAN << '\n';
     }
     // Nếu nhấn vào ô trước đó
     else if (selectedPiece == lastPiece) {
