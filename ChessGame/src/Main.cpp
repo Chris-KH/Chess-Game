@@ -25,7 +25,7 @@ int main() {
         Stockfish stockfish;
         RenderWindow window(VideoMode(1400, 930), "Chess Game", Style::Close | Style::Titlebar);
         Image icon;
-        if (!icon.loadFromFile("../assets/ChessGameIcon.png")) {
+        if (!icon.loadFromFile("../assets/Icon/ChessGameIcon.png")) {
             cerr << "Failed to load icon!" << '\n';
             return -1;
         }

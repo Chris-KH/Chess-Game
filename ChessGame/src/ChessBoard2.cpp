@@ -173,7 +173,9 @@ void ChessBoard::freeRedoStack() {
 
 //Reset game (new game)
 void ChessBoard::newGame() {
-    GUI::newGame(*this);
+    if (GUI::newGame(*this) == false) {
+        return;
+    }
 
     // CLear old pieces
     for (int i = 0; i < 8; i++) {
@@ -277,8 +279,8 @@ bool ChessBoard::saveGame(const string& path) {
 }
 
 //Load game
-void ChessBoard::loadGame(const string& path) {
-
+void ChessBoard::loadGame(/*const string& path*/) {
+    GUI::loadGame(*this);
 }
 
 string ChessBoard::generateLongAlgebraicNotation(Move*& moved) {

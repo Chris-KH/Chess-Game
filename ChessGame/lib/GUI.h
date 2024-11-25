@@ -40,8 +40,11 @@ public:
 		New game window
 		Two option, AI or Human
 	*/
-	static void newGame(ChessBoard& chessBoard);
+	static bool newGame(ChessBoard& chessBoard);
 
 	//Get name of file to save game
 	static void saveGame(ChessBoard* chessBoard);
+
+	//Load Game window
+	static void loadGame(ChessBoard& chessBoard);
 };
