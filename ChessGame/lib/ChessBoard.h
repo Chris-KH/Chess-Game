@@ -39,7 +39,7 @@ private:
     * gameOver = 0: the game is not over
     * gameOver = 1: white won
     * gameOver = 2: black won
-    * gameOver = 3: taiwan
+    * gameOver = 3: Taiwan
     */
     int gameOver;
 
@@ -47,10 +47,6 @@ private:
     // Stack store piece move
     vector<Move*> undoStack; //index 0, 1 for start position and 2,3 for destination position
     vector<Move*> redoStack;
-
-    // Buttons
-    vector<unique_ptr<Button>> buttonList;
-    Button* selectedBut = nullptr;
 
     //Chess board state
     bool whiteTurn;
@@ -69,7 +65,7 @@ private:
     bool undoPress;
 public:
     // Constructor
-    ChessBoard(RenderWindow* win, Stockfish* stockfish, int currentBoardIndex = 0, bool isAI = false);
+    ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI = false);
     ~ChessBoard();
 
     // Updates
@@ -78,6 +74,7 @@ public:
     bool changeBoard(int newIndex);
     void changePieces(int newIndex);
     void addPiece(unique_ptr<Pieces> piece, int col, int row);
+    void setGameOver(int val) { gameOver = val; }
     size_t countPieces();
 
     // Get
@@ -99,8 +96,6 @@ public:
     void handleMousePress(int mouseX, int mouseY);
     void handleMouseRelease(int mouseX, int mouseY);
     void highlightPossibleMove(Pieces* clickedPiece);
-    void handleButtonPress(int mouseX, int mouseY);
-    void handleButtonRelease(int mouseX, int mouseY);
 
     // Player turn
     void alterTurn(void); // Đổi lượt

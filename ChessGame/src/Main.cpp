@@ -14,6 +14,7 @@ using namespace sf;
 //Header include
 //#include "../lib/Game.h"
 #include "../lib/ChessBoard.h"
+#include "../lib/SideBoard.h"
 #include "../lib/StockFish.h"
 
 int main() {
@@ -29,11 +30,11 @@ int main() {
             cerr << "Failed to load icon!" << '\n';
             return -1;
         }
-
         // Set icon for window
         window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-        ChessBoard chessBoard(&window, &stockfish, 0, true);
+        ChessBoard chessBoard(&window, &stockfish, true);
+        SideBoard sideBoard(&window, &chessBoard);
         cout << "Created a chessboard\n";
 
         //Stockfish stockfish;
@@ -53,6 +54,7 @@ int main() {
             else {
                 GUI::gameOver(chessBoard);
             }
+            sideBoard.update(event);
 
             RectangleShape background(Vector2f((float)window.getSize().x - (float)window.getSize().y - 6, 165.0f));
             background.setFillColor(Color::Black);
@@ -64,6 +66,7 @@ int main() {
             window.clear(Color(60, 60, 60, 255));
             window.draw(background);
             chessBoard.draw();
+            sideBoard.draw();
             window.display();
 
             if (chessBoard.getAI() && chessBoard.isAITurn() && !chessBoard.getUndoPress()) {
@@ -87,6 +90,7 @@ int main() {
             window.clear(Color(60, 60, 60, 255));
             window.draw(background);
             chessBoard.draw();
+            sideBoard.draw();
             window.display();
         }
     }

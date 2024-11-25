@@ -1,7 +1,7 @@
 ﻿#include"../lib/ChessBoard.h"
 
 // Thiết lập các thứ
-ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoardIndex, bool isAI) {
+ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
     // Khởi tạo
     window = win;
     this->stockfish = stockfish;
@@ -100,30 +100,6 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
 
     // Game Over
     gameOver = 0;
-
-    // Buttons
-    unique_ptr<Button> newBut = make_unique<Button>();
-    newBut->setSpriteButton("new", "../assets/Button/new.png", 35, 35, 960, 30);
-    buttonList.push_back(move(newBut));
-    unique_ptr<Button> undoBut = make_unique<Button>();
-    undoBut->setSpriteButton("undo", "../assets/Button/undo.png", 35, 35, 1035, 30);
-    buttonList.push_back(move(undoBut));
-    unique_ptr<Button> redoBut = make_unique<Button>();
-    redoBut->setSpriteButton("redo", "../assets/Button/redo.png", 35, 35, 1110, 30);
-    buttonList.push_back(move(redoBut));
-    unique_ptr<Button> surrenderBut = make_unique<Button>();
-    surrenderBut->setSpriteButton("surrender", "../assets/Button/surrender.png", 35, 35, 1185, 30);
-    buttonList.push_back(move(surrenderBut));
-
-    unique_ptr<Button> saveBut = make_unique<Button>();
-    saveBut->setSpriteButton("save", "../assets/Button/save.png", 35, 35, 960, 100);
-    buttonList.push_back(move(saveBut));
-    unique_ptr<Button> settingBut = make_unique<Button>();
-    settingBut->setSpriteButton("setting", "../assets/Button/settings.png", 35, 35, 1035, 100);
-    buttonList.push_back(move(settingBut));
-    unique_ptr<Button> loadBut = make_unique<Button>();
-    loadBut->setSpriteButton("load", "../assets/Button/LoadGame.png", 35, 35, 1110, 100);
-    buttonList.push_back(move(loadBut));   
 }
 
 ChessBoard::~ChessBoard() {
@@ -203,14 +179,12 @@ void ChessBoard::update(const Event& event) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMousePress(mouseX, mouseY);
-        handleButtonPress(mouseX, mouseY);
     }
     // Release left mouse
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMouseRelease(mouseX, mouseY);
-        handleButtonRelease(mouseX, mouseY);
         if (isCheck(whiteTurn, true)) {
             if (cannotMove()) {
                 gameOver = whiteTurn + 1; // Checkmate
@@ -245,11 +219,6 @@ void ChessBoard::draw() {
             if (!piece) continue;
             piece->draw(*window);
         }
-    }
-
-    // Buttons
-    for (unique_ptr<Button> &button : buttonList) {
-        button->drawSprite(*window);
     }
 }
 
@@ -410,48 +379,6 @@ void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
     highlightTile.setPosition(float(65 + selectedPiece->getCol() * 100), float(65 + selectedPiece->getRow() * 100)); // Đặt vị trí ô tô màu với viền
     highlightTile.setFillColor(Color(100, 255, 100, 128)); // Màu xanh
     highlightTiles.push_back(highlightTile);
-}
-
-void ChessBoard::handleButtonPress(int mouseX, int mouseY) {
-    // Find which button the mouse pressed
-    selectedBut = nullptr;
-    for (unique_ptr<Button> &button : buttonList) {
-        if (button->contain(mouseX, mouseY)) selectedBut = button.get();
-    }
-}
-
-void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
-    // Record the last button pressed
-    Button* lastBut = selectedBut;
-    // Find which button the mouse released
-    selectedBut = nullptr;
-    for (unique_ptr<Button>& button : buttonList) {
-        if (button->contain(mouseX, mouseY)) selectedBut = button.get();
-    }
-    // If the button clicked the same with the button released then do operation(s) on this
-    if (selectedBut && selectedBut == lastBut) {
-        if (selectedBut->getName() == "undo") {
-            undoMove();
-        }
-        else if (selectedBut->getName() == "redo") {
-            redoMove();
-        }
-        else if (selectedBut->getName() == "save") {
-            GUI::saveGame(this);
-        }
-        else if (selectedBut->getName() == "new") {
-            newGame();
-        }
-        else if (selectedBut->getName() == "surrender") {
-            gameOver = whiteTurn + 1;
-        }
-        else if (selectedBut->getName() == "setting") {
-            GUI::settingChoice(*this);
-        }
-        else if (selectedBut->getName() == "load") {
-            loadGame();
-        }
-    }
 }
 
 // Player turn

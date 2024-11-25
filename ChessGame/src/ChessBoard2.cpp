@@ -258,7 +258,6 @@ void ChessBoard::newGame() {
     selectedPiece = nullptr;
     pieceFollowingMouse = nullptr;
     highlightTiles.clear();
-    selectedBut = nullptr;
 }
 
 //Save game
