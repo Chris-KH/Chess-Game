@@ -334,7 +334,7 @@ void GUI::gameOver(ChessBoard& chessBoard) {
     * Display text: "White won", "Black won", or "Tied" to announce
     * that the game was over with the corresponding state.
     * 
-    * After turning off this window, game reset
+    * After turning off this window, game stay but player cannot touch the screen
     */
     int windowWidth = 300, windowHeight = 200;
     //float rW, rH;
@@ -390,7 +390,6 @@ void GUI::gameOver(ChessBoard& chessBoard) {
         while (gameOverWD.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 gameOverWD.close();
-                chessBoard.newGame();
             }
         }
 

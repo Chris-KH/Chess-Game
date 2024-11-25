@@ -35,7 +35,6 @@ int main() {
 
         ChessBoard chessBoard(&window, &stockfish, true);
         SideBoard sideBoard(&window, &chessBoard);
-        cout << "Created a chessboard\n";
 
         //Stockfish stockfish;
 
@@ -47,14 +46,14 @@ int main() {
                     window.close();
                 }
             }
-
+            int gameOver = chessBoard.isOver();
             if (chessBoard.isOver() == 0) {
                 chessBoard.update(event);
             }
-            else {
+            sideBoard.update(event);
+            if (chessBoard.isOver() != 0 && gameOver == 0) {
                 GUI::gameOver(chessBoard);
             }
-            sideBoard.update(event);
 
             RectangleShape background(Vector2f((float)window.getSize().x - (float)window.getSize().y - 6, 165.0f));
             background.setFillColor(Color::Black);
