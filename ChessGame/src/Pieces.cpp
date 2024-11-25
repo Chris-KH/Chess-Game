@@ -131,15 +131,15 @@ bool Pieces::isThreatened(int row, int col, const vector<vector<unique_ptr<Piece
                 // Kiểm tra nếu quân cờ có thể di chuyển đến ô đích
                 bool curCheck = false;
                 if (piece->getType() == "king") { // 1. Vua
-                    if (abs(r - getRow()) <= 1 && abs(c - getCol()) <= 1) curCheck = true;
+                    if (abs(r - row) <= 1 && abs(c - col) <= 1) curCheck = true;
                 }
                 else if (board[r][c]->getType() == "queen") { // 2. Hậu
-                    if (r == getRow() || c == getCol() || 
-                        r + c == getRow() + getCol() || r - c == getRow() - getCol()) { // Cùng hàng, cột, đường chéo
+                    if (r == row || c == col || 
+                        r + c == row + col || r - c == row - col) { // Cùng hàng, cột, đường chéo
                         curCheck = true;
-                        int dx = r - getRow(), dy = c - getCol(), d = max(abs(dx), abs(dy));
+                        int dx = r - row, dy = c - col, d = max(abs(dx), abs(dy));
                         dx /= d, dy /= d;
-                        int x = getRow() + dx, y = getCol() + dy;
+                        int x = row + dx, y = col + dy;
                         while (x != r || y != c) {
                             if (board[x][y] != nullptr) {
                                 curCheck = false;
@@ -150,11 +150,11 @@ bool Pieces::isThreatened(int row, int col, const vector<vector<unique_ptr<Piece
                     }
                 }
                 else if (board[r][c]->getType() == "bishop") { // 3. Tượng
-                    if (r + c == getRow() + getCol() || r - c == getRow() - getCol()) { // cùng đường chéo
+                    if (r + c == row + col || r - c == row - col) { // cùng đường chéo
                         curCheck = true;
-                        int dx = r - getRow(), dy = c - getCol(), d = max(abs(dx), abs(dy));
+                        int dx = r - row, dy = c - col, d = max(abs(dx), abs(dy));
                         dx /= d, dy /= d;
-                        int x = getRow() + dx, y = getCol() + dy;
+                        int x = row + dx, y = col + dy;
                         while (x != r || y != c) {
                             if (board[x][y] != nullptr) {
                                 curCheck = false;
@@ -165,18 +165,20 @@ bool Pieces::isThreatened(int row, int col, const vector<vector<unique_ptr<Piece
                     }
                 }
                 else if (board[r][c]->getType() == "knight") { // 4. Mã
-                    if ((abs(getRow() - r) == 2 && abs(getCol() - c) == 1) ||
-                        (abs(getRow() - r) == 1 && abs(getCol() - c) == 2)) {
+                    if ((abs(row - r) == 2 && abs(col - c) == 1) ||
+                        (abs(row - r) == 1 && abs(col - c) == 2)) {
                         curCheck = true;
                     }
                 }
                 else if (board[r][c]->getType() == "rook") { // 5. Xe
-                    if (r == getRow() || c == getCol()) { // Cùng cột
+                    if (r == row || c == col) { // Cùng cột
                         curCheck = true;
-                        int dx = r - getRow(), dy = c - getCol(), d = max(abs(dx), abs(dy));
+                        int dx = r - row, dy = c - col, d = max(abs(dx), abs(dy));
                         dx /= d, dy /= d;
-                        int x = r + dx, y = c + dy;
+                        int x = row + dx, y = col + dy;
                         while (x != r || y != c) {
+                            assert(0 <= x && x < 8);
+                            assert(0 <= y && y < 8);
                             if (board[x][y] != nullptr) {
                                 curCheck = false;
                                 break;
@@ -187,7 +189,7 @@ bool Pieces::isThreatened(int row, int col, const vector<vector<unique_ptr<Piece
                 }
                 else if (board[r][c]->getType() == "pawn") { // 6. Tốt
                     int Dir = isWhite ? 1 : -1;
-                    if (getRow() == r + Dir && (getCol() == c - 1 || getCol() == c + 1))
+                    if (row == r + Dir && (col == c - 1 || col == c + 1))
                         curCheck = true;
                 }
                 
