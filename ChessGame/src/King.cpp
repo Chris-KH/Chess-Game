@@ -96,20 +96,14 @@ void King::performCastling(bool isKingside, vector<vector<unique_ptr<Pieces>>>& 
     int row = this->getRow();
     if (isKingside) {
         // Nhập thành gần
-        //board[row][6] = move(board[row][colKing]);   // Di chuyển Vua đến g6
         board[row][5] = move(board[row][7]);          // Di chuyển Xe đến f1
+        board[row][5]->setPosition(5, row);
     }
     else {
         // Nhập thành xa
-        //board[row][2] = move(board[row][colKing]);    // Di chuyển Vua đến c1
         board[row][3] = move(board[row][0]);          // Di chuyển Xe đến d1
+        board[row][3]->setPosition(3, row);
     }
-
-    // Đặt lại vị trí cho các quân cờ sau khi nhập thành
-    //board[row][2]->setPosition(2, row);
-    board[row][3]->setPosition(3, row);
-    board[row][5]->setPosition(5, row);
-    //board[row][6]->setPosition(6, row);
 }
 
 void King::attemptCastling(vector<vector<unique_ptr<Pieces>>>& board, bool isKingSide) {
