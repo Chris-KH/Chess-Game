@@ -53,12 +53,20 @@ int main() {
                 }
             }
 
+            RectangleShape background(Vector2f((float)window.getSize().x - (float)window.getSize().y - 6, 165.0f));
+            background.setFillColor(Color::Black);
+            background.setOutlineThickness(3);
+            background.setOutlineColor(Color(255, 140, 0, 255));
+            background.setPosition(Vector2f(933.0f, 3.0f));
+            window.draw(background);
+
             window.clear(Color(60, 60, 60, 255));
+            window.draw(background);
             chessBoard.draw();
             window.display();
 
             if (chessBoard.getAI() && chessBoard.isAITurn()) {
-                string bestmove = stockfish.calculateBestMoveWithDepth(20, 1000);
+                string bestmove = stockfish.calculateBestMoveWithDepth(10, 1000);
                 tuple<int, int, int, int> movePos = chessBoard.processStockfishMove(bestmove);
                 int lastRow = get<0>(movePos);
                 int lastCol = get<1>(movePos);
@@ -72,10 +80,11 @@ int main() {
 
                 chessBoard.makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
 
-                Sleep(500);
+                Sleep(300);
             }
 
             window.clear(Color(60, 60, 60, 255));
+            window.draw(background);
             chessBoard.draw();
             window.display();
         }
