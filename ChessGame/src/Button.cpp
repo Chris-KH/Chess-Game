@@ -32,6 +32,13 @@ void Button::setTextButton(std::string name, std::string content, std::string fo
 	if (!font.loadFromFile(fontPath)) {
 		throw runtime_error("Cannot load " + fontPath + "!\n");
 	}
+	// Set back rectangle
+	rectangle.setOutlineThickness(3);
+	rectangle.setFillColor(Color::White);
+	rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64));
+	rectangle.setSize(Vector2f(width + 20, height + 20));
+	rectangle.setPosition(posX - 10, posY - 10);
+
 	text.setFont(font);
 	// Set text
 	text.setFillColor(Color::Black);
@@ -42,13 +49,7 @@ void Button::setTextButton(std::string name, std::string content, std::string fo
 		float r = width / (float)text.getGlobalBounds().width;
 		text.setScale(r, r);
 	}
-	text.setPosition(textX, textY);
-	// Set back rectangle
-	rectangle.setOutlineThickness(3);
-	rectangle.setFillColor(Color::White);
-	rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64));
-	rectangle.setSize(Vector2f(width + 20, height + 20));
-	rectangle.setPosition(posX - 10, posY - 10);
+	text.setPosition(rectangle.getPosition().x + (rectangle.getGlobalBounds().width - text.getGlobalBounds().width) / 2, rectangle.getPosition().y);
 }
 
 void Button::setSpriteAndTextButton(std::string name, std::string imagePath, std::string content, std::string fontPath, float width, float height, float posX, float posY, float spriteWidth, float spriteHeight, float spriteX, float spriteY, float textWidth, float textHeight, float textX, float textY) {
@@ -68,6 +69,13 @@ void Button::setSpriteAndTextButton(std::string name, std::string imagePath, std
 	if (!font.loadFromFile(fontPath)) {
 		throw runtime_error("Cannot load the file " + fontPath + "! (Button::setSpriteAndTextButton)\n");
 	}
+	// Set the rectangle
+	rectangle.setOutlineThickness(3);
+	rectangle.setFillColor(Color::White);
+	rectangle.setOutlineColor(Color(100, 100, 100, 255));
+	rectangle.setSize(Vector2f(width + 20, height + 20));
+	rectangle.setPosition(posX - 10, posY - 10);
+
 	text.setFont(font);
 	// Text: Text
 	text.setFillColor(Color::Black);
@@ -78,13 +86,8 @@ void Button::setSpriteAndTextButton(std::string name, std::string imagePath, std
 		float r = textWidth / (float)text.getGlobalBounds().width;
 		text.setScale(r, r);
 	}
-	text.setPosition(textX, textY);
-	// Set the rectangle
-	rectangle.setOutlineThickness(3);
-	rectangle.setFillColor(Color::White);
-	rectangle.setOutlineColor(Color(100, 100, 100, 255));
-	rectangle.setSize(Vector2f(width + 20, height + 20));
-	rectangle.setPosition(posX - 10, posY - 10);
+	text.setPosition(rectangle.getPosition().x + (rectangle.getGlobalBounds().width - text.getGlobalBounds().width) / 2, rectangle.getPosition().y);
+	//text.setPosition(textX, textY);
 }
 
 void Button::drawSprite(RenderWindow& window) {
