@@ -71,7 +71,7 @@ public:
     ChessBoard(RenderWindow* win, Stockfish* stockfish, int currentBoardIndex = 0, bool isAI = false);
     ~ChessBoard();
 
-    // Update các kiểu
+    // Updates
     bool loadBoardTexture(const string& filePath);
     void updateBoardScale();
     bool changeBoard(int newIndex);

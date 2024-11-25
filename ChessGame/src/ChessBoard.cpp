@@ -147,7 +147,8 @@ bool ChessBoard::loadBoardTexture(const string& filePath) {
     return true;
 }
 
-// Update các thứ
+// Updates
+
 void ChessBoard::updateBoardScale() {
     Vector2u windowSize = window->getSize();
     Vector2u boardSize = boardTexture.getSize();
@@ -196,15 +197,14 @@ void ChessBoard::changePieces(int newIndex) {
 }
 
 void ChessBoard::update(const Event& event) {
-    //Update các sự kiện xảy ra trên bàn cờ
-    // Nhấn chuột trái
+    // Press left mouse
     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMousePress(mouseX, mouseY);
         handleButtonPress(mouseX, mouseY);
     }
-    // Nếu thả chuột trái
+    // Release left mouse
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;

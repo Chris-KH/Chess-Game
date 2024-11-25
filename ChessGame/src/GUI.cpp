@@ -72,6 +72,7 @@ unique_ptr<Pieces> GUI::promoteChoice(unique_ptr<Pieces>& piece) {
 
     while (window.isOpen()) {
         Event event;
+        window.requestFocus();
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 window.close();
@@ -212,6 +213,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     vector<DropDownButton*> dropDownButtonList = { &board, &piece };
 
     while (settingWD.isOpen()) {
+        settingWD.requestFocus();
         while (settingWD.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 chessBoard.changeBoard(initBoard);
@@ -384,6 +386,7 @@ void GUI::gameOver(ChessBoard& chessBoard) {
     Event event;
 
     while (gameOverWD.isOpen()) {
+        gameOverWD.requestFocus();
         while (gameOverWD.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 gameOverWD.close();
@@ -417,6 +420,7 @@ bool GUI::newGame(ChessBoard& chessBoard) {
     Button* selectedButton = nullptr;
 
     while (newGameWD.isOpen()) {
+        newGameWD.requestFocus();
         while (newGameWD.pollEvent(event)) {
             mouse = event.mouseButton;
             if (event.type == Event::Closed) {
@@ -507,6 +511,7 @@ void GUI::saveGame(ChessBoard* chessBoard) {
 
     while (window.isOpen()) {
         Event event;
+        window.requestFocus();
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 window.close();
@@ -608,6 +613,7 @@ void GUI::loadGame(ChessBoard& chessBoard) {
     Event event;
 
     while (loadWD.isOpen()) {
+        loadWD.requestFocus();
         while (loadWD.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 loadWD.close();

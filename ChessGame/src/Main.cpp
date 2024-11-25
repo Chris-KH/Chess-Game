@@ -45,12 +45,13 @@ int main() {
                 if (event.type == Event::Closed) {
                     window.close();
                 }
-                if (chessBoard.isOver() == 0) {
-                    chessBoard.update(event);
-                }
-                else {
-                    GUI::gameOver(chessBoard);
-                }
+            }
+
+            if (chessBoard.isOver() == 0) {
+                chessBoard.update(event);
+            }
+            else {
+                GUI::gameOver(chessBoard);
             }
 
             RectangleShape background(Vector2f((float)window.getSize().x - (float)window.getSize().y - 6, 165.0f));
