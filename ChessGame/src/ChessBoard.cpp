@@ -1,10 +1,11 @@
 ﻿#include"../lib/ChessBoard.h"
 
 // Thiết lập các thứ
-ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoardIndex) {
+ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoardIndex, bool isAI) {
     // Khởi tạo
     window = win;
     this->stockfish = stockfish;
+    this->isAI = isAI;
     boardFiles = {
             "../assets/Chess Board/ChessBoard1.png",
             "../assets/Chess Board/ChessBoard2.png",

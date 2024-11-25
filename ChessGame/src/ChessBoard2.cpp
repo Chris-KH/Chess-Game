@@ -395,6 +395,11 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         board[row][col] = move(board[lastRow][lastCol]);
         board[row][col]->setPosition(col, row);
 
+        if (board[row][col]->getType() == "pawn" && abs(row - lastRow) == 2) {
+            unsigned num = (row + lastRow) / 2;
+            enPassantTargetSquare
+        }
+
         //Lưu quân tốt này có thể bắt tốt qua đường bắt ở bên nào bên nào không
         if (board[row][col]->getType() == "pawn" && (lastRow == 3 || lastRow == 4)) {
             int direct = (board[row][col]->getColor() ? -1 : 1);
@@ -469,4 +474,20 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     board[row][col]->resetNumPress();
     highlightTiles.clear();
     selectedPiece = nullptr;
+}
+
+void ChessBoard::setAI(bool isAI) {
+    this->isAI = isAI;
+}
+
+bool ChessBoard::getAI() const {
+    return this->isAI;
+}
+
+void ChessBoard::setHumanColor(bool humanColor) {
+    this->humanColor = humanColor;
+}
+
+bool ChessBoard::getHumanColor() const {
+    return this->humanColor;
 }

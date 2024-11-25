@@ -63,9 +63,12 @@ private:
     bool castlingAvailability[2]; 
     string enPassantTargetSquare;
 
+    //AI mode
+    bool isAI;
+    bool humanColor; //true = white, false = black
 public:
     // Constructor
-    ChessBoard(RenderWindow* win, Stockfish* stockfish, int currentBoardIndex = 0);
+    ChessBoard(RenderWindow* win, Stockfish* stockfish, int currentBoardIndex = 0, bool isAI = false);
     ~ChessBoard();
 
     // Update các kiểu
@@ -126,4 +129,27 @@ public:
     string generateMoveNotation(Move*& moved);
     string generateFEN();
     void makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove);
+
+    //AI mode
+    void setAI(bool isAI);
+    bool getAI() const;
+    void setHumanColor(bool humanColor);
+    bool getHumanColor() const;
 };
+
+
+void ChessBoard::setAI(bool isAI) {
+    this->isAI = isAI;
+}
+
+bool ChessBoard::getAI() const {
+    return this->isAI;
+}
+
+void ChessBoard::setHumanColor(bool humanColor) {
+    this->humanColor = humanColor;
+}
+
+bool ChessBoard::getHumanColor() const {
+    return this->humanColor;
+}
