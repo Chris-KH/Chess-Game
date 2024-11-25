@@ -49,7 +49,7 @@ private:
     vector<Move*> redoStack;
 
     // Buttons
-    Button undoBut, redoBut, saveBut, newBut, surrenderBut, settingBut;
+    vector<Button*> buttonList;
     Button* selectedBut = nullptr;
 
     //Chess board state

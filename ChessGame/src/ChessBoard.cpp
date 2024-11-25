@@ -95,13 +95,21 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish , int currentBoar
     gameOver = 0;
 
     // Buttons
+    Button newBut;
     newBut.setSpriteButton("new", "../assets/Button/new.png", 35, 35, 960, 30);
+    Button undoBut;
     undoBut.setSpriteButton("undo", "../assets/Button/undo.png", 35, 35, 1035, 30);
+    Button redoBut;
     redoBut.setSpriteButton("redo", "../assets/Button/redo.png", 35, 35, 1110, 30);
+    Button surrenderBut;
     surrenderBut.setSpriteButton("surrender", "../assets/Button/surrender.png", 35, 35, 1185, 30);
+    Button saveBut;
     saveBut.setSpriteButton("save", "../assets/Button/save.png", 35, 35, 1260, 30);
+    Button settingBut;
     settingBut.setSpriteButton("setting", "../assets/Button/settings.png", 35, 35, 1335, 30);
-
+    Button loadBut;
+    loadBut.setSpriteButton("load", "../assets/Button/LoadGame.png", 35, 35, 960, 80);
+    buttonList = { &newBut, &undoBut, &redoBut, &surrenderBut, &saveBut, &settingBut, &loadBut };
 }
 
 ChessBoard::~ChessBoard() {
@@ -226,13 +234,9 @@ void ChessBoard::draw() {
     }
 
     // Buttons
-    undoBut.drawSprite(*window);
-    redoBut.drawSprite(*window);
-    saveBut.drawSprite(*window);
-
-    newBut.drawSprite(*window);
-    surrenderBut.drawSprite(*window);
-    settingBut.drawSprite(*window);
+    for (Button*& button : buttonList) {
+        button->drawSprite(*window);
+    }
 }
 
 size_t ChessBoard::countPieces() {
@@ -387,27 +391,21 @@ void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
 }
 
 void ChessBoard::handleButtonPress(int mouseX, int mouseY) {
-    // Find which button did the mouse press
+    // Find which button the mouse pressed
     selectedBut = nullptr;
-    if (undoBut.contain(mouseX, mouseY)) selectedBut = &undoBut;
-    else if (redoBut.contain(mouseX, mouseY)) selectedBut = &redoBut;
-    else if (saveBut.contain(mouseX, mouseY)) selectedBut = &saveBut;
-    else if (newBut.contain(mouseX, mouseY)) selectedBut = &newBut;
-    else if (surrenderBut.contain(mouseX, mouseY)) selectedBut = &surrenderBut;
-    else if (settingBut.contain(mouseX, mouseY)) selectedBut = &settingBut;
+    for (Button*& button : buttonList) {
+        if (button->contain(mouseX, mouseY)) selectedBut = button;
+    }
 }
 
 void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
     // Record the last button pressed
     Button* lastBut = selectedBut;
-    // Find which button did the mouse release
+    // Find which button the mouse released
     selectedBut = nullptr;
-    if (undoBut.contain(mouseX, mouseY)) selectedBut = &undoBut;
-    else if (redoBut.contain(mouseX, mouseY)) selectedBut = &redoBut;
-    else if (saveBut.contain(mouseX, mouseY)) selectedBut = &saveBut;
-    else if (newBut.contain(mouseX, mouseY)) selectedBut = &newBut;
-    else if (surrenderBut.contain(mouseX, mouseY)) selectedBut = &surrenderBut;
-    else if (settingBut.contain(mouseX, mouseY)) selectedBut = &settingBut;
+    for (Button*& button : buttonList) {
+        if (button->contain(mouseX, mouseY)) selectedBut = button;
+    }
     // If the button clicked the same with the button released then do operation(s) on this
     if (selectedBut && selectedBut == lastBut) {
         if (selectedBut->getName() == "undo") {
@@ -427,6 +425,9 @@ void ChessBoard::handleButtonRelease(int mouseX, int mouseY) {
         }
         else if (selectedBut->getName() == "setting") {
             GUI::settingChoice(*this);
+        }
+        else if (selectedBut->getName() == "load") {
+            // loadGame(...);
         }
     }
 }
