@@ -25,31 +25,26 @@ void Button::setSpriteButton(std::string name, std::string imagePath, float widt
 	rectangle.setPosition(posX - 10, posY - 10); // Minus rectangle's thickness: -10
 }
 
-void Button::setTextButton(std::string name, std::string content, std::string fontPath, float width, float height, float posX, float posY, float textX, float textY) {
-	// Update name, width, height, posX, posY
+void Button::setTextButton(std::string name, std::string content, std::string fontPath, float width, float height, float posX, float posY) {
 	this->name = name, this->width = width, this->height = height, this->posX = posX, this->posY = posY;
-	//Load the font
-	if (!font.loadFromFile(fontPath)) {
-		throw runtime_error("Cannot load " + fontPath + "!\n");
-	}
-	// Set back rectangle
-	rectangle.setOutlineThickness(3);
+	
+	// Set the rectangle
+	rectangle.setOutlineThickness(-1);
 	rectangle.setFillColor(Color::White);
 	rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64));
-	rectangle.setSize(Vector2f(width + 20, height + 20));
-	rectangle.setPosition(posX - 10, posY - 10);
+	rectangle.setSize(Vector2f(width, height));
+	rectangle.setPosition(posX, posY);
 
-	text.setFont(font);
 	// Set text
+	assert(font.loadFromFile(fontPath) == true);
+	text.setFont(font);
 	text.setFillColor(Color::Black);
 	text.setString(content);
-	text.setCharacterSize(height + 15);
-	// Scale the text if the text width exceed the button width
-	if (text.getGlobalBounds().width > width) {
-		float r = width / (float)text.getGlobalBounds().width;
-		text.setScale(r, r);
-	}
-	text.setPosition(rectangle.getPosition().x + (rectangle.getGlobalBounds().width - text.getGlobalBounds().width) / 2, rectangle.getPosition().y);
+	text.setCharacterSize(height - 10);
+	//float r = min({ 1.f, width / (float)text.getGlobalBounds().width, height / (float)text.getGlobalBounds().height });
+	//text.setScale(r, r);
+	text.setOrigin(Vector2f(text.getGlobalBounds().left + text.getGlobalBounds().width / 2.f, text.getGlobalBounds().top + text.getGlobalBounds().height / 2.f));
+	text.setPosition(rectangle.getGlobalBounds().left + width / 2.f, rectangle.getGlobalBounds().top + height / 2.f);
 }
 
 void Button::setSpriteAndTextButton(std::string name, std::string imagePath, std::string content, std::string fontPath, float width, float height, float posX, float posY, float spriteWidth, float spriteHeight, float spriteX, float spriteY, float textWidth, float textHeight, float textX, float textY) {

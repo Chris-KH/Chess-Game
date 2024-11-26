@@ -123,22 +123,12 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     * @How to close: Click "Save" button to exit
     */
 
-    const float wdWidth = 600.f, wdHeight = 800.f;
-    const float topSpace = 30.f, botSpace = 30.f, leftSpace = 50.f, rightSpace = 50.f;
-    const float lineSpace = 30.f;
-    const float dropDownButtonWidth = 225.f;
-    const float dropDownButtonSpace = 50.f;
-
-    // Save old data(s)
+    // Save old datas
     const int initBoard = chessBoard.getBoardIndex();
     const int initPiece = chessBoard.getPieceIndex();
     const std::string color = chessBoard.isWhiteTurn() ? "white" : "black";
 
-    // Board preview
-    Sprite reviewBoard(chessBoard.getBoardSprite());
-    reviewBoard.setPosition(leftSpace, topSpace);
-    reviewBoard.setTextureRect(IntRect(65, 65, 500, 200));
-    const float previewSpace = topSpace + reviewBoard.getGlobalBounds().height;
+    // Paths
     vector<std::string> pieceThemePath = {
         "../assets/Standard Theme/",
         "../assets/Cartoon Theme/",
@@ -157,44 +147,56 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
         color + "-pawn.png",
         color + "-pawn.png",
     };
+    Font fontTitle;
+    assert(fontTitle.loadFromFile("../assets/fonts/ZenOldMincho.ttf") == true);
+
+    // Sizes and spaces
+    const float wdWidth = 550.f, wdHeight = 800.f;
+    const float topSpace = 25.f, botSpace = 25.f, leftSpace = 25.f, rightSpace = 25.f;
+    const float lineSpace = 30.f;
+    const float previewBoardWidth = 500.f, previewBoardHeight = 200.f;
+    const float dropDownButtonWidth = 300.f, dropDownButtonHeight = 40.f;
+    const float dropDownButtonTitleHeight = 25.f;
+    const float buttonWidth = 200.f, buttonHeight = 40.f;
+    // Elements' space
+    const float previewBoardSpace = topSpace;
+    const float changeBoardSpace = previewBoardSpace + previewBoardHeight + lineSpace;
+    const float changePieceSpace = changeBoardSpace + dropDownButtonHeight + lineSpace;
+
+    // Board preview
+    Sprite previewBoard(chessBoard.getBoardSprite());
+    previewBoard.setPosition((wdWidth - previewBoardWidth) / 2.f, previewBoardSpace);
+    previewBoard.setTextureRect(IntRect(65, 65, 5 * 100, 2 * 100));
     vector<Texture> pieceTexture(10);
     vector<Sprite> reviewPiece(10);
-    for (int i = 0; i < 10; i++) {
-        if (i < 5)
-            reviewPiece[i].setPosition(leftSpace + i * 100, topSpace);
-        else
-            reviewPiece[i].setPosition(leftSpace + (i - 5) * 100, topSpace + 100);
-    }
+    for (int i = 0; i < 5; i++) reviewPiece[i].setPosition(leftSpace + i * 100, previewBoardSpace);
+    for (int i = 5; i < 10; i++) reviewPiece[i].setPosition(leftSpace + (i - 5) * 100, previewBoardSpace + 100);
     setPiece(initPiece, pieceThemePath, piecePath, pieceTexture, reviewPiece);
 
+    
+
     // Change board button
-    Font fontBoard;
-    if (!fontBoard.loadFromFile("../assets/fonts/ZenOldMincho.ttf")) {
-        throw runtime_error("Cannot load ZenOldMincho for GUI::settingChoice");
-    }
-    Text textBoard("Board", fontBoard, 25);
+    Text textBoard("Board", fontTitle, dropDownButtonTitleHeight);
     textBoard.setFillColor(Color::White);
-    textBoard.setPosition(leftSpace, previewSpace + lineSpace - 10);
-    DropDownButton board("Board", dropDownButtonWidth, 9, wdWidth - rightSpace - dropDownButtonWidth - 13, previewSpace + lineSpace, chessBoard.getBoardList(), chessBoard.getBoardIndex());
-    const float boardSpace = previewSpace + dropDownButtonSpace;
+    textBoard.setPosition(leftSpace, changeBoardSpace);
+    DropDownButton board("Board", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, changeBoardSpace, chessBoard.getBoardList(), chessBoard.getBoardIndex());
 
     // Change piece button
-    Text textPiece("Pieces", fontBoard, 25);
+    Text textPiece("Pieces", fontTitle, dropDownButtonTitleHeight);
     textPiece.setFillColor(Color::White);
-    textPiece.setPosition(leftSpace, boardSpace + lineSpace - 10);
-    DropDownButton piece("Pieces", dropDownButtonWidth, 9, wdWidth - rightSpace - dropDownButtonWidth - 13, boardSpace + lineSpace, chessBoard.getPieceList(), chessBoard.getPieceIndex());
-    const float pieceSpace = previewSpace + dropDownButtonSpace * 2;
+    textPiece.setPosition(leftSpace, changePieceSpace);
+    DropDownButton piece("Pieces", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, changePieceSpace, chessBoard.getPieceList(), chessBoard.getPieceIndex());
 
     // Cancel button
     Button cancel;
-    cancel.setTextButton("cancel", "Cancel", "../assets/fonts/Holen Vintage.otf", 115, 12, leftSpace, wdHeight - botSpace - 12 - 13, leftSpace, wdHeight - botSpace - 12 - 13 - 10);
+    cancel.setTextButton("cancel", "Cancel", "../assets/fonts/Holen Vintage.otf", buttonWidth, buttonHeight, leftSpace, wdHeight - botSpace - buttonHeight);
 
     // Save button
     Button apply;
-    apply.setTextButton("apply", "Apply", "../assets/fonts/Holen Vintage.otf", 115, 12, wdWidth - rightSpace - 115 - 13, wdHeight - botSpace - 12 - 13, wdWidth - rightSpace - 115 - 13, wdHeight - botSpace - 12 - 13 - 10);
+    apply.setTextButton("apply", "Apply", "../assets/fonts/Holen Vintage.otf", buttonWidth, buttonHeight, wdWidth - rightSpace - buttonWidth, wdHeight - botSpace - buttonHeight);
 
     // Open setting window
-    RenderWindow settingWD(VideoMode(600, 800), "Setting", Style::Close | Style::Titlebar);
+    RenderWindow settingWD(VideoMode(wdWidth, wdHeight), "Setting", Style::Close | Style::Titlebar);
 
     // Set icon for window
     Image icon;
@@ -206,7 +208,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     Event event;
     Button* selectedButton = nullptr;
     DropDownButton* selectedDropDownButton = nullptr;
-    vector<Sprite*> spriteList = { &reviewBoard };
+    vector<Sprite*> spriteList = { &previewBoard };
     for (int i = 0; i < 10; i++) spriteList.push_back(&reviewPiece[i]);
     vector<Text*> textList = { &textBoard, &textPiece };
     vector<Button*> buttonList = { &apply, &cancel };

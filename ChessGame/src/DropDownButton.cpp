@@ -6,7 +6,7 @@ DropDownButton::DropDownButton(std::string _name, float _width, float _height, f
 	// Make the list
 	for (const std::string& s : _list) {
 		list.push_back(make_unique<Button>());
-		list.back()->setTextButton(s, s, "../assets/fonts/ZenOldMincho.ttf", width, height, posX, posY, posX, posY - 10);
+		list.back()->setTextButton(s, s, "../assets/fonts/ZenOldMincho.ttf", width, height, posX, posY);
 	}
 }
 
@@ -21,9 +21,9 @@ void DropDownButton::draw(RenderWindow &window) {
 void DropDownButton::drawOptions(RenderWindow &window) {
 	if (isClicked) {
 		for (int i = 0; i < (int)list.size(); i++) {
-			list[i]->move(0, (i + 1) * (height + 23)); // (Free area = 20) + (Border = 6 / 2) -> 23
+			list[i]->move(0, (i + 1) * height); // (Free area = 20) + (Border = 6 / 2) -> 23
 			list[i]->drawText(window);
-			list[i]->move(0, -(i + 1) * (height + 23));
+			list[i]->move(0, -(i + 1) * height);
 		}
 	}
 }
@@ -36,9 +36,9 @@ int DropDownButton::eventOption(int x, int y) {
 	if (list[curBut]->contain(x, y)) return curBut;
 	for (int i = 0; i < (int)list.size(); i++) {
 		bool ok = false;
-		list[i]->move(0, (i + 1) * (height + 23));
+		list[i]->move(0, (i + 1) * height);
 		if (list[i]->contain(x, y)) curBut = i, ok = true;
-		list[i]->move(0, -(i + 1) * (height + 23));
+		list[i]->move(0, -(i + 1) * height);
 		if (ok) break;
 	}
 	return curBut;
