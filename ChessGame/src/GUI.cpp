@@ -176,13 +176,13 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     
 
     // Change board button
-    Text textBoard("Board", fontTitle, dropDownButtonTitleHeight);
+    Text textBoard("Board", fontTitle, (unsigned)dropDownButtonTitleHeight);
     textBoard.setFillColor(Color::White);
     textBoard.setPosition(leftSpace, changeBoardSpace);
     DropDownButton board("Board", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, changeBoardSpace, chessBoard.getBoardList(), chessBoard.getBoardIndex());
 
     // Change piece button
-    Text textPiece("Pieces", fontTitle, dropDownButtonTitleHeight);
+    Text textPiece("Pieces", fontTitle, (unsigned)dropDownButtonTitleHeight);
     textPiece.setFillColor(Color::White);
     textPiece.setPosition(leftSpace, changePieceSpace);
     DropDownButton piece("Pieces", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, changePieceSpace, chessBoard.getPieceList(), chessBoard.getPieceIndex());
@@ -196,7 +196,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     apply.setTextButton("apply", "Apply", "../assets/fonts/Holen Vintage.otf", buttonWidth, buttonHeight, wdWidth - rightSpace - buttonWidth, wdHeight - botSpace - buttonHeight);
 
     // Open setting window
-    RenderWindow settingWD(VideoMode(wdWidth, wdHeight), "Setting", Style::Close | Style::Titlebar);
+    RenderWindow settingWD(VideoMode((unsigned)wdWidth, (unsigned)wdHeight), "Setting", Style::Close | Style::Titlebar);
 
     // Set icon for window
     Image icon;
@@ -435,11 +435,11 @@ bool GUI::newGame(ChessBoard& chessBoard) {
                 else if (twoPButton.contain(mouse.x, mouse.y)) selectedButton = &twoPButton;
                 if (selectedButton && lastSelectedButton == selectedButton) {
                     if (selectedButton->getName() == "playerVersusAI") {
-                        // Start player vs. AI mode
+                        chessBoard.setAI(true);
                         newGameWD.close();
                     }
                     else if(selectedButton->getName() == "playerVersusPlayer") {
-                        // Start player vs. player mode
+                        chessBoard.setAI(false);
                         newGameWD.close();
                     }
                 }
@@ -461,7 +461,7 @@ void GUI::saveGame(ChessBoard* chessBoard) {
     const float wdWidth = 800, wdHeight = 400;
 
     // Window
-    RenderWindow window(VideoMode(wdWidth, wdHeight), "Save Game", Style::Close | Style::Titlebar);
+    RenderWindow window(VideoMode((unsigned)wdWidth, (unsigned)wdHeight), "Save Game", Style::Close | Style::Titlebar);
     Image icon;
     assert(icon.loadFromFile("../assets/Icon/saveGameIcon.png") == true);
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
@@ -604,7 +604,7 @@ void GUI::loadGame(ChessBoard& chessBoard, std::string path) {
 
 
     // Window
-    RenderWindow loadWD(VideoMode(wdWidth, wdHeight), "Load game", Style::Close | Style::Titlebar);
+    RenderWindow loadWD(VideoMode((unsigned)wdWidth, (unsigned)wdHeight), "Load game", Style::Close | Style::Titlebar);
     Image icon;
     assert(icon.loadFromFile("../assets/Icon/LoadGameIcon.png") == true);
     loadWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
