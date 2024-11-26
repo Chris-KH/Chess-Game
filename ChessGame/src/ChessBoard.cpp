@@ -100,6 +100,8 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
 
     // Game Over
     gameOver = 0;
+
+    //Drag pieces
 }
 
 ChessBoard::~ChessBoard() {
@@ -188,7 +190,7 @@ void ChessBoard::update(const Event& event) {
     }
 
     // Drag a valid pressed piece
-    if (pieceFollowingMouse) pieceFollowingMouse->followMouse(Mouse::getPosition(*window));
+    if (pieceFollowingMouse && isDragging) pieceFollowingMouse->followMouse(Mouse::getPosition(*window), initialPosition);
 }
 
 void ChessBoard::draw() {
@@ -327,6 +329,8 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
             // Press this piece
             selectedPiece->press();
             pieceFollowingMouse = selectedPiece;
+            isDragging = true;
+            initialPosition = Vector2f(mouseX, mouseY);
         }
         // Press a different piece
         else if (selectedPiece != lastPiece) {
@@ -340,6 +344,8 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
             highlightPossibleMove(selectedPiece);
             selectedPiece->press();
             pieceFollowingMouse = selectedPiece;
+            isDragging = true;
+            initialPosition = Vector2f(mouseX, mouseY);
         }
     }
 }
@@ -350,6 +356,8 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
         pieceFollowingMouse->setPosition(pieceFollowingMouse->getCol(), pieceFollowingMouse->getRow());
         pieceFollowingMouse = nullptr;
     }
+
+    isDragging = false;
 
     // Last piece is invalid
     if (selectedPiece == nullptr || selectedPiece->getColor() != whiteTurn) return;

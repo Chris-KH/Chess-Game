@@ -84,6 +84,13 @@ void ChessBoard::undoMove() {
         }
     }
 
+    highlightTiles.clear();
+    if (!undoStack.empty()) {
+        pair<int, int> last = undoStack.back()->getFrom();
+        pair<int, int> cur = undoStack.back()->getTo();
+        highLightAfterMove(last.first, last.second, cur.first, cur.second);
+    }
+
     //Set turn
     whiteTurn = board[fromPosition.first][fromPosition.second]->getColor();
 
@@ -156,6 +163,9 @@ void ChessBoard::redoMove() {
         board[toPosition.first][toPosition.second] = std::move(board[fromPosition.first][fromPosition.second]);
         board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
     }
+
+    highlightTiles.clear();
+    highLightAfterMove(fromPosition.first, fromPosition.second, toPosition.first, toPosition.second);
 
     //Set turn
     whiteTurn = !board[toPosition.first][toPosition.second]->getColor();
@@ -416,6 +426,8 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         enPassantTargetSquare += char('a' + col);
         enPassantTargetSquare += char('8' - num);
     }
+
+    undoStack.push_back(curMove);
 
     alterTurn();
 

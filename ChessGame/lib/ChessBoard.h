@@ -32,6 +32,9 @@ private:
     Pieces* pieceFollowingMouse = nullptr;
     vector<RectangleShape> highlightTiles; // List of squares need to highlight
 
+    bool isDragging = false;          
+    Vector2f initialPosition;         
+
     // Indicate checks
     bool inCheck[2];
     vector<RectangleShape> checkTiles[2];
