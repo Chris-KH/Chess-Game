@@ -73,7 +73,7 @@ void SideBoard::handleButtonRelease(int mouseX, int mouseY) {
             GUI::settingChoice(*chessboard);
         }
         else if (selectedBut->getName() == "load") {
-            chessboard->loadGame();
+            chessboard->loadGame("");
         }
     }
 }

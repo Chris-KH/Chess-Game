@@ -284,8 +284,8 @@ bool ChessBoard::saveGame(const string& path) {
 }
 
 //Load game
-void ChessBoard::loadGame(/*const string& path*/) {
-    GUI::loadGame(*this);
+void ChessBoard::loadGame(const string& path) {
+    GUI::loadGame(*this, path);
 }
 
 string ChessBoard::generateLongAlgebraicNotation(Move*& moved) {

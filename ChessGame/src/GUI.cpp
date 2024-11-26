@@ -214,6 +214,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     vector<Button*> buttonList = { &apply, &cancel };
     vector<DropDownButton*> dropDownButtonList = { &board, &piece };
 
+    // Poll events and handle them
     while (settingWD.isOpen()) {
         settingWD.requestFocus();
         while (settingWD.pollEvent(event)) {
@@ -456,21 +457,19 @@ bool GUI::newGame(ChessBoard& chessBoard) {
 void GUI::saveGame(ChessBoard* chessBoard) {
     bool isSave = false;
 
-    RenderWindow window(VideoMode(800, 400), "Save Game", Style::Close | Style::Titlebar);
-    Image icon;
-    if (!icon.loadFromFile("../assets/Icon/saveGameIcon.png")) {
-        cerr << "Failed to load icon!" << '\n';
-        return;
-    }
-    // Set icon for window
-    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-    
-    // Font để hiển thị văn bản
-    Font font;
-    if (!font.loadFromFile("../assets/fonts/Holen Vintage.otf")) {
-        throw exception("Failed to load font file.\n");
-    }
+    // Sizes
+    const float wdWidth = 800, wdHeight = 400;
 
+    // Window
+    RenderWindow window(VideoMode(wdWidth, wdHeight), "Save Game", Style::Close | Style::Titlebar);
+    Image icon;
+    assert(icon.loadFromFile("../assets/Icon/saveGameIcon.png") == true);
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
+    // Font
+    Font font;
+    assert(font.loadFromFile("../assets/fonts/Holen Vintage.otf"));
+    
     // Khai báo biến để nhập tên tệp
     string filename;
     Text filenameText("", font, 30);
@@ -598,15 +597,20 @@ void GUI::saveGame(ChessBoard* chessBoard) {
     }
 }
 
-void GUI::loadGame(ChessBoard& chessBoard) {
-    RenderWindow loadWD(VideoMode(800, 400), "Load game", Style::Close | Style::Titlebar);
-    Image icon;
-    if (!icon.loadFromFile("../assets/Icon/LoadGameIcon.png")) {
-        throw runtime_error("Cannot load 'LoadGameIcon.png'!\n");
-    }
-    loadWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-    Event event;
+void GUI::loadGame(ChessBoard& chessBoard, std::string path) {
+    // Sizes
+    const float wdWidth = 800.f, wdHeight = 400.f;
 
+
+
+    // Window
+    RenderWindow loadWD(VideoMode(wdWidth, wdHeight), "Load game", Style::Close | Style::Titlebar);
+    Image icon;
+    assert(icon.loadFromFile("../assets/Icon/LoadGameIcon.png") == true);
+    loadWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+    
+    // Poll events and handle
+    Event event;
     while (loadWD.isOpen()) {
         loadWD.requestFocus();
         while (loadWD.pollEvent(event)) {
