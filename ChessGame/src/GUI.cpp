@@ -336,44 +336,38 @@ void GUI::gameOver(ChessBoard& chessBoard) {
     * 
     * After turning off this window, game stay but player cannot touch the screen
     */
-    int windowWidth = 300, windowHeight = 200;
+    const int windowWidth = 800, windowHeight = 400;
+    const int topSpace = 25, lineSpace = 10;
+    const int textGameOverSize = 50, textStatementSize = 25;
+    const int topGameOverSpace = topSpace;
+    const int topStatementSpace = topGameOverSpace + textGameOverSize + lineSpace;
     //float rW, rH;
 
     // Sprite for game over
-    Font fontGO;
-    if (!fontGO.loadFromFile("../assets/fonts/Vogue.ttf")) {
-        throw runtime_error("Font for Game Over cannot be loaded!\n");
-    }
-    Text textGO;
-    textGO.setFont(fontGO);
-    textGO.setString("GAME OVER");
-    textGO.setCharacterSize(50);
-    textGO.setPosition(float(windowWidth / 2.0) - float(textGO.getGlobalBounds().width / 2.0), 25);
-    textGO.setFillColor(Color::Black);
+    Font fontGameOver;
+    assert(fontGameOver.loadFromFile("../assets/fonts/Holen Vintage.otf"));
+    Text textGameOver;
+    textGameOver.setFont(fontGameOver);
+    textGameOver.setString("GAME OVER");
+    textGameOver.setCharacterSize(textGameOverSize);
+    textGameOver.setPosition((windowWidth - textGameOver.getGlobalBounds().width) / 2.0f, topGameOverSpace);
+    textGameOver.setFillColor(Color::Black);
 
     // Text for statement
-    Font fontS;
-    if (!fontS.loadFromFile("../assets/fonts/Holen Vintage.otf")) {
-        throw runtime_error("Font for Game Over Statement cannot be loaded!\n");
-    }
-    Text textS;
-    textS.setFont(fontS);
-    switch (chessBoard.isOver()) {
-    case 0:
-        throw runtime_error("??? The game should have been ended! ???");
-        break;
-    case 1:
-        textS.setString("White won!");
-        break;
-    case 2:
-        textS.setString("Black won!");
-        break;
-    case 3:
-        textS.setString("Tie!");
-    }
-    textS.setCharacterSize(25);
-    textS.setPosition(windowWidth / 2.0f - textS.getGlobalBounds().width / 2.0f, 100);
-    textS.setFillColor(Color::Black);
+    Font fontStatement;
+    assert(fontStatement.loadFromFile("../assets/fonts/Holen Vintage.otf") == true);
+    Text textStatement;
+    textStatement.setFont(fontStatement);
+    assert(chessBoard.isOver() != 0);
+    if (chessBoard.isOver() == 1)
+        textStatement.setString("White won!");
+    else if (chessBoard.isOver() == 2)
+        textStatement.setString("Black won!");
+    else if (chessBoard.isOver() == 3)
+        textStatement.setString("Tie!");
+    textStatement.setCharacterSize(textStatementSize);
+    textStatement.setPosition((windowWidth - textStatement.getGlobalBounds().width) / 2.0f, topStatementSpace);
+    textStatement.setFillColor(Color::Black);
     
     RenderWindow gameOverWD(VideoMode(windowWidth, windowHeight), "Game Over", Style::Titlebar | Style::Close);
     Image icon;
@@ -394,8 +388,8 @@ void GUI::gameOver(ChessBoard& chessBoard) {
         }
 
         gameOverWD.clear(Color(200, 200, 200, 255));
-        gameOverWD.draw(textGO);
-        gameOverWD.draw(textS);
+        gameOverWD.draw(textGameOver);
+        gameOverWD.draw(textStatement);
         gameOverWD.display();
     }
 }
@@ -603,7 +597,7 @@ void GUI::saveGame(ChessBoard* chessBoard) {
 }
 
 void GUI::loadGame(ChessBoard& chessBoard) {
-    RenderWindow loadWD(VideoMode(500, 500), "Load game", Style::Close | Style::Titlebar);
+    RenderWindow loadWD(VideoMode(800, 400), "Load game", Style::Close | Style::Titlebar);
     Image icon;
     if (!icon.loadFromFile("../assets/Icon/LoadGameIcon.png")) {
         throw runtime_error("Cannot load 'LoadGameIcon.png'!\n");
