@@ -229,6 +229,8 @@ void ChessBoard::newGame() {
 
     selectedPiece = pieceFollowingMouse = nullptr;
     highlightTiles.clear();
+    checkTiles[0].clear();
+    checkTiles[1].clear();
 
     // Player turn
     whiteTurn = true;
@@ -257,7 +259,7 @@ void ChessBoard::newGame() {
     justMovePiece = nullptr;
     selectedPiece = nullptr;
     pieceFollowingMouse = nullptr;
-    highlightTiles.clear();
+    
 }
 
 //Save game
@@ -392,7 +394,6 @@ string ChessBoard::generateFEN() {
 void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove) {
     //cout << generateFEN() << '\n';
     if (whiteTurn == false) fullMoveNumber++;
-    alterTurn();
 
     // Đặt quân cờ từ ô cũ đến ô hiện tại
     {
@@ -488,7 +489,21 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         if (justMovePiece) justMovePiece->setJustMove(true);
     }
 
+    alterTurn();
+
     stockfish->setBoardState(generateFEN());
+
+    if (isCheck(whiteTurn, true)) {
+        if (cannotMove()) {
+            gameOver = whiteTurn + 1; // Checkmate
+        }
+    }
+    else {
+        if (cannotMove() || isTie()) {
+            gameOver = 3; // Tie state
+        }
+    }
+    isCheck(1 - whiteTurn, true); // Delete old check highlight if it exists
 
     // Bỏ chọn quân cờ này
     board[row][col]->resetNumPress();

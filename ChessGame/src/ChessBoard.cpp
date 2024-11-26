@@ -185,17 +185,6 @@ void ChessBoard::update(const Event& event) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMouseRelease(mouseX, mouseY);
-        if (isCheck(whiteTurn, true)) {
-            if (cannotMove()) {
-                gameOver = whiteTurn + 1; // Checkmate
-            }
-        }
-        else {
-            if (cannotMove() || isTie()) {
-                gameOver = 3; // Tie state
-            }
-        }
-        isCheck(1 - whiteTurn, true); // Delete old check highlight if it exists
     }
 
     if (pieceFollowingMouse != nullptr) {
