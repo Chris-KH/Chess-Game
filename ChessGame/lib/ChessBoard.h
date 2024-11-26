@@ -31,6 +31,7 @@ private:
     Pieces* selectedPiece = nullptr;
     Pieces* pieceFollowingMouse = nullptr;
     vector<RectangleShape> highlightTiles; // List of squares need to highlight
+    vector<RectangleShape> highlightTilesJustMove;
 
     bool isDragging = false;          
     Vector2f initialPosition;         
@@ -130,7 +131,7 @@ public:
     string generateLongAlgebraicNotation(Move*& moved);
     string generateMoveNotation(Move*& moved);
     string generateFEN();
-    void makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove);
+    void makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove, char promotionPiece = '0');
     void highLightAfterMove(int lastRow, int lastCol, int row, int col);
 
     //AI mode
@@ -140,5 +141,5 @@ public:
     bool getHumanColor() const;
     bool getUndoPress() const { return undoPress; };
     bool isAITurn() const;
-    tuple<int, int, int ,int> processStockfishMove(const string& bestmove);
+    tuple<int, int, int ,int, char> processStockfishMove(const string& bestmove);
 };

@@ -204,6 +204,10 @@ void ChessBoard::draw() {
         window->draw(tile);
     }
 
+    for (const auto& tile : highlightTilesJustMove) {
+        window->draw(tile);
+    }
+
     for (auto& pieces : board) {
         for (auto& piece : pieces) {
             if (!piece) continue;
@@ -383,7 +387,7 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
         Move* curMove = nullptr;
         if (undoPress == false) makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
         // Unselect current piece
-        board[row][col]->resetNumPress();
+        if (undoPress == false) board[row][col]->resetNumPress();
     }
     // Released on the same cell as the pressed cell
     else if (selectedPiece == lastPiece) {
@@ -558,7 +562,7 @@ bool ChessBoard::isCheck(bool color, bool save) {
     if (save && inCheck[color]) {
         tile.setPosition(65 + c * cellSize, 65 + r * cellSize);
         checkTiles[color].push_back(tile);
-        highlightTiles.pop_back();
+        highlightTilesJustMove.pop_back();
         return true;
     }
     return false;

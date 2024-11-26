@@ -8,6 +8,10 @@ void ChessBoard::undoMove() {
     redoStack.push_back(move);
 
     this->undoPress = true;
+    highlightTiles.clear();
+    highlightTilesJustMove.clear();
+    checkTiles[0].clear();
+    checkTiles[1].clear();
 
     highlightTiles.clear();
     window->clear();
@@ -84,7 +88,6 @@ void ChessBoard::undoMove() {
         }
     }
 
-    highlightTiles.clear();
     if (!undoStack.empty()) {
         pair<int, int> last = undoStack.back()->getFrom();
         pair<int, int> cur = undoStack.back()->getTo();
@@ -106,6 +109,10 @@ void ChessBoard::redoMove() {
     undoStack.push_back(move);
 
     this->undoPress = true;
+    highlightTiles.clear();
+    highlightTilesJustMove.clear();
+    checkTiles[0].clear();
+    checkTiles[1].clear();
 
     highlightTiles.clear();
     window->clear();
@@ -169,6 +176,22 @@ void ChessBoard::redoMove() {
 
     //Set turn
     whiteTurn = !board[toPosition.first][toPosition.second]->getColor();
+
+    //Check checkmate...
+    {
+        if (isCheck(whiteTurn, true)) {
+            if (cannotMove()) {
+                gameOver = whiteTurn + 1; // Checkmate
+            }
+        }
+        else {
+            if (cannotMove() || isTie()) {
+                gameOver = 3; // Tie state
+            }
+        }
+        isCheck(1 - whiteTurn, true); // Delete old check highlight if it exists
+    }
+
 
     this->numPieces = countPieces();
 
@@ -239,6 +262,7 @@ void ChessBoard::newGame() {
 
     selectedPiece = pieceFollowingMouse = nullptr;
     highlightTiles.clear();
+    highlightTilesJustMove.clear();
     checkTiles[0].clear();
     checkTiles[1].clear();
 
@@ -401,7 +425,7 @@ string ChessBoard::generateFEN() {
     return fen;
 }
 
-void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove) {
+void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove, char promotionPiece) {
     //cout << generateFEN() << '\n';
     if (whiteTurn == false) fullMoveNumber++;
 
@@ -421,32 +445,106 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
 
     enPassantTargetSquare = "";
     if (board[row][col]->getType() == "pawn" && abs(row - lastRow) == 2) {
-            
         unsigned num = (row + lastRow) / 2;
         enPassantTargetSquare += char('a' + col);
         enPassantTargetSquare += char('8' - num);
     }
 
+    //Lưu quân tốt này có thể bắt tốt qua đường bắt ở bên nào bên nào không
+    if (board[row][col]->getType() == "pawn" && (lastRow == 3 || lastRow == 4)) {
+        int direct = (board[row][col]->getColor() ? -1 : 1);
+        if ((lastCol - 1) >= 0 && !board[lastRow + direct][lastCol - 1] && find(possibleMoves.begin(), possibleMoves.end(), make_pair(lastRow + direct, lastCol - 1)) != possibleMoves.end()) {
+            curMove->setEnPassantLeft('l');
+        }
+        else if ((lastCol + 1) < 8 && !board[lastRow + direct][lastCol + 1] && find(possibleMoves.begin(), possibleMoves.end(), make_pair(lastRow + direct, lastCol + 1)) != possibleMoves.end()) {
+            curMove->setEnPassantLeft('r');
+        }
+    }
+
+    //Check enPassant
+    if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1 && !deletePiece) {
+        if (board[row][col]->getColor()) {
+            curMove->setPieceCaptured(board[row + 1][col]);
+            curMove->setEnPassant(true);
+            board[row + 1][col].reset();
+        }
+        if (!board[row][col]->getColor()) {
+            curMove->setPieceCaptured(board[row - 1][col]);
+            curMove->setEnPassant(true);
+            board[row - 1][col].reset();
+        }
+    }
+
+    //Check Castling
+    else if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove(lastRow, lastCol) == false) {
+        int moveDisplacement = col - lastCol;
+        if (moveDisplacement == 2) {
+            curMove->setCastling(true);
+            curMove->setIsKingSide(true);
+            board[row][col]->attemptCastling(board, true);
+            castlingAvailability[!board[row][col]->getColor()] = false;
+        }
+        else if (moveDisplacement == -2) {
+            curMove->setCastling(true);
+            curMove->setIsKingSide(false);
+            board[row][col]->attemptCastling(board, false);
+            castlingAvailability[!board[row][col]->getColor()] = false;
+        }
+    }
+    // Check promotion
+    else if (board[row][col]->getType() == "pawn" && board[row][col]->checkPromote()) {
+        // Vẽ lại giao diện để hiển thị quân mới di chuyển
+        highlightTiles.clear();
+        highlightTilesJustMove.clear();
+        highLightAfterMove(lastRow, lastCol, row, col);
+        draw();    // Giả sử hàm này vẽ lại toàn bộ bàn cờ và quân cờ
+        window->display();
+        unique_ptr<Pieces> promotePiece;
+        if (isAI) {
+            if (promotionPiece == 'q') promotePiece = make_unique<Queen>(board[row][col]->getColor(), col, row);
+            else if (promotionPiece == 'r') promotePiece = make_unique<Rook>(board[row][col]->getColor(), col, row);
+            else if (promotionPiece == 'n') promotePiece = make_unique<Knight>(board[row][col]->getColor(), col, row);
+            else if (promotionPiece == 'b') promotePiece = make_unique<Bishop>(board[row][col]->getColor(), col, row);
+        }
+        else promotePiece = GUI::promoteChoice(board[row][col]);
+        // Nếu không chọn được quân thăng cấp, mặc định là quân Hậu
+        if (!promotePiece) promotePiece = make_unique<Queen>(board[row][col]->getColor(), col, row);
+        promotePiece->changeTexture(board[row][col]->getCurrentTextureIndex());
+        board[row][col].reset();
+        board[row][col] = move(promotePiece);
+        board[row][col]->setPosition(col, row);
+        curMove->setPromotion(true);
+        curMove->setPromotionPiece(board[row][col]);
+    }
+
     undoStack.push_back(curMove);
+    freeRedoStack();
+    if (justMovePiece) justMovePiece->setJustMove(false);
+    this->justMovePiece = board[row][col].get();
+    if (justMovePiece) justMovePiece->setJustMove(true);
 
     alterTurn();
 
     stockfish->setBoardState(generateFEN());
 
     highlightTiles.clear();
+    highlightTilesJustMove.clear();
     highLightAfterMove(lastRow, lastCol, row, col);
 
-    if (isCheck(whiteTurn, true)) {
-        if (cannotMove()) {
-            gameOver = whiteTurn + 1; // Checkmate
+    //Check checkmate...
+    {
+        if (isCheck(whiteTurn, true)) {
+            if (cannotMove()) {
+                gameOver = whiteTurn + 1; // Checkmate
+            }
         }
-    }
-    else {
-        if (cannotMove() || isTie()) {
-            gameOver = 3; // Tie state
+        else {
+            if (cannotMove() || isTie()) {
+                gameOver = 3; // Tie state
+            }
         }
+        isCheck(1 - whiteTurn, true); // Delete old check highlight if it exists
     }
-    isCheck(1 - whiteTurn, true); // Delete old check highlight if it exists
 
     // Bỏ chọn quân cờ này
     board[row][col]->resetNumPress();
@@ -457,11 +555,11 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
 void ChessBoard::highLightAfterMove(int lastRow, int lastCol, int row, int col) {
     RectangleShape highlightTile(Vector2f(100, 100)); 
     highlightTile.setPosition(float(65 + lastCol * 100), float(65 + lastRow * 100)); 
-    highlightTile.setFillColor(Color(100, 255, 100, 100));
-    highlightTiles.push_back(highlightTile);
+    highlightTile.setFillColor(Color(0xDD, 0xCD, 0x94, 128));
+    highlightTilesJustMove.push_back(highlightTile);
     
     highlightTile.setPosition(float(65 + col * 100), float(65 + row * 100));
-    highlightTiles.push_back(highlightTile);
+    highlightTilesJustMove.push_back(highlightTile);
 }
 
 void ChessBoard::setAI(bool isAI) {
@@ -484,13 +582,19 @@ bool ChessBoard::isAITurn() const {
     return this->whiteTurn != this->humanColor;
 }
 
-tuple<int, int, int, int> ChessBoard::processStockfishMove(const string& bestmove) {
-    if (bestmove.size() < 4) return { -1, -1, -1, -1 };
+tuple<int, int, int, int, char> ChessBoard::processStockfishMove(const string& bestmove) {
+    if (bestmove.size() < 4) return { -1, -1, -1, -1, '0' };
 
     int lastCol = bestmove[0] - 'a';
     int lastRow = '8' - bestmove[1];
     int col = bestmove[2] - 'a';
     int row = '8' - bestmove[3];
 
-    return { lastRow, lastCol, row, col };
+    char promotionPiece = '0';
+
+    if (bestmove.size() >= 5) {
+        if (bestmove[4] == 'q' || bestmove[4] == 'b' || bestmove[4] == 'n' || bestmove[4] == 'r') promotionPiece = bestmove[4];
+    }
+
+    return { lastRow, lastCol, row, col, promotionPiece };
 }

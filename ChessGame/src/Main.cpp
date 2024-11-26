@@ -75,18 +75,19 @@ int main() {
                 window.display();
 
                 string bestmove = stockfish.calculateBestMoveWithDepth(10,1000);
-                tuple<int, int, int, int> movePos = chessBoard.processStockfishMove(bestmove);
+                tuple<int, int, int, int, char> movePos = chessBoard.processStockfishMove(bestmove);
                 int lastRow = get<0>(movePos);
                 int lastCol = get<1>(movePos);
                 int row = get<2>(movePos);
                 int col = get<3>(movePos);
+                char promotionPiece = get<4>(movePos);
 
                 Move* curMove = nullptr;
 
                 vector<pair<int, int>> possibleMoves;
                 chessBoard.getPossibleMoves(chessBoard.getPieceAtIndex(lastRow, lastCol), possibleMoves);
 
-                chessBoard.makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
+                chessBoard.makeMove(lastRow, lastCol, row, col, possibleMoves, curMove, promotionPiece);
 
                 Sleep(300);
 
