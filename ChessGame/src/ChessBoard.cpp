@@ -185,15 +185,8 @@ void ChessBoard::update(const Event& event) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMouseRelease(mouseX, mouseY);
-        // Get check state
-        bool inCheckState = isCheck(whiteTurn, true);
-        // Checkmate state
-        if (inCheckState && cannotMove()) gameOver = whiteTurn + 1;
-        // Tie state
-        else if (!inCheckState && (cannotMove() || isTie())) gameOver = 3;
-        // Delete old check highlight if it exists
-        isCheck(1 - whiteTurn, true); 
     }
+
     // Drag a valid pressed piece
     if (pieceFollowingMouse) pieceFollowingMouse->followMouse(Mouse::getPosition(*window));
 }

@@ -30,10 +30,15 @@ int main() {
         // Set icon for window
         window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-        ChessBoard chessBoard(&window, &stockfish, true);
+        ChessBoard chessBoard(&window, &stockfish, false);
         SideBoard sideBoard(&window, &chessBoard);
 
-        //Stockfish stockfish;
+        RectangleShape background(Vector2f((float)window.getSize().x - (float)window.getSize().y - 6, 165.0f));
+        background.setFillColor(Color::Black);
+        background.setOutlineThickness(3);
+        background.setOutlineColor(Color(255, 140, 0, 255));
+        background.setPosition(Vector2f(933.0f, 3.0f));
+        window.draw(background);
 
         //Main loop
         while (window.isOpen()) {
@@ -51,26 +56,26 @@ int main() {
                 }
                 // If game becomes over for the first time
                 if (chessBoard.isOver() != 0 && gameOver == 0) {
+                    window.clear(Color(60, 60, 60, 255));
+                    window.draw(background);
+                    chessBoard.draw();
+                    sideBoard.draw();
+                    window.display();
+                    Sleep(1000);
                     GUI::gameOver(chessBoard);
                 }
             }
-            
 
-            RectangleShape background(Vector2f((float)window.getSize().x - (float)window.getSize().y - 6, 165.0f));
-            background.setFillColor(Color::Black);
-            background.setOutlineThickness(3);
-            background.setOutlineColor(Color(255, 140, 0, 255));
-            background.setPosition(Vector2f(933.0f, 3.0f));
-            window.draw(background);
-
-            window.clear(Color(60, 60, 60, 255));
-            window.draw(background);
-            chessBoard.draw();
-            sideBoard.draw();
-            window.display();
+            int gameOver = chessBoard.isOver();
 
             if (chessBoard.getAI() && chessBoard.isAITurn() && !chessBoard.getUndoPress()) {
-                string bestmove = stockfish.calculateBestMoveWithDepth(3,1000);
+                window.clear(Color(60, 60, 60, 255));
+                window.draw(background);
+                chessBoard.draw();
+                sideBoard.draw();
+                window.display();
+
+                string bestmove = stockfish.calculateBestMoveWithDepth(10,1000);
                 tuple<int, int, int, int> movePos = chessBoard.processStockfishMove(bestmove);
                 int lastRow = get<0>(movePos);
                 int lastCol = get<1>(movePos);
@@ -85,6 +90,16 @@ int main() {
                 chessBoard.makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
 
                 Sleep(300);
+
+                if (chessBoard.isOver() != 0 && gameOver == 0) {
+                    window.clear(Color(60, 60, 60, 255));
+                    window.draw(background);
+                    chessBoard.draw();
+                    sideBoard.draw();
+                    window.display();
+                    Sleep(1000);
+                    GUI::gameOver(chessBoard);
+                }
             }
 
             window.clear(Color(60, 60, 60, 255));
