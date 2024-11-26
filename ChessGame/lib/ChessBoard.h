@@ -34,7 +34,7 @@ private:
     vector<RectangleShape> highlightTilesJustMove;
 
     bool isDragging = false;          
-    Vector2f initialPosition;         
+    Vector2i initialPosition;         
 
     // Indicate checks
     bool inCheck[2];

@@ -171,7 +171,6 @@ void ChessBoard::redoMove() {
         board[toPosition.first][toPosition.second]->setPosition(toPosition.second, toPosition.first);
     }
 
-    highlightTiles.clear();
     highLightAfterMove(fromPosition.first, fromPosition.second, toPosition.first, toPosition.second);
 
     //Set turn
@@ -499,7 +498,7 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         highLightAfterMove(lastRow, lastCol, row, col);
         draw();    // Giả sử hàm này vẽ lại toàn bộ bàn cờ và quân cờ
         window->display();
-        unique_ptr<Pieces> promotePiece;
+        unique_ptr<Pieces> promotePiece = nullptr;
         if (isAI) {
             if (promotionPiece == 'q') promotePiece = make_unique<Queen>(board[row][col]->getColor(), col, row);
             else if (promotionPiece == 'r') promotePiece = make_unique<Rook>(board[row][col]->getColor(), col, row);

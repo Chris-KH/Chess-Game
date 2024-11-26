@@ -18,8 +18,6 @@ using namespace sf;
 #include "../lib/StockFish.h"
 
 int main() {
-    
-    
     try {
         //Game GameEngine;
         //GameEngine.startGame();
@@ -67,7 +65,7 @@ int main() {
             }
             int gameOver = chessBoard.isOver();
 
-            if (chessBoard.getAI() && chessBoard.isAITurn() && !chessBoard.getUndoPress()) {
+            if (chessBoard.getAI() && chessBoard.isAITurn()) {
                 window.clear(Color(60, 60, 60, 255));
                 window.draw(background);
                 chessBoard.draw();
@@ -101,7 +99,6 @@ int main() {
                     GUI::gameOver(chessBoard);
                 }
             }
-
             window.clear(Color(60, 60, 60, 255));
             window.draw(background);
             chessBoard.draw();

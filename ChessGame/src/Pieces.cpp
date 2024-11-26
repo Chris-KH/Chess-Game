@@ -105,10 +105,10 @@ void Pieces::setInitialPosition(const Vector2f& position) {
 }
 
 // Drag a piece
-void Pieces::followMouse(Vector2i mousePos, Vector2f initialPosition) {
-    float dx = abs((float)mousePos.x - initialPosition.x);
-    float dy = abs((float)mousePos.y - initialPosition.y);
-    if (!(dx > 5.f || dy > 5.f)) {
+void Pieces::followMouse(Vector2i mousePos, Vector2i initialPosition) {
+    int dx = abs(mousePos.x - initialPosition.x);
+    int dy = abs(mousePos.y - initialPosition.y);
+    if (!(dx > 5 || dy > 5)) {
         return;
     }
     float x = mousePos.x - sprite.getGlobalBounds().width / 2.0f;

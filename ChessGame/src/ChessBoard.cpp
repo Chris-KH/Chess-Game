@@ -284,8 +284,9 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
             getPossibleMoves(lastPiece, possibleMoves);
             // Valid cell move
             if (find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
+                undoPress = false;
                 Move* curMove = nullptr;
-                if (undoPress == false) makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
+                makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
                 // Unselect last piece
                 board[row][col]->resetNumPress();
                 highlightTiles.clear();
@@ -307,8 +308,9 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
             getPossibleMoves(lastPiece, possibleMoves);
             // Valid cell move
             if (find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
+                undoPress = false;
                 Move* curMove = nullptr;
-                if (undoPress == false) makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
+                makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
                 // Unselect last piece
                 board[row][col]->resetNumPress();
                 highlightTiles.clear();
@@ -334,7 +336,7 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
             selectedPiece->press();
             pieceFollowingMouse = selectedPiece;
             isDragging = true;
-            initialPosition = Vector2f(mouseX, mouseY);
+            initialPosition = Vector2i(mouseX, mouseY);
         }
         // Press a different piece
         else if (selectedPiece != lastPiece) {
@@ -349,7 +351,7 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
             selectedPiece->press();
             pieceFollowingMouse = selectedPiece;
             isDragging = true;
-            initialPosition = Vector2f(mouseX, mouseY);
+            initialPosition = Vector2i(mouseX, mouseY);
         }
     }
 }
@@ -385,9 +387,9 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
     // Make a valid move
     if (find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
         Move* curMove = nullptr;
-        if (undoPress == false) makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
+        makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
         // Unselect current piece
-        if (undoPress == false) board[row][col]->resetNumPress();
+        board[row][col]->resetNumPress();
     }
     // Released on the same cell as the pressed cell
     else if (selectedPiece == lastPiece) {
@@ -402,9 +404,11 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
     // Make an invalid move
     else {
         selectedPiece = lastPiece;
+        //if (undoPress == true) {
+        //    while (!redoStack.empty()) redoMove();
+        //    undoPress = false;
+        //}
     }
-
-    undoPress = false;
 }
 
 void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {
