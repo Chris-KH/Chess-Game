@@ -25,9 +25,12 @@ SideBoard::SideBoard(RenderWindow* window, ChessBoard* chessboard) {
     unique_ptr<Button> settingBut = make_unique<Button>();
     settingBut->setSpriteButton("setting", "../assets/Button/settings.png", 35, 35, 1110, 100);
     buttonList.push_back(move(settingBut));
+
+    gameOver = 0;
 }
 
-void SideBoard::update(Event& event) {
+void SideBoard::update(Event& event, int gameOver) {
+    this->gameOver = gameOver;
     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         handleButtonPress(event.mouseButton.x, event.mouseButton.y);
     }
@@ -53,20 +56,20 @@ void SideBoard::handleButtonRelease(int mouseX, int mouseY) {
     }
     // If the button clicked the same with the button released then do operation(s) on this
     if (selectedBut && selectedBut == lastBut) {
-        if (selectedBut->getName() == "undo") {
+        if (selectedBut->getName() == "undo" && gameOver == 0) {
             chessboard->undoMove();
         }
-        else if (selectedBut->getName() == "redo") {
+        else if (selectedBut->getName() == "redo" && gameOver == 0) {
             chessboard->redoMove();
         }
-        else if (selectedBut->getName() == "save") {
+        else if (selectedBut->getName() == "save" && gameOver == 0) {
             cout << "Open save game window please!\n";
             GUI::saveGame(chessboard);
         }
         else if (selectedBut->getName() == "new") {
             chessboard->newGame();
         }
-        else if (selectedBut->getName() == "surrender") {
+        else if (selectedBut->getName() == "surrender" && gameOver == 0) {
             chessboard->setGameOver(chessboard->isWhiteTurn() + 1);
         }
         else if (selectedBut->getName() == "setting") {

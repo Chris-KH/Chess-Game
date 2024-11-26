@@ -492,6 +492,7 @@ bool ChessBoard::isCheck(bool color, bool save) {
     if (save && inCheck[color]) {
         tile.setPosition(65 + c * cellSize, 65 + r * cellSize);
         checkTiles[color].push_back(tile);
+        highlightTiles.pop_back();
         return true;
     }
     return false;

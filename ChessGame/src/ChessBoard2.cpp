@@ -493,6 +493,9 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
 
     stockfish->setBoardState(generateFEN());
 
+    highlightTiles.clear();
+    highLightAfterMove(lastRow, lastCol, row, col);
+
     if (isCheck(whiteTurn, true)) {
         if (cannotMove()) {
             gameOver = whiteTurn + 1; // Checkmate
@@ -507,8 +510,18 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
 
     // Bỏ chọn quân cờ này
     board[row][col]->resetNumPress();
-    highlightTiles.clear();
     selectedPiece = nullptr;
+}
+
+
+void ChessBoard::highLightAfterMove(int lastRow, int lastCol, int row, int col) {
+    RectangleShape highlightTile(Vector2f(100, 100)); 
+    highlightTile.setPosition(float(65 + lastCol * 100), float(65 + lastRow * 100)); 
+    highlightTile.setFillColor(Color(100, 255, 100, 100));
+    highlightTiles.push_back(highlightTile);
+    
+    highlightTile.setPosition(float(65 + col * 100), float(65 + row * 100));
+    highlightTiles.push_back(highlightTile);
 }
 
 void ChessBoard::setAI(bool isAI) {

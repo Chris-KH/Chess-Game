@@ -126,6 +126,7 @@ public:
     string generateMoveNotation(Move*& moved);
     string generateFEN();
     void makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove);
+    void highLightAfterMove(int lastRow, int lastCol, int row, int col);
 
     //AI mode
     void setAI(bool isAI);

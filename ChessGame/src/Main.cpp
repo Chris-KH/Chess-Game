@@ -55,7 +55,7 @@ int main() {
             if (chessBoard.isOver() == 0) {
                 chessBoard.update(event);
             }
-            sideBoard.update(event);
+            sideBoard.update(event, chessBoard.isOver());
             if (chessBoard.isOver() != 0 && gameOver == 0) {
                 window.clear(Color(60, 60, 60, 255));
                 window.draw(background);
