@@ -65,7 +65,6 @@ int main() {
                     GUI::gameOver(chessBoard);
                 }
             }
-
             int gameOver = chessBoard.isOver();
 
             if (chessBoard.getAI() && chessBoard.isAITurn() && !chessBoard.getUndoPress()) {

@@ -259,8 +259,8 @@ Pieces* ChessBoard::getPieceAtIndex(int row, int col) {
 }
 
 void ChessBoard::handleMousePress(int mouseX, int mouseY) {
-    int row = (mouseY - topMargin) / cellSize;
-    int col = (mouseX - leftMargin) / cellSize;
+    int row = static_cast<int>(round((mouseY - topMargin) / cellSize));
+    int col = static_cast<int>(round((mouseX - leftMargin) / cellSize));
 
     // Out of the board
     if (col < 0 || col >= 8 || row < 0 || row >= 8) return;
@@ -356,8 +356,8 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
 
     int lastRow = selectedPiece->getRow();
     int lastCol = selectedPiece->getCol();
-    int row = (mouseY - topMargin) / cellSize;
-    int col = (mouseX - leftMargin) / cellSize;
+    int row = static_cast<int>(round((mouseY - topMargin) / cellSize));
+    int col = static_cast<int>(round((mouseX - leftMargin) / cellSize));
 
     // Out of the board
     if (col < 0 || col >= 8 || row < 0 || row >= 8) return;
@@ -376,7 +376,6 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
         if (undoPress == false) makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
         // Unselect current piece
         board[row][col]->resetNumPress();
-        highlightTiles.clear();
     }
     // Released on the same cell as the pressed cell
     else if (selectedPiece == lastPiece) {
