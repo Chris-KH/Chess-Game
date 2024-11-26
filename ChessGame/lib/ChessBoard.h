@@ -7,6 +7,10 @@
 
 class ChessBoard {
 private:
+    // Board size
+    float cellSize = 100.f; // Size of each square
+    float leftMargin = 65.f, topMargin = 65.f; // Size of margin
+
     Stockfish* stockfish;
 
     RenderWindow* window; // SFML window
@@ -21,8 +25,6 @@ private:
     size_t numPieces;
     vector<vector<unique_ptr<Pieces>>> board;
     Pieces* justMovePiece = nullptr;
-
-    float cellSize = 100; // Size of each square
 
     Font font; // Font of text and number
 

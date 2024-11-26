@@ -394,106 +394,98 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     if (whiteTurn == false) fullMoveNumber++;
     alterTurn();
 
-    // Đặt quân cờ từ ô cũ đến ô hiện tại
-    {
-        //Move
-        curMove = new Move(lastRow, lastCol, row, col);
-        unique_ptr<Pieces> deletePiece = move(board[row][col]);
+    // Move
+    curMove = new Move(lastRow, lastCol, row, col);
+    unique_ptr<Pieces> deletePiece = move(board[row][col]);
 
-        if (board[lastRow][lastCol]->getType() == "pawn" || deletePiece) haftMoveClock = 0;
-        else haftMoveClock++;
+    if (board[lastRow][lastCol]->getType() == "pawn" || deletePiece) haftMoveClock = 0;
+    else haftMoveClock++;
 
-        curMove->setPieceMoved(board[lastRow][lastCol]);
-        if (deletePiece) curMove->setPieceCaptured(deletePiece);
+    curMove->setPieceMoved(board[lastRow][lastCol]);
+    if (deletePiece) curMove->setPieceCaptured(deletePiece);
+    selectedPiece = nullptr;
+    board[row][col].reset();
+    board[row][col] = move(board[lastRow][lastCol]);
+    board[row][col]->setPosition(col, row);
 
-        board[row][col].reset();
-        board[row][col] = move(board[lastRow][lastCol]);
-        board[row][col]->setPosition(col, row);
-
-        enPassantTargetSquare = "";
-        if (board[row][col]->getType() == "pawn" && abs(row - lastRow) == 2) {
+    enPassantTargetSquare = "";
+    if (board[row][col]->getType() == "pawn" && abs(row - lastRow) == 2) {
             
-            unsigned num = (row + lastRow) / 2;
-            enPassantTargetSquare += char('a' + col);
-            enPassantTargetSquare += char('8' - num);
-        }
-
-        //Lưu quân tốt này có thể bắt tốt qua đường bắt ở bên nào bên nào không
-        if (board[row][col]->getType() == "pawn" && (lastRow == 3 || lastRow == 4)) {
-            int direct = (board[row][col]->getColor() ? -1 : 1);
-            if ((lastCol - 1) >= 0 && !board[lastRow + direct][lastCol - 1] && find(possibleMoves.begin(), possibleMoves.end(), make_pair(lastRow + direct, lastCol - 1)) != possibleMoves.end()) {
-                curMove->setEnPassantLeft('l');
-            }
-            else if ((lastCol + 1) < 8 && !board[lastRow + direct][lastCol + 1] && find(possibleMoves.begin(), possibleMoves.end(), make_pair(lastRow + direct, lastCol + 1)) != possibleMoves.end()) {
-                curMove->setEnPassantLeft('r');
-            }
-        }
-
-        //Check enPassant
-        if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1 && !deletePiece) {
-            if (board[row][col]->getColor()) {
-                curMove->setPieceCaptured(board[row + 1][col]);
-                curMove->setEnPassant(true);
-                board[row + 1][col].reset();
-            }
-            if (!board[row][col]->getColor()) {
-                curMove->setPieceCaptured(board[row - 1][col]);
-                curMove->setEnPassant(true);
-                board[row - 1][col].reset();
-            }
-        }
-
-        //Check Castling
-        else if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove(lastRow, lastCol) == false) {
-            int moveDisplacement = col - lastCol;
-            if (moveDisplacement == 2) {
-                curMove->setCastling(true);
-                curMove->setIsKingSide(true);
-                board[row][col]->attemptCastling(board, true);
-                castlingAvailability[!board[row][col]->getColor()] = false;
-            }
-            else if (moveDisplacement == -2) {
-                curMove->setCastling(true);
-                curMove->setIsKingSide(false);
-                board[row][col]->attemptCastling(board, false);
-                castlingAvailability[!board[row][col]->getColor()] = false;
-            }
-        }
-
-        // Check promotion
-        else if (board[row][col]->getType() == "pawn" && board[row][col]->checkPromote()) {
-            // Vẽ lại giao diện để hiển thị quân mới di chuyển
-            highlightTiles.clear();
-            window->clear();
-            draw();    // Giả sử hàm này vẽ lại toàn bộ bàn cờ và quân cờ
-            window->display();
-            unique_ptr<Pieces> promotePiece = GUI::promoteChoice(board[row][col]);
-
-            // Nếu không chọn được quân thăng cấp, mặc định là quân Hậu
-            if (!promotePiece) promotePiece = make_unique<Queen>(board[row][col]->getColor(), col, row);
-
-            promotePiece->changeTexture(board[row][col]->getCurrentTextureIndex());
-            board[row][col].reset();
-            board[row][col] = move(promotePiece);
-            board[row][col]->setPosition(col, row);
-
-            curMove->setPromotion(true);
-            curMove->setPromotionPiece(board[row][col]);
-        }
-
-        undoStack.push_back(curMove);
-        freeRedoStack();
-        if (justMovePiece) justMovePiece->setJustMove(false);
-        this->justMovePiece = board[row][col].get();
-        if (justMovePiece) justMovePiece->setJustMove(true);
+        unsigned num = (row + lastRow) / 2;
+        enPassantTargetSquare += char('a' + col);
+        enPassantTargetSquare += char('8' - num);
     }
 
-    stockfish->setBoardState(generateFEN());
+    //Lưu quân tốt này có thể bắt tốt qua đường bắt ở bên nào bên nào không
+    if (board[row][col]->getType() == "pawn" && (lastRow == 3 || lastRow == 4)) {
+        int direct = (board[row][col]->getColor() ? -1 : 1);
+        if ((lastCol - 1) >= 0 && !board[lastRow + direct][lastCol - 1] && find(possibleMoves.begin(), possibleMoves.end(), make_pair(lastRow + direct, lastCol - 1)) != possibleMoves.end()) {
+            curMove->setEnPassantLeft('l');
+        }
+        else if ((lastCol + 1) < 8 && !board[lastRow + direct][lastCol + 1] && find(possibleMoves.begin(), possibleMoves.end(), make_pair(lastRow + direct, lastCol + 1)) != possibleMoves.end()) {
+            curMove->setEnPassantLeft('r');
+        }
+    }
 
-    // Bỏ chọn quân cờ này
-    board[row][col]->resetNumPress();
-    highlightTiles.clear();
-    selectedPiece = nullptr;
+    //Check enPassant
+    if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1 && !deletePiece) {
+        if (board[row][col]->getColor()) {
+            curMove->setPieceCaptured(board[row + 1][col]);
+            curMove->setEnPassant(true);
+            board[row + 1][col].reset();
+        }
+        if (!board[row][col]->getColor()) {
+            curMove->setPieceCaptured(board[row - 1][col]);
+            curMove->setEnPassant(true);
+            board[row - 1][col].reset();
+        }
+    }
+
+    //Check Castling
+    else if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove(lastRow, lastCol) == false) {
+        int moveDisplacement = col - lastCol;
+        if (moveDisplacement == 2) {
+            curMove->setCastling(true);
+            curMove->setIsKingSide(true);
+            board[row][col]->attemptCastling(board, true);
+            castlingAvailability[!board[row][col]->getColor()] = false;
+        }
+        else if (moveDisplacement == -2) {
+            curMove->setCastling(true);
+            curMove->setIsKingSide(false);
+            board[row][col]->attemptCastling(board, false);
+            castlingAvailability[!board[row][col]->getColor()] = false;
+        }
+    }
+
+    // Check promotion
+    else if (board[row][col]->getType() == "pawn" && board[row][col]->checkPromote()) {
+        // Vẽ lại giao diện để hiển thị quân mới di chuyển
+        highlightTiles.clear();
+        window->clear();
+        draw();    // Giả sử hàm này vẽ lại toàn bộ bàn cờ và quân cờ
+        window->display();
+        unique_ptr<Pieces> promotePiece = GUI::promoteChoice(board[row][col]);
+
+        // Nếu không chọn được quân thăng cấp, mặc định là quân Hậu
+        if (!promotePiece) promotePiece = make_unique<Queen>(board[row][col]->getColor(), col, row);
+
+        promotePiece->changeTexture(board[row][col]->getCurrentTextureIndex());
+        board[row][col].reset();
+        board[row][col] = move(promotePiece);
+        board[row][col]->setPosition(col, row);
+
+        curMove->setPromotion(true);
+        curMove->setPromotionPiece(board[row][col]);
+    }
+
+    undoStack.push_back(curMove);
+    freeRedoStack();
+    if (justMovePiece) justMovePiece->setJustMove(false);
+    this->justMovePiece = board[row][col].get();
+    if (justMovePiece) justMovePiece->setJustMove(true);
+
+    stockfish->setBoardState(generateFEN());
 }
 
 void ChessBoard::setAI(bool isAI) {

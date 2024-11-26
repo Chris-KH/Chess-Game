@@ -185,22 +185,17 @@ void ChessBoard::update(const Event& event) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMouseRelease(mouseX, mouseY);
-        if (isCheck(whiteTurn, true)) {
-            if (cannotMove()) {
-                gameOver = whiteTurn + 1; // Checkmate
-            }
-        }
-        else {
-            if (cannotMove() || isTie()) {
-                gameOver = 3; // Tie state
-            }
-        }
-        isCheck(1 - whiteTurn, true); // Delete old check highlight if it exists
+        // Get check state
+        bool inCheckState = isCheck(whiteTurn, true);
+        // Checkmate state
+        if (inCheckState && cannotMove()) gameOver = whiteTurn + 1;
+        // Tie state
+        else if (!inCheckState && (cannotMove() || isTie())) gameOver = 3;
+        // Delete old check highlight if it exists
+        isCheck(1 - whiteTurn, true); 
     }
-
-    if (pieceFollowingMouse != nullptr) {
-        pieceFollowingMouse->followMouse(Mouse::getPosition(*window));
-    }
+    // Drag a valid pressed piece
+    if (pieceFollowingMouse) pieceFollowingMouse->followMouse(Mouse::getPosition(*window));
 }
 
 void ChessBoard::draw() {
@@ -271,76 +266,136 @@ Pieces* ChessBoard::getPieceAtIndex(int row, int col) {
 }
 
 void ChessBoard::handleMousePress(int mouseX, int mouseY) {
-    int row = (mouseY - 65) / 100; // Kích thước ô là 100, trừ viền 65px
-    int col = (mouseX - 65) / 100; // Kích thước ô là 100, trừ viền 65px
+    int row = (mouseY - topMargin) / cellSize;
+    int col = (mouseX - leftMargin) / cellSize;
 
-    // Nếu ô được chọn nằm ngoài bàn cờ thì ta không làm gì
+    // Out of the board
     if (col < 0 || col >= 8 || row < 0 || row >= 8) return;
 
-    Pieces* lastPiece = selectedPiece; // lastPiece = quân cờ cũ
-    selectedPiece = board[row][col].get(); // Lấy quân cờ ở ô đã click
+    // Last piece and current piece
+    Pieces* lastPiece = selectedPiece;
+    selectedPiece = board[row][col].get();
 
-    // Nếu trước đó có chọn quân cờ
-    if (lastPiece != nullptr) {
-        highlightTiles.clear();
-        // Nếu ta chọn quân cờ khác thì reset biến numPress
-        if (selectedPiece != lastPiece) {
-            lastPiece->resetNumPress();
+    // Press empty cell
+    if(selectedPiece == nullptr) {
+        // Handle last piece
+        if (lastPiece) {
+            int lastRow = lastPiece->getRow(), lastCol = lastPiece->getCol();
+            vector<pair<int, int>> possibleMoves;
+            getPossibleMoves(lastPiece, possibleMoves);
+            // Valid cell move
+            if (find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
+                Move* curMove = nullptr;
+                if (undoPress == false) makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
+                // Unselect last piece
+                board[row][col]->resetNumPress();
+                highlightTiles.clear();
+            }
+            // Invalid cell move
+            else {
+                // Unselect last piece
+                lastPiece->resetNumPress();
+                highlightTiles.clear();
+            }
         }
     }
-
-    // Nếu ta chọn một quân cờ được đi
-    if (selectedPiece != nullptr && selectedPiece->getColor() == whiteTurn) {
-        selectedPiece->press();
-        highlightPossibleMove(selectedPiece);
-        pieceFollowingMouse = selectedPiece;
+    // Press invalid-color piece
+    else if (selectedPiece->getColor() != whiteTurn) {
+        // Selected a piece before
+        if (lastPiece) {
+            int lastRow = lastPiece->getRow(), lastCol = lastPiece->getCol();
+            vector<pair<int, int>> possibleMoves;
+            getPossibleMoves(lastPiece, possibleMoves);
+            // Valid cell move
+            if (find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
+                Move* curMove = nullptr;
+                if (undoPress == false) makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
+                // Unselect last piece
+                board[row][col]->resetNumPress();
+                highlightTiles.clear();
+            }
+            // Invalid cell move
+            else {
+                // Unselect last piece
+                lastPiece->resetNumPress();
+                highlightTiles.clear();
+            }
+        }
+        // Did not select any piece
+        else {
+            // Do nothing
+        }
+        selectedPiece = nullptr;
     }
-    // Nếu chọn ô khác mà trước đó ta có chọn một quân cờ được đi
-    else if (lastPiece != nullptr && lastPiece->getColor() == whiteTurn) {
-        selectedPiece = lastPiece;
+    // Press valid-color piece
+    else if (selectedPiece->getColor() == whiteTurn) {
+        // Press a piece selected before
+        if (selectedPiece == lastPiece) {
+            // Press this piece
+            selectedPiece->press();
+            pieceFollowingMouse = selectedPiece;
+        }
+        // Press a different piece
+        else if (selectedPiece != lastPiece) {
+            // Unselect last piece
+            if (lastPiece) {
+                highlightTiles.clear();
+                lastPiece->resetNumPress();
+            }
+
+            // Press the new one
+            highlightPossibleMove(selectedPiece);
+            selectedPiece->press();
+            pieceFollowingMouse = selectedPiece;
+        }
     }
 }
 
 void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
-    // Nếu trước đó đang giữ quân nào thì thả quân đó ra
+    // Unselect last piece
     if (pieceFollowingMouse != nullptr) {
         pieceFollowingMouse->setPosition(pieceFollowingMouse->getCol(), pieceFollowingMouse->getRow());
         pieceFollowingMouse = nullptr;
     }
 
-    // Nếu trước đó không chọn quân cờ được phép đi thì ta bỏ qua
+    // Last piece is invalid
     if (selectedPiece == nullptr || selectedPiece->getColor() != whiteTurn) return;
 
     int lastRow = selectedPiece->getRow();
     int lastCol = selectedPiece->getCol();
-    int row = (mouseY - 65) / 100; // Kích thước ô là 100, trừ viền 65px
-    int col = (mouseX - 65) / 100; // Kích thước ô là 100, trừ viền 65px
+    int row = (mouseY - topMargin) / cellSize;
+    int col = (mouseX - leftMargin) / cellSize;
 
-    // Nếu ô được chọn nằm ngoài bàn cờ thì ta không làm gì
+    // Out of the board
     if (col < 0 || col >= 8 || row < 0 || row >= 8) return;
 
-    Pieces* lastPiece = selectedPiece; // lastPiece = quân cờ cũ
-    selectedPiece = board[row][col].get(); // Lấy quân cờ ở ô đã click
+    // Last selected piece and current selected piece
+    Pieces* lastPiece = selectedPiece;
+    selectedPiece = board[row][col].get();
 
-    // Nếu nước đi hiện tại là đúng luật
+    // Possible moves of the last piece
     vector<pair<int, int>> possibleMoves; 
     getPossibleMoves(lastPiece, possibleMoves);
 
+    // Make a valid move
     if (find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end()) {
         Move* curMove = nullptr;
         if (undoPress == false) makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
-    }
-    // Nếu nhấn vào ô trước đó
-    else if (selectedPiece == lastPiece) {
-        // Nếu số lần nhấn vào = 1 thì không làm gì
-        if (selectedPiece == lastPiece && selectedPiece->getNumPress() == 1) return;
-
-        // Bỏ chọn quân cờ này
+        // Unselect current piece
         board[row][col]->resetNumPress();
         highlightTiles.clear();
-        selectedPiece = nullptr;
     }
-    // Nếu ta đi nước đi không hợp lệ thì trả quân cờ về vị trí ban đầu
+    // Released on the same cell as the pressed cell
+    else if (selectedPiece == lastPiece) {
+        // Piece is pressed more than one time
+        if (selectedPiece->getNumPress() > 1) {
+            // Unselect current piece
+            board[row][col]->resetNumPress();
+            highlightTiles.clear();
+            selectedPiece = nullptr;
+        }
+    }
+    // Make an invalid move
     else {
         selectedPiece = lastPiece;
     }

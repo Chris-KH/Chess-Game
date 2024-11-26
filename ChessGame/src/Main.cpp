@@ -26,10 +26,7 @@ int main() {
         Stockfish stockfish;
         RenderWindow window(VideoMode(1400, 930), "Chess Game", Style::Close | Style::Titlebar);
         Image icon;
-        if (!icon.loadFromFile("../assets/Icon/ChessGameIcon.png")) {
-            cerr << "Failed to load icon!" << '\n';
-            return -1;
-        }
+        assert(icon.loadFromFile("../assets/Icon/ChessGameIcon.png") == true);
         // Set icon for window
         window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
@@ -42,18 +39,22 @@ int main() {
         while (window.isOpen()) {
             Event event;
             while (window.pollEvent(event)) {
-                if (event.type == Event::Closed) {
-                    window.close();
+                if (event.type == Event::Closed) window.close();
+                int gameOver = chessBoard.isOver();
+                // Update the chessboard
+                if (chessBoard.isOver() == 0) chessBoard.update(event);
+                // Update the side board
+                {
+                    sideBoard.update(event);
+                    // Clear all events
+                    while (window.pollEvent(event));
+                }
+                // If game becomes over for the first time
+                if (chessBoard.isOver() != 0 && gameOver == 0) {
+                    GUI::gameOver(chessBoard);
                 }
             }
-            int gameOver = chessBoard.isOver();
-            if (chessBoard.isOver() == 0) {
-                chessBoard.update(event);
-            }
-            sideBoard.update(event);
-            if (chessBoard.isOver() != 0 && gameOver == 0) {
-                GUI::gameOver(chessBoard);
-            }
+            
 
             RectangleShape background(Vector2f((float)window.getSize().x - (float)window.getSize().y - 6, 165.0f));
             background.setFillColor(Color::Black);
@@ -69,7 +70,7 @@ int main() {
             window.display();
 
             if (chessBoard.getAI() && chessBoard.isAITurn() && !chessBoard.getUndoPress()) {
-                string bestmove = stockfish.calculateBestMoveWithDepth(10,1000);
+                string bestmove = stockfish.calculateBestMoveWithDepth(3,1000);
                 tuple<int, int, int, int> movePos = chessBoard.processStockfishMove(bestmove);
                 int lastRow = get<0>(movePos);
                 int lastCol = get<1>(movePos);
