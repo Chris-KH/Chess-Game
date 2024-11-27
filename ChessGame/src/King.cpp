@@ -98,11 +98,13 @@ void King::performCastling(bool isKingside, vector<vector<unique_ptr<Pieces>>>& 
         // Nhập thành gần
         board[row][5] = move(board[row][7]);          // Di chuyển Xe đến f1
         board[row][5]->setPosition(5, row);
+        board[row][5]->setAlreadyMove(board[row][5]->getAlreadyMove() + 1);
     }
     else {
         // Nhập thành xa
         board[row][3] = move(board[row][0]);          // Di chuyển Xe đến d1
         board[row][3]->setPosition(3, row);
+        board[row][3]->setAlreadyMove(board[row][3]->getAlreadyMove() + 1);
     }
 }
 

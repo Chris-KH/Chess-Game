@@ -59,10 +59,12 @@ private:
     int fullMoveNumber;
     int haftMoveClock;
     /* 
-        [0] for white
-        [1] for black
+        [0] for king side white
+        [1] for queen side white
+        [2] for king side black
+        [3] for queen side black
     */
-    bool castlingAvailability[2]; 
+    bool castlingAvailability[4]; 
     string enPassantTargetSquare;
 
     //AI mode

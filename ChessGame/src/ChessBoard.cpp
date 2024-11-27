@@ -85,7 +85,7 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
     whiteTurn = true;
     fullMoveNumber = 1;
     haftMoveClock = 0;
-    for (int i = 0; i < 2; i++) castlingAvailability[i] = true;
+    for (int i = 0; i < 4; i++) castlingAvailability[i] = true;
     enPassantTargetSquare = "";
 
     //Set Stockfish
