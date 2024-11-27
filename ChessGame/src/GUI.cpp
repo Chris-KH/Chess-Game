@@ -220,6 +220,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
         while (settingWD.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 chessBoard.changeBoard(initBoard);
+                chessBoard.changePieces(initPiece);
                 settingWD.close();
             }
             else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
@@ -229,7 +230,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
                     setPiece(chessBoard.getPieceIndex(), pieceThemePath, piecePath, pieceTexture, reviewPiece);
             }
             else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
-                handleReleaseSetting(selectedButton, selectedDropDownButton, event.mouseButton, buttonList, dropDownButtonList, initBoard, chessBoard, settingWD);
+                handleReleaseSetting(selectedButton, selectedDropDownButton, event.mouseButton, buttonList, dropDownButtonList, initBoard, initPiece, chessBoard, settingWD);
             }
         }
 
@@ -286,7 +287,7 @@ void GUI::handlePressSetting(Button *&selectedButton, DropDownButton *&selectedD
     }
 }
 
-void GUI::handleReleaseSetting(Button *&selectedButton, DropDownButton *&selectedDropDownButton, Event::MouseButtonEvent &mouse, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList, int initBoard, ChessBoard &chessBoard, RenderWindow &window) {
+void GUI::handleReleaseSetting(Button *&selectedButton, DropDownButton *&selectedDropDownButton, Event::MouseButtonEvent &mouse, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList, int initBoard, int initPiece, ChessBoard &chessBoard, RenderWindow &window) {
     Button* lastSelectedButton = selectedButton;
     selectedButton = nullptr;
     for (Button*& button : buttonList) {
@@ -303,6 +304,7 @@ void GUI::handleReleaseSetting(Button *&selectedButton, DropDownButton *&selecte
         }
         else if (selectedButton->getName() == "cancel") {
             chessBoard.changeBoard(initBoard);
+            chessBoard.changePieces(initPiece);
             window.close();
         }
     }

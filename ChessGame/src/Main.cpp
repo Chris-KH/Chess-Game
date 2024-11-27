@@ -1,5 +1,4 @@
-﻿//System include
-#pragma once
+﻿#pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
@@ -73,7 +72,7 @@ int main() {
                 sideBoard.draw();
                 window.display();
 
-                string bestmove = stockfish.calculateBestMoveWithDepth(10,1000);
+                string bestmove = stockfish.calculateBestMoveWithDepth(10, 1000);
                 tuple<int, int, int, int, char> movePos = chessBoard.processStockfishMove(bestmove);
                 int lastRow = get<0>(movePos);
                 int lastCol = get<1>(movePos);
