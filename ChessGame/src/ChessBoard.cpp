@@ -277,6 +277,7 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
 
     // Press empty cell
     if(selectedPiece == nullptr) {
+        
         // Handle last piece
         if (lastPiece) {
             int lastRow = lastPiece->getRow(), lastCol = lastPiece->getCol();
@@ -330,6 +331,7 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
     }
     // Press valid-color piece
     else if (selectedPiece->getColor() == whiteTurn) {
+       
         // Press a piece selected before
         if (selectedPiece == lastPiece) {
             // Press this piece

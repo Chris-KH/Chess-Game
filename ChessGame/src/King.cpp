@@ -50,10 +50,10 @@ bool King::canCastleKingside(const vector<vector<unique_ptr<Pieces>>>& board) {
 
     // Kiểm tra điều kiện nhập thành gần
     if (auto& king = board[row][colKing]) {
-        if (king->getAlreadyMove(king->getRow(), king->getCol())) return false; // Vua đã di chuyển
+        if (king->getAlreadyMove()) return false; // Vua đã di chuyển
 
         if (auto& rook = board[row][colRookKingside]) {
-            if (rook->getAlreadyMove(rook->getRow(), rook->getCol())) return false; // Xe đã di chuyển
+            if (rook->getAlreadyMove()) return false; // Xe đã di chuyển
 
             // Kiểm tra nếu các ô giữa Vua và Xe trống
             if (board[row][5] != nullptr || board[row][6] != nullptr) return false;
@@ -74,10 +74,10 @@ bool King::canCastleQueenside(const vector<vector<unique_ptr<Pieces>>>& board) {
 
     // Kiểm tra điều kiện nhập thành xa
     if (auto& king = board[row][colKing]) {
-        if (king->getAlreadyMove(king->getRow(), king->getCol())) return false; // Vua đã di chuyển
+        if (king->getAlreadyMove()) return false; // Vua đã di chuyển
 
         if (auto& rook = board[row][colRookQueenside]) {
-            if (rook->getAlreadyMove(rook->getRow(), rook->getCol())) return false; // Xe đã di chuyển
+            if (rook->getAlreadyMove()) return false; // Xe đã di chuyển
 
             // Kiểm tra nếu các ô giữa Vua và Xe trống
             if (board[row][1] != nullptr || board[row][2] != nullptr || board[row][3] != nullptr) return false;

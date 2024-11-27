@@ -475,7 +475,7 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     }
 
     //Check Castling
-    else if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove(lastRow, lastCol) == false) {
+    else if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove() == false) {
         int moveDisplacement = col - lastCol;
         if (moveDisplacement == 2) {
             curMove->setCastling(true);
@@ -546,6 +546,7 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     }
 
     // Bỏ chọn quân cờ này
+    board[row][col]->setAlreadyMove(true);
     board[row][col]->resetNumPress();
     selectedPiece = nullptr;
 }

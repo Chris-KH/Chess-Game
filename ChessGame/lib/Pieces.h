@@ -33,6 +33,7 @@ protected:
 
     //Original Postion
     int originCol = 0, originRow = 0;
+    bool isAlreadyMove;
     // Current position
     int col = 0, row = 0;
 public:
@@ -47,7 +48,8 @@ public:
     int getCol() const;
     int getRow() const;
     size_t getCurrentTextureIndex() const;
-    bool getAlreadyMove(int row, int col) const;
+    bool getAlreadyMove() const;
+    void setAlreadyMove(bool isAlreadyMove);
     bool getJustMove() const { return justMove; }
     void setJustMove(bool justMove) { this->justMove = justMove; }
 
