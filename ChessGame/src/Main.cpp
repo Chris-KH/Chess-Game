@@ -28,7 +28,7 @@ int main() {
         // Set icon for window
         window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-        ChessBoard chessBoard(&window, &stockfish, true);
+        ChessBoard chessBoard(&window, &stockfish, false);
         SideBoard sideBoard(&window, &chessBoard);
 
         RectangleShape background(Vector2f((float)window.getSize().x - (float)window.getSize().y - 6, 165.0f));

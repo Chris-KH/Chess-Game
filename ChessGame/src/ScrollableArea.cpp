@@ -3,19 +3,20 @@
 ScrollableArea::ScrollableArea(Vector2f position, Vector2f size, RenderWindow& window) {
     // Khu vực hiển thị
     container.setPosition(position);
-    container.setSize(Vector2f(size.x, size.y));
-    container.setFillColor(Color(60, 60, 60)); // Màu nền
+    container.setSize(Vector2f(size.x, max(size.y, (float)window.getSize().y)));
+    container.setFillColor(Color(50, 50, 50)); // Màu nền
     container.setOutlineColor(Color::Black);
 
     // Đường dẫn thanh cuộn
-    scrollBarTrack.setSize({ 20, min(size.y, float(window.getSize().y)) - 20});
+    scrollBarTrack.setSize({ 20, float(window.getSize().y) - 20 });
     scrollBarTrack.setPosition(position.x + size.x - 20, position.y + 10);
-    scrollBarTrack.setFillColor(Color(100, 100, 100));
+    scrollBarTrack.setFillColor(Color(80, 80, 80));
 
     // Tay cầm thanh cuộn
-    scrollBarThumb.setSize({ 20, 50 });
+    float thumbHeight = scrollBarTrack.getSize().y * (float)window.getSize().y / (container.getSize().y);
+    scrollBarThumb.setSize({ 20, min(thumbHeight, scrollBarTrack.getSize().y)});
     scrollBarThumb.setPosition(scrollBarTrack.getPosition());
-    scrollBarThumb.setFillColor(Color(150, 150, 150));
+    scrollBarThumb.setFillColor(Color(120, 120, 120));
 
     // Tạo view giới hạn nội dung trong container
     view.setCenter(Vector2f(window.getSize().x / 2, window.getSize().y / 2));
@@ -27,6 +28,9 @@ ScrollableArea::ScrollableArea(Vector2f position, Vector2f size, RenderWindow& w
     isDragging = false;
     contentHeight = 0.0f; // Ban đầu nội dung trống
     scrollSpeed = (view.getSize().y / 10);
+    //cout << container.getSize().y << '\n';
+    //cout << scrollBarTrack.getSize().y << '\n';
+    //cout << scrollBarThumb.getSize().y << '\n';
 }
 
 // Thêm phần tử vào danh sách
@@ -36,6 +40,17 @@ void ScrollableArea::addItem(Button& item) {
 
 // Xử lý sự kiện
 void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
+    if (event.type == Event::MouseMoved) {
+        Vector2f mousePos = window.mapPixelToCoords({ event.mouseMove.x, event.mouseMove.y });
+
+        // Đổi màu nếu chuột đang trên thumb
+        if (scrollBarThumb.getGlobalBounds().contains(mousePos)) {
+            scrollBarThumb.setFillColor(Color(170, 170, 170)); // Màu xám sáng
+        }
+        else {
+            scrollBarThumb.setFillColor(Color(120, 120, 120)); // Màu mặc định
+        }
+    }
     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         // Chuyển đổi tọa độ chuột từ pixel sang hệ tọa độ của view
         Vector2f mousePos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y }, view);
@@ -53,8 +68,8 @@ void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
         Vector2f curMousePos = window.mapPixelToCoords({ event.mouseMove.x, event.mouseMove.y }, view);
 
         float delta = curMousePos.y - lastMousePos.y;
-        cout << delta << '\n';
         float totalScroll = delta * (container.getSize().y - window.getSize().y) / (scrollBarTrack.getSize().y - scrollBarThumb.getSize().y);
+        if (abs(scrollBarTrack.getSize().y - scrollBarThumb.getSize().y) < 10e-9) totalScroll = 0.f;
 
         if (totalScroll > 0) { // Lăn xuống
             view.move(0, totalScroll);
@@ -74,10 +89,11 @@ void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
 
         //scrollOffset Limited
         if (scrollOffset < 0) scrollOffset = 0;
-        if (scrollOffset > container.getSize().y - window.getSize().y) scrollOffset = container.getSize().y - window.getSize().y;
+        if (scrollOffset > (container.getSize().y - window.getSize().y)) scrollOffset = container.getSize().y - window.getSize().y;
 
         // Calculate scroll ratio
         float scrollRatio = scrollOffset / (container.getSize().y - window.getSize().y);
+        if (abs(container.getSize().y - window.getSize().y) < 10e-9) scrollRatio = 0.f;
         // Update postion of scroll bar track
         scrollBarTrack.setPosition(scrollBarTrack.getPosition().x, 10 + scrollOffset);
 
@@ -113,6 +129,7 @@ void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
 
         // Calculate scroll ratio
         float scrollRatio = scrollOffset / (container.getSize().y - window.getSize().y);
+        if (abs(container.getSize().y - window.getSize().y) < 10e-9) scrollRatio = 0.f;
         // Update postion of scroll bar track
         scrollBarTrack.setPosition(scrollBarTrack.getPosition().x, 10 + scrollOffset);
 

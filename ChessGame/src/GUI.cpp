@@ -599,29 +599,54 @@ void GUI::saveGame(ChessBoard* chessBoard) {
     }
 }
 
-void GUI::loadGame(ChessBoard& chessBoard, std::string path) {
+void GUI::loadGame(ChessBoard& chessBoard, string path) {
     // Sizes
-    const float wdWidth = 800.f, wdHeight = 400.f;
-
-
+    const float wdWidth = 800.f, wdHeight = 600.f;
 
     // Window
     RenderWindow loadWD(VideoMode((unsigned)wdWidth, (unsigned)wdHeight), "Load game", Style::Close | Style::Titlebar);
+    loadWD.setFramerateLimit(120);
     Image icon;
     assert(icon.loadFromFile("../assets/Icon/LoadGameIcon.png") == true);
     loadWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     
-    // Poll events and handle
+    string folderPath = "../save";
+
+    vector<string> fileName;
+
+    if (filesystem::exists(folderPath) && filesystem::is_directory(folderPath)) {
+        for (const auto& entry : filesystem::directory_iterator(folderPath)) {
+            if (filesystem::is_regular_file(entry)) {
+                fileName.push_back(entry.path().filename().string());
+            }
+        }
+    }
+
+    size_t numberOfFile = fileName.size();
+
+    ScrollableArea scroll(Vector2f(0, 0), Vector2f(800, 20 + 70 * numberOfFile + 50 + 20), loadWD);
+
+    for (size_t i = 0; i < numberOfFile; i++) {
+        Button item;
+        item.setTextButton(string("Button") + to_string(i + 1), fileName[i], "../assets/fonts/Vogue.ttf", 600, 50, 100, i * 70 + 20);
+        scroll.addItem(item);
+    }
+
     Event event;
+    // Poll events and handle
     while (loadWD.isOpen()) {
         loadWD.requestFocus();
+
         while (loadWD.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 loadWD.close();
             }
+
+            scroll.handleEvent(event, loadWD);
         }
 
         loadWD.clear(Color(80, 80, 80, 255));
+        scroll.draw(loadWD);
         loadWD.display();
     }
 }

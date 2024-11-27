@@ -82,7 +82,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\GUI.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

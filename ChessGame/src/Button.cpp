@@ -46,7 +46,7 @@ void Button::setTextButton(string name, string content, string fontPath, float w
 	text.setCharacterSize(height - 10);
 	//float r = min({ 1.f, width / (float)text.getGlobalBounds().width, height / (float)text.getGlobalBounds().height });
 	//text.setScale(r, r);
-	//text.setOrigin(Vector2f(text.getGlobalBounds().left + text.getGlobalBounds().width / 2.f, text.getGlobalBounds().top + text.getGlobalBounds().height / 2.f));
+	text.setOrigin(Vector2f(text.getGlobalBounds().left + text.getGlobalBounds().width / 2.f, text.getGlobalBounds().top + text.getGlobalBounds().height / 2.f));
 	text.setPosition(rectangle.getGlobalBounds().left + width / 2.f, rectangle.getGlobalBounds().top + height / 2.f);
 }
 
@@ -95,7 +95,7 @@ void Button::drawSprite(RenderWindow& window) {
 
 void Button::drawText(RenderWindow& window) {
 	window.draw(rectangle);
-	//window.draw(text);
+	window.draw(text);
 }
 
 void Button::drawAll(RenderWindow& window) {
