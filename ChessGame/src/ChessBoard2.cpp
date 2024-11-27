@@ -94,8 +94,14 @@ void ChessBoard::undoMove() {
         highLightAfterMove(last.first, last.second, cur.first, cur.second);
     }
 
+    board[fromPosition.first][fromPosition.second]->setAlreadyMove(board[fromPosition.first][fromPosition.second]->getAlreadyMove() - 1);
+
     //Set turn
     whiteTurn = board[fromPosition.first][fromPosition.second]->getColor();
+    if (!whiteTurn) this->fullMoveNumber--;
+    if (board[fromPosition.first][fromPosition.second]->getType() != "pawn" || move->getPieceCaptured()) {
+        this->haftMoveClock--;
+    }
 
     this->numPieces = countPieces();
 
@@ -173,8 +179,13 @@ void ChessBoard::redoMove() {
 
     highLightAfterMove(fromPosition.first, fromPosition.second, toPosition.first, toPosition.second);
 
+    board[toPosition.first][toPosition.second]->setAlreadyMove(board[toPosition.first][toPosition.second]->getAlreadyMove() + 1);
+
     //Set turn
     whiteTurn = !board[toPosition.first][toPosition.second]->getColor();
+    if (whiteTurn) this->fullMoveNumber++;
+    if (board[toPosition.first][toPosition.second]->getType() == "pawn" || move->getPieceCaptured()) this->haftMoveClock = 0;
+    else this->haftMoveClock++;
 
     //Check checkmate...
     {
@@ -269,7 +280,7 @@ void ChessBoard::newGame() {
     whiteTurn = true;
     fullMoveNumber = 1;
     haftMoveClock = 0;
-    for (int i = 0; i < 2; i++) castlingAvailability[i] = true;
+    for (int i = 0; i < 4; i++) castlingAvailability[i] = true;
     enPassantTargetSquare = "";
 
     this->undoPress = false;
@@ -400,11 +411,34 @@ string ChessBoard::generateFEN() {
     fen += (whiteTurn ? 'w' : 'b');
 
     //Castling availability
+    //Check for white
+    if (board[7][4] && board[7][4]->getType() == "king" && board[7][4]->getAlreadyMove() == 0) {
+        if (board[7][7] && board[7][7]->getType() == "rook" && board[7][7]->getAlreadyMove() == 0) {
+            castlingAvailability[0] = true;
+        } else castlingAvailability[0] = false;
+        if (board[7][0] && board[7][0]->getType() == "rook" && board[7][0]->getAlreadyMove() == 0) {
+            castlingAvailability[1] = true;
+        } else castlingAvailability[1] = false;
+    }
+    else castlingAvailability[0] = castlingAvailability[1] = false;
+
+    //Check for black
+    if (board[0][4] && board[0][4]->getType() == "king" && board[0][4]->getAlreadyMove() == 0) {
+        if (board[0][7] && board[0][7]->getType() == "rook" && board[0][7]->getAlreadyMove() == 0) {
+            castlingAvailability[2] = true;
+        } else castlingAvailability[2] = false;
+        if (board[0][0] && board[0][0]->getType() == "rook" && board[0][0]->getAlreadyMove() == 0) {
+            castlingAvailability[3] = true;
+        } else castlingAvailability[3] = false;
+    }
+    else castlingAvailability[2] = castlingAvailability[3] = false;
+
     fen += ' ';
     string castling = "";
-    for (int i = 0; i < 2; i++) {
+    char tmp[] = "KQkq";
+    for (int i = 0; i < 4; i++) {
         if (castlingAvailability[i] == true) {
-            castling += (i == 0 ? "KQ" : "kq");
+            castling += tmp[i];
         }
     }
     fen += (castling.empty() ? "-" : castling);
@@ -475,19 +509,17 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     }
 
     //Check Castling
-    else if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove(lastRow, lastCol) == false) {
+    else if (board[row][col]->getType() == "king" && board[row][col]->getAlreadyMove() == 0) {
         int moveDisplacement = col - lastCol;
         if (moveDisplacement == 2) {
             curMove->setCastling(true);
             curMove->setIsKingSide(true);
             board[row][col]->attemptCastling(board, true);
-            castlingAvailability[!board[row][col]->getColor()] = false;
         }
         else if (moveDisplacement == -2) {
             curMove->setCastling(true);
             curMove->setIsKingSide(false);
             board[row][col]->attemptCastling(board, false);
-            castlingAvailability[!board[row][col]->getColor()] = false;
         }
     }
     // Check promotion
@@ -521,6 +553,7 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     if (justMovePiece) justMovePiece->setJustMove(false);
     this->justMovePiece = board[row][col].get();
     if (justMovePiece) justMovePiece->setJustMove(true);
+    board[row][col]->setAlreadyMove(board[row][col]->getAlreadyMove() + 1);
 
     alterTurn();
 

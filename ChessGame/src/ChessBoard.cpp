@@ -85,7 +85,7 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
     whiteTurn = true;
     fullMoveNumber = 1;
     haftMoveClock = 0;
-    for (int i = 0; i < 2; i++) castlingAvailability[i] = true;
+    for (int i = 0; i < 4; i++) castlingAvailability[i] = true;
     enPassantTargetSquare = "";
 
     //Set Stockfish
@@ -278,6 +278,7 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
 
     // Press empty cell
     if(selectedPiece == nullptr) {
+        
         // Handle last piece
         if (lastPiece) {
             int lastRow = lastPiece->getRow(), lastCol = lastPiece->getCol();
@@ -327,6 +328,7 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
     }
     // Press valid-color piece
     else if (selectedPiece->getColor() == whiteTurn) {
+       
         // Press a piece selected before
         if (selectedPiece == lastPiece) {
             // Press this piece

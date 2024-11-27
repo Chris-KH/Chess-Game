@@ -6,6 +6,7 @@ Pieces::Pieces() {
     this->typeKey = '0';
     this->isWhite = true;
     this->chosen = false;
+    this->isAlreadyMove = 0;
 }
 
 Pieces::Pieces(bool isWhite, int originCol, int originRow) {
@@ -15,6 +16,7 @@ Pieces::Pieces(bool isWhite, int originCol, int originRow) {
     this->originCol = originCol;
     this->chosen = false;
     this->typeKey = '0';
+    this->isAlreadyMove = 0;
 }
 
 Pieces::Pieces(const Pieces& piece) :
@@ -32,7 +34,8 @@ Pieces::Pieces(const Pieces& piece) :
     originCol(piece.originCol),
     originRow(piece.originRow),
     col(piece.col),
-    row(piece.row)
+    row(piece.row),
+    isAlreadyMove(piece.isAlreadyMove)
 {}
 
 //isWhite
@@ -52,8 +55,12 @@ size_t Pieces::getCurrentTextureIndex() const {
     return this->currentTextureIndex;
 }
 
-bool Pieces::getAlreadyMove(int row, int col) const {
-    return (row != this->originRow || col != this->originCol);
+size_t Pieces::getAlreadyMove() const {
+    return this->isAlreadyMove;
+}
+
+void Pieces::setAlreadyMove(size_t isAlreadyMove) {
+    this->isAlreadyMove = isAlreadyMove;
 }
 
 bool Pieces::loadTexture(const vector<string>& texturePaths) {
