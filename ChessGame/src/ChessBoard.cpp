@@ -188,7 +188,8 @@ void ChessBoard::update(const Event& event) {
         int mouseY = event.mouseButton.y;
         handleMouseRelease(mouseX, mouseY);
     }
-
+    highlightTiles.clear();
+    if (selectedPiece) highlightPossibleMove(selectedPiece);
     // Drag a valid pressed piece
     if (pieceFollowingMouse && isDragging) pieceFollowingMouse->followMouse(Mouse::getPosition(*window), initialPosition);
 }
@@ -289,13 +290,11 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
                 makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
                 // Unselect last piece
                 board[row][col]->resetNumPress();
-                highlightTiles.clear();
             }
             // Invalid cell move
             else {
                 // Unselect last piece
                 lastPiece->resetNumPress();
-                highlightTiles.clear();
             }
         }
     }
@@ -313,13 +312,11 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
                 makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
                 // Unselect last piece
                 board[row][col]->resetNumPress();
-                highlightTiles.clear();
             }
             // Invalid cell move
             else {
                 // Unselect last piece
                 lastPiece->resetNumPress();
-                highlightTiles.clear();
             }
         }
         // Did not select any piece
@@ -342,12 +339,10 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY) {
         else if (selectedPiece != lastPiece) {
             // Unselect last piece
             if (lastPiece) {
-                highlightTiles.clear();
                 lastPiece->resetNumPress();
             }
 
             // Press the new one
-            highlightPossibleMove(selectedPiece);
             selectedPiece->press();
             pieceFollowingMouse = selectedPiece;
             isDragging = true;
@@ -390,6 +385,7 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
         makeMove(lastRow, lastCol, row, col, possibleMoves, curMove);
         // Unselect current piece
         board[row][col]->resetNumPress();
+        // selectedPi
     }
     // Released on the same cell as the pressed cell
     else if (selectedPiece == lastPiece) {
@@ -397,7 +393,6 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
         if (selectedPiece->getNumPress() > 1) {
             // Unselect current piece
             board[row][col]->resetNumPress();
-            highlightTiles.clear();
             selectedPiece = nullptr;
         }
     }
