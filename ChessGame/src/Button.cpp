@@ -4,7 +4,7 @@ Button::Button() : width(0), height(0), posX(0), posY(0) {
 	
 }
 
-void Button::setSpriteButton(std::string name, std::string imagePath, float width, float height, float posX, float posY) {
+void Button::setSpriteButton(string name, string imagePath, float width, float height, float posX, float posY) {
 	// Update name, width, height, posX, posY
 	this->name = name, this->width = width, this->height = height, this->posX = posX, this->posY = posY;
 	// Load the texture
@@ -25,29 +25,32 @@ void Button::setSpriteButton(std::string name, std::string imagePath, float widt
 	rectangle.setPosition(posX - 10, posY - 10); // Minus rectangle's thickness: -10
 }
 
-void Button::setTextButton(std::string name, std::string content, std::string fontPath, float width, float height, float posX, float posY) {
+void Button::setTextButton(string name, string content, string fontPath, float width, float height, float posX, float posY) {
 	this->name = name, this->width = width, this->height = height, this->posX = posX, this->posY = posY;
 	
 	// Set the rectangle
-	rectangle.setOutlineThickness(-1);
+	rectangle.setSize(Vector2f(width, height));
+	rectangle.setOutlineThickness(3);
 	rectangle.setFillColor(Color::White);
 	rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64));
-	rectangle.setSize(Vector2f(width, height));
 	rectangle.setPosition(posX, posY);
 
 	// Set text
-	assert(font.loadFromFile(fontPath) == true);
+	if (!font.loadFromFile(fontPath)) {
+		throw runtime_error("Cannot load " + fontPath + "!\n");
+	}
+
 	text.setFont(font);
-	text.setFillColor(Color::Black);
 	text.setString(content);
+	text.setFillColor(Color::Black);
 	text.setCharacterSize(height - 10);
 	//float r = min({ 1.f, width / (float)text.getGlobalBounds().width, height / (float)text.getGlobalBounds().height });
 	//text.setScale(r, r);
-	text.setOrigin(Vector2f(text.getGlobalBounds().left + text.getGlobalBounds().width / 2.f, text.getGlobalBounds().top + text.getGlobalBounds().height / 2.f));
+	//text.setOrigin(Vector2f(text.getGlobalBounds().left + text.getGlobalBounds().width / 2.f, text.getGlobalBounds().top + text.getGlobalBounds().height / 2.f));
 	text.setPosition(rectangle.getGlobalBounds().left + width / 2.f, rectangle.getGlobalBounds().top + height / 2.f);
 }
 
-void Button::setSpriteAndTextButton(std::string name, std::string imagePath, std::string content, std::string fontPath, float width, float height, float posX, float posY, float spriteWidth, float spriteHeight, float spriteX, float spriteY, float textWidth, float textHeight, float textX, float textY) {
+void Button::setSpriteAndTextButton(string name, string imagePath, string content, string fontPath, float width, float height, float posX, float posY, float spriteWidth, float spriteHeight, float spriteX, float spriteY, float textWidth, float textHeight, float textX, float textY) {
 	// Update variables
 	this->name = name, this->width = width, this->height = height, this->posX = posX, this->posY = posY;
 	// Sprite: texture
@@ -73,9 +76,9 @@ void Button::setSpriteAndTextButton(std::string name, std::string imagePath, std
 
 	text.setFont(font);
 	// Text: Text
+	text.setCharacterSize(textHeight + 15);
 	text.setFillColor(Color::Black);
 	text.setString(content);
-	text.setCharacterSize(textHeight + 15);
 	// Scale if the text width exceeds the desired width
 	if (text.getGlobalBounds().width > textWidth) {
 		float r = textWidth / (float)text.getGlobalBounds().width;
@@ -92,7 +95,7 @@ void Button::drawSprite(RenderWindow& window) {
 
 void Button::drawText(RenderWindow& window) {
 	window.draw(rectangle);
-	window.draw(text);
+	//window.draw(text);
 }
 
 void Button::drawAll(RenderWindow& window) {
@@ -115,4 +118,24 @@ void Button::move(float addX, float addY) {
 
 bool Button::contain(int x, int y) {
 	return rectangle.getGlobalBounds().contains(x, y);
+}
+
+void Button::setWidth(float width) {
+	this->width = width;
+}
+
+void Button::setHeight(float height) {
+	this->height = height;
+}
+
+void Button::setX(float x) {
+	this->posX = x;
+}
+
+void Button::setY(float y) {
+	this->posY = y;
+}
+
+RectangleShape& Button::getRectangle() {
+	return this->rectangle;
 }

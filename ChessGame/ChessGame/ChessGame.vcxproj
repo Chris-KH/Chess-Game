@@ -35,6 +35,7 @@
     <ClCompile Include="..\src\Pieces.cpp" />
     <ClCompile Include="..\src\Queen.cpp" />
     <ClCompile Include="..\src\Rook.cpp" />
+    <ClCompile Include="..\src\ScrollableArea.cpp" />
     <ClCompile Include="..\src\SideBoard.cpp" />
     <ClCompile Include="..\src\StockFish.cpp" />
   </ItemGroup>
@@ -53,6 +54,7 @@
     <ClInclude Include="..\lib\Pieces.h" />
     <ClInclude Include="..\lib\Queen.h" />
     <ClInclude Include="..\lib\Rook.h" />
+    <ClInclude Include="..\lib\ScrollableArea.h" />
     <ClInclude Include="..\lib\SideBoard.h" />
     <ClInclude Include="..\lib\StockFish.h" />
   </ItemGroup>

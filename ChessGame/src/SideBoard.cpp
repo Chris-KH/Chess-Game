@@ -1,4 +1,4 @@
-#include "../lib/SideBoard.h"
+﻿#include "../lib/SideBoard.h"
 SideBoard::SideBoard(RenderWindow* window, ChessBoard* chessboard) {
     this->window = window;
     this->chessboard = chessboard;

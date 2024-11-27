@@ -22,6 +22,7 @@ int main() {
         //GameEngine.startGame();
         Stockfish stockfish;
         RenderWindow window(VideoMode(1400, 930), "Chess Game", Style::Close | Style::Titlebar);
+        window.setFramerateLimit(120);
         Image icon;
         assert(icon.loadFromFile("../assets/Icon/ChessGameIcon.png") == true);
         // Set icon for window
