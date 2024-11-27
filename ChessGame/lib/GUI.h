@@ -17,9 +17,10 @@ using namespace sf;
 #include "Rook.h"
 #include "Knight.h"
 #include "Bishop.h"
-#include "Button.h"
+#include "ScrollableArea.h"
 #include "DropDownButton.h"
 #include "ChessBoard.h"
+
 
 class GUI {
 	friend class ChessBoard;
