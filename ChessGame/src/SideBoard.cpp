@@ -35,9 +35,8 @@ void SideBoard::update(Event& event) {
         handleButtonPress(event.mouseButton.x, event.mouseButton.y);
     }
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
-        return handleButtonRelease(event.mouseButton.x, event.mouseButton.y);
+        handleButtonRelease(event.mouseButton.x, event.mouseButton.y);
     }
-    return false;
 }
 
 void SideBoard::handleButtonPress(int mouseX, int mouseY) {
@@ -47,7 +46,7 @@ void SideBoard::handleButtonPress(int mouseX, int mouseY) {
     }
 }
 
-bool SideBoard::handleButtonRelease(int mouseX, int mouseY) {
+void SideBoard::handleButtonRelease(int mouseX, int mouseY) {
     // Record the last button pressed
     Button* lastBut = selectedBut;
     // Find which button the mouse released
@@ -66,26 +65,20 @@ bool SideBoard::handleButtonRelease(int mouseX, int mouseY) {
         else if (selectedBut->getName() == "save" && gameOver == 0) {
             cout << "Open save game window please!\n";
             GUI::saveGame(chessboard);
-            return true;
         }
         else if (selectedBut->getName() == "new") {
             chessboard->newGame();
-            return true;
         }
         else if (selectedBut->getName() == "surrender" && gameOver == 0) {
             chessboard->setGameOver(chessboard->isWhiteTurn() + 1);
-            return true;
         }
         else if (selectedBut->getName() == "setting") {
             GUI::settingChoice(*chessboard);
-            return true;
         }
         else if (selectedBut->getName() == "load") {
             chessboard->loadGame("");
-            return true;
         }
     }
-    return false;
 }
 
 void SideBoard::draw(void) {
