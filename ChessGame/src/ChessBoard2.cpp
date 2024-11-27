@@ -558,7 +558,6 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     alterTurn();
 
     stockfish->setBoardState(generateFEN());
-    cout << generateFEN() << '\n';
 
     highlightTiles.clear();
     highlightTilesJustMove.clear();

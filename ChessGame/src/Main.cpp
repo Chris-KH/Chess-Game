@@ -48,7 +48,7 @@ int main() {
                 if (chessBoard.isOver() == 0) chessBoard.update(event);
                 // Update the side board
                 {
-                    sideBoard.update(event, chessBoard.isOver());
+                    sideBoard.update(event);
                     // Clear all events
                     while (window.pollEvent(event));
                 }
@@ -59,7 +59,7 @@ int main() {
                     chessBoard.draw();
                     sideBoard.draw();
                     window.display();
-                    Sleep(1000);
+                    Sleep(200);
                     GUI::gameOver(chessBoard);
                 }
             }
@@ -95,7 +95,7 @@ int main() {
                     chessBoard.draw();
                     sideBoard.draw();
                     window.display();
-                    Sleep(1000);
+                    Sleep(200);
                     GUI::gameOver(chessBoard);
                 }
             }
