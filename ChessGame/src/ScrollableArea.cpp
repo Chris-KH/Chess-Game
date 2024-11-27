@@ -19,8 +19,8 @@ ScrollableArea::ScrollableArea(Vector2f position, Vector2f size, RenderWindow& w
     scrollBarThumb.setFillColor(Color(120, 120, 120));
 
     // Tạo view giới hạn nội dung trong container
-    view.setCenter(Vector2f(window.getSize().x / 2, window.getSize().y / 2));
-    view.setSize(Vector2f(window.getSize().x, window.getSize().y));
+    view.setCenter(Vector2f(window.getSize().x / 2.f, window.getSize().y / 2.f));
+    view.setSize(Vector2f((float)window.getSize().x, (float)window.getSize().y));
 
     maxScroll = container.getSize().y - window.getSize().y;
 
@@ -28,14 +28,15 @@ ScrollableArea::ScrollableArea(Vector2f position, Vector2f size, RenderWindow& w
     isDragging = false;
     contentHeight = 0.0f; // Ban đầu nội dung trống
     scrollSpeed = (view.getSize().y / 10);
+    lastButton = -1;
     //cout << container.getSize().y << '\n';
     //cout << scrollBarTrack.getSize().y << '\n';
     //cout << scrollBarThumb.getSize().y << '\n';
 }
 
 // Thêm phần tử vào danh sách
-void ScrollableArea::addItem(Button& item) {
-    items.push_back(item);
+void ScrollableArea::addItem(unique_ptr<Button>& item) {
+    items.emplace_back(move(item));
 }
 
 // Xử lý sự kiện
@@ -51,6 +52,7 @@ void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
             scrollBarThumb.setFillColor(Color(120, 120, 120)); // Màu mặc định
         }
     }
+
     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         // Chuyển đổi tọa độ chuột từ pixel sang hệ tọa độ của view
         Vector2f mousePos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y }, view);
@@ -137,18 +139,29 @@ void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
         float thumbY = scrollBarTrack.getPosition().y + scrollRatio * (scrollBarTrack.getSize().y - scrollBarThumb.getSize().y);
         scrollBarThumb.setPosition(scrollBarThumb.getPosition().x, thumbY);
     }
+
+    if (event.type == Event::MouseWheelScrolled || event.type == Event::MouseMoved) {
+        // Đổi màu nếu chuột đang trên thumb
+        Vector2i mousePos = Mouse::getPosition(window);
+        int but = detectClickedItem(mousePos, window);
+        if (but != lastButton && lastButton != -1) items[lastButton]->getRectangle().setFillColor(Color::White);
+        if (but != -1) {
+            lastButton = but;
+            items[but]->getRectangle().setFillColor(Color(180, 180, 180));
+        }
+        else {
+            lastButton = -1;
+        }
+    }
 }
 
 // Phát hiện phần tử được nhấn
 int ScrollableArea::detectClickedItem(Vector2i& mousePosition, RenderWindow& window) {
-    Vector2f worldPos = window.mapPixelToCoords(mousePosition);
+    Vector2f worldPos = window.mapPixelToCoords(mousePosition, view);
 
-    for (size_t i = 0; i < items.size(); ++i) {
-        // Tính toán vị trí cuộn của phần tử
-        FloatRect bounds = items[i].getRectangle().getGlobalBounds();
-        bounds.top -= scrollOffset;
+    for (int i = 0; i < items.size(); ++i) {
 
-        if (bounds.contains(worldPos)) {
+        if (items[i]->getRectangle().getGlobalBounds().contains(worldPos)) {
             return i; // Trả về chỉ số phần tử được nhấn
         }
     }
@@ -167,8 +180,8 @@ void ScrollableArea::draw(RenderWindow& window) {
     window.draw(scrollBarThumb);
 
     // Vẽ các phần tử
-    for (Button& but : items) {
-        but.drawText(window);
+    for (unique_ptr<Button>& but : items) {
+        but->drawText(window);
     }
 
     // Khôi phục view gốc

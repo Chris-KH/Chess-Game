@@ -624,11 +624,11 @@ void GUI::loadGame(ChessBoard& chessBoard, string path) {
 
     size_t numberOfFile = fileName.size();
 
-    ScrollableArea scroll(Vector2f(0, 0), Vector2f(800, 20 + 70 * numberOfFile + 50 + 20), loadWD);
+    ScrollableArea scroll(Vector2f(0, 0), Vector2f(wdWidth, 20 + 60 * numberOfFile), loadWD);
 
     for (size_t i = 0; i < numberOfFile; i++) {
-        Button item;
-        item.setTextButton(string("Button") + to_string(i + 1), fileName[i], "../assets/fonts/Vogue.ttf", 600, 50, 100, i * 70 + 20);
+        unique_ptr<Button> item = make_unique<Button>();
+        item->setTextButton(string("Button") + to_string(i + 1), fileName[i], "../assets/fonts/TimesNewRoman.ttf", 600, 40, 40, i * 60 + 20);
         scroll.addItem(item);
     }
 
