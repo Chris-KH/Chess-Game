@@ -14,6 +14,7 @@ private:
 
     View view; 
 
+    Vector2f lastMousePos;
     float scrollSpeed = 20.0f; // Tốc độ cuộn
     float maxScroll;
 

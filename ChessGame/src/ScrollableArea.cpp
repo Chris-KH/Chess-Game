@@ -26,6 +26,7 @@ ScrollableArea::ScrollableArea(Vector2f position, Vector2f size, RenderWindow& w
     scrollOffset = 0.0f;
     isDragging = false;
     contentHeight = 0.0f; // Ban đầu nội dung trống
+    scrollSpeed = (view.getSize().y / 10);
 }
 
 // Thêm phần tử vào danh sách
@@ -35,55 +36,56 @@ void ScrollableArea::addItem(Button& item) {
 
 // Xử lý sự kiện
 void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
-    if (event.type == Event::MouseButtonPressed) {
+    if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         // Chuyển đổi tọa độ chuột từ pixel sang hệ tọa độ của view
         Vector2f mousePos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y }, view);
         // Kiểm tra xem chuột có nằm trong phạm vi của scrollBarThumb không
         if (scrollBarThumb.getGlobalBounds().contains(mousePos)) {
             isDragging = true; // Bắt đầu kéo thanh cuộn
+            lastMousePos = mousePos;
         }
     }
-    else if (event.type == Event::MouseButtonReleased) {
+    else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         isDragging = false; // Dừng kéo
     }
     else if (event.type == Event::MouseMoved && isDragging) {
-        int originOffset = scrollOffset;
         // Lấy vị trí chuột trong không gian tọa độ của cửa sổ
-        float newY = window.mapPixelToCoords({ event.mouseMove.x, event.mouseMove.y }, view).y - scrollBarThumb.getSize().y;
+        Vector2f curMousePos = window.mapPixelToCoords({ event.mouseMove.x, event.mouseMove.y }, view);
 
-        // Giới hạn vị trí của thanh cuộn thumb
-        float minY = scrollBarTrack.getPosition().y;
-        float maxY = scrollBarTrack.getPosition().y + scrollBarTrack.getSize().y - scrollBarThumb.getSize().y;
+        float delta = curMousePos.y - lastMousePos.y;
+        cout << delta << '\n';
+        float totalScroll = delta * (container.getSize().y - window.getSize().y) / (scrollBarTrack.getSize().y - scrollBarThumb.getSize().y);
 
-        // Đảm bảo thanh cuộn thumb không ra ngoài phạm vi
-        if (newY < minY) newY = minY;
-        if (newY > maxY) newY = maxY;
+        if (totalScroll > 0) { // Lăn xuống
+            view.move(0, totalScroll);
+        }
+        else if (curMousePos.y - lastMousePos.y < 0) { // Lăn lên
+            view.move(0, totalScroll);
+        }
 
-        // Tính toán tỷ lệ cuộn (scrollRatio)
-        float scrollRatio = (newY - minY) / (maxY - minY);
-
-        // Cập nhật scrollOffset dựa trên tỷ lệ cuộn
-        scrollOffset = scrollRatio * (container.getSize().y - window.getSize().y);
-
-
-        // Giới hạn scrollOffset
-        if (scrollOffset < 0) scrollOffset = 0;
-        if (scrollOffset > container.getSize().y - window.getSize().y) scrollOffset = container.getSize().y - window.getSize().y;
-
-        view.move(0, scrollOffset - originOffset);
-        
-        // Giới hạn vị trí của view (đảm bảo không ra ngoài vùng hiển thị)
+        // Giới hạn vùng nhìn thấy
         if (view.getCenter().y - view.getSize().y / 2 < 0)
             view.setCenter(view.getCenter().x, view.getSize().y / 2);
         if (view.getCenter().y + view.getSize().y / 2 > container.getSize().y)
             view.setCenter(view.getCenter().x, container.getSize().y - view.getSize().y / 2);
 
-        // Cập nhật vị trí của thanh cuộn thumb
-        scrollBarThumb.setPosition(scrollBarThumb.getPosition().x, newY);
+        // Update scroll offset
+        scrollOffset += totalScroll;
 
-        // Cập nhật vị trí của thanh cuộn track (theo tỷ lệ cuộn)
-        float trackY = 10 + scrollOffset; // 10 là khoảng cách ban đầu, có thể điều chỉnh
-        scrollBarTrack.setPosition(scrollBarTrack.getPosition().x, trackY);
+        //scrollOffset Limited
+        if (scrollOffset < 0) scrollOffset = 0;
+        if (scrollOffset > container.getSize().y - window.getSize().y) scrollOffset = container.getSize().y - window.getSize().y;
+
+        // Calculate scroll ratio
+        float scrollRatio = scrollOffset / (container.getSize().y - window.getSize().y);
+        // Update postion of scroll bar track
+        scrollBarTrack.setPosition(scrollBarTrack.getPosition().x, 10 + scrollOffset);
+
+        // Update postion of scroll bar thumb
+        float thumbY = scrollBarTrack.getPosition().y + scrollRatio * (scrollBarTrack.getSize().y - scrollBarThumb.getSize().y);
+        scrollBarThumb.setPosition(scrollBarThumb.getPosition().x, thumbY);
+
+        lastMousePos = window.mapPixelToCoords({ event.mouseMove.x, event.mouseMove.y }, view);
     }
     else if (event.type == Event::MouseWheelScrolled) {
         float totalScroll = 0;

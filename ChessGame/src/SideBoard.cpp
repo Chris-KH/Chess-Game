@@ -1,4 +1,4 @@
-#include "../lib/SideBoard.h"
+﻿#include "../lib/SideBoard.h"
 SideBoard::SideBoard(RenderWindow* window, ChessBoard* chessboard) {
     this->window = window;
     this->chessboard = chessboard;
@@ -29,16 +29,16 @@ SideBoard::SideBoard(RenderWindow* window, ChessBoard* chessboard) {
     gameOver = 0;
 }
 
-void SideBoard::update(Event& event) {
-    this->gameOver = chessboard->isOver();
-    if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
-        handleButtonPress(event.mouseButton.x, event.mouseButton.y);
-    }
-    else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
-        return handleButtonRelease(event.mouseButton.x, event.mouseButton.y);
-    }
-    return false;
-}
+//void SideBoard::update(Event& event) {
+//    this->gameOver = chessboard->isOver();
+//    if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+//        handleButtonPress(event.mouseButton.x, event.mouseButton.y);
+//    }
+//    else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+//        return handleButtonRelease(event.mouseButton.x, event.mouseButton.y);
+//    }
+//    return false;
+//}
 
 void SideBoard::handleButtonPress(int mouseX, int mouseY) {
     selectedBut = nullptr;
