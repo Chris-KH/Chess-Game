@@ -14,7 +14,6 @@ void ChessBoard::undoMove() {
     checkTiles[1].clear();
 
     highlightTiles.clear();
-    window->clear();
     draw();
     window->display();
 
@@ -121,7 +120,6 @@ void ChessBoard::redoMove() {
     checkTiles[1].clear();
 
     highlightTiles.clear();
-    window->clear();
     draw();
     window->display();
 
