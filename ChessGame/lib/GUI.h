@@ -6,6 +6,7 @@
 #include <SFML/Network.hpp>
 #include <SFML/OpenGL.hpp>
 #include <bits/stdc++.h>
+#include <filesystem>
 
 using namespace std;
 using namespace sf;
@@ -48,5 +49,5 @@ public:
 	static void saveGame(ChessBoard* chessBoard);
 
 	//Load Game window
-	static void loadGame(ChessBoard& chessBoard, std::string path);
+	static void loadGame(ChessBoard& chessBoard, string path);
 };

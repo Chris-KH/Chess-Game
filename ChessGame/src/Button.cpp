@@ -7,6 +7,7 @@ Button::Button() : width(0), height(0), posX(0), posY(0) {
 void Button::setSpriteButton(string name, string imagePath, float width, float height, float posX, float posY) {
 	// Update name, width, height, posX, posY
 	this->name = name, this->width = width, this->height = height, this->posX = posX, this->posY = posY;
+	this->imagePath = imagePath;
 	// Load the texture
 	if (!texture.loadFromFile(imagePath)) {
 		throw runtime_error("Cannot load " + imagePath + "!\n");
@@ -27,7 +28,8 @@ void Button::setSpriteButton(string name, string imagePath, float width, float h
 
 void Button::setTextButton(string name, string content, string fontPath, float width, float height, float posX, float posY) {
 	this->name = name, this->width = width, this->height = height, this->posX = posX, this->posY = posY;
-	
+	this->fontPath = fontPath;
+	this->content = content;
 	// Set the rectangle
 	rectangle.setSize(Vector2f(width, height));
 	rectangle.setOutlineThickness(3);
@@ -44,15 +46,16 @@ void Button::setTextButton(string name, string content, string fontPath, float w
 	text.setString(content);
 	text.setFillColor(Color::Black);
 	text.setCharacterSize(height - 10);
-	//float r = min({ 1.f, width / (float)text.getGlobalBounds().width, height / (float)text.getGlobalBounds().height });
-	//text.setScale(r, r);
-	//text.setOrigin(Vector2f(text.getGlobalBounds().left + text.getGlobalBounds().width / 2.f, text.getGlobalBounds().top + text.getGlobalBounds().height / 2.f));
-	text.setPosition(rectangle.getGlobalBounds().left + width / 2.f, rectangle.getGlobalBounds().top + height / 2.f);
+	//text.setPosition(rectangle.getPosition().x + (rectangle.getGlobalBounds().width - text.getGlobalBounds().width) / 2.f, rectangle.getPosition().y + 10);
+	text.setPosition(rectangle.getPosition().x + 10, rectangle.getPosition().y + 5);
 }
 
 void Button::setSpriteAndTextButton(string name, string imagePath, string content, string fontPath, float width, float height, float posX, float posY, float spriteWidth, float spriteHeight, float spriteX, float spriteY, float textWidth, float textHeight, float textX, float textY) {
 	// Update variables
 	this->name = name, this->width = width, this->height = height, this->posX = posX, this->posY = posY;
+	this->imagePath = imagePath;
+	this->fontPath = fontPath;
+	this->content = content;
 	// Sprite: texture
 	if (!texture.loadFromFile(imagePath)) {
 		throw runtime_error("Cannot load the file " + imagePath + "! (Button::setSpriteAndTextButton)\n");
@@ -95,7 +98,7 @@ void Button::drawSprite(RenderWindow& window) {
 
 void Button::drawText(RenderWindow& window) {
 	window.draw(rectangle);
-	//window.draw(text);
+	window.draw(text);
 }
 
 void Button::drawAll(RenderWindow& window) {

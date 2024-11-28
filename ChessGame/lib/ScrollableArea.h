@@ -6,7 +6,7 @@ private:
     RectangleShape scrollBarTrack;  // Đường dẫn thanh cuộn
     RectangleShape scrollBarThumb;  // Tay cầm thanh cuộn
 
-    vector<Button> items; // Các phần tử bên trong
+    vector<unique_ptr<Button>> items; // Các phần tử bên trong
     float scrollOffset;                   // Độ lệch cuộn
     bool isDragging;                      // Kiểm tra có đang kéo thanh cuộn không
 
@@ -17,11 +17,11 @@ private:
     Vector2f lastMousePos;
     float scrollSpeed = 20.0f; // Tốc độ cuộn
     float maxScroll;
-
+    int lastButton;
 public:
     ScrollableArea(Vector2f position, Vector2f size, RenderWindow& window);
 
-    void addItem(Button& item);
+    void addItem(unique_ptr<Button>& item);
     void handleEvent(Event& event, RenderWindow& window);
 
     // Phát hiện phần tử được nhấn
