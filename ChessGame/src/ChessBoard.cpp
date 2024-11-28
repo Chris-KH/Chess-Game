@@ -26,7 +26,8 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
         "Pixel",
         "Neo"
     };
-    this->currentBoardIndex = this->currentPieceIndex = currentBoardIndex;
+    this->currentBoardIndex = 0;
+    this->currentPieceIndex = 0;
 
     // Set texture for chess board
     // Load first texture
