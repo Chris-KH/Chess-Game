@@ -25,7 +25,7 @@ public:
     void handleEvent(Event& event, RenderWindow& window);
 
     // Phát hiện phần tử được nhấn
-    int detectClickedItem(Vector2i& mousePosition, RenderWindow& window);
+    int detectClickedItem(Vector2i mousePosition, RenderWindow& window);
 
     // Vẽ khu vực cuộn
     void draw(RenderWindow& window);
