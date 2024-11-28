@@ -62,11 +62,11 @@ public:
     virtual char getTypeKey() const = 0;
 
     // Drag/click a piece
-    void setInitialPosition(const Vector2f& position);
     int getNumPress(void) { return numPress; } // return variable numPress
     void press(void) { numPress++;  } // increase variable numPress by 1
     void resetNumPress(void) { numPress = 0; } // set variable numPress = 0
-    void followMouse(Vector2i mousePos, Vector2i initialPosition); // set position of the piece to the mouse's position
+    void followMouse(Vector2i mousePos); // set position of the piece to the mouse's position
+    void unfollowMouse(void);
 
     //Possible move
     virtual vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) = 0;

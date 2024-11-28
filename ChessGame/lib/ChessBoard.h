@@ -101,8 +101,8 @@ public:
 
     // Handle mouse click
     void getPossibleMoves(Pieces* clickedPiece, vector<pair<int, int>>& vpii);
-    void handleMousePress(int mouseX, int mouseY);
-    void handleMouseRelease(int mouseX, int mouseY);
+    void handleMousePress(int mouseX, int mouseY, bool enableClick, bool enableDrag);
+    void handleMouseRelease(int mouseX, int mouseY, bool enableClick, bool enableDrag);
     void highlightPossibleMove(Pieces* clickedPiece);
 
     // Player turn

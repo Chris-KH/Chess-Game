@@ -107,12 +107,8 @@ void Pieces::draw(RenderWindow& window) {
     window.draw(sprite);
 }
 
-void Pieces::setInitialPosition(const Vector2f& position) {
-    this->initialPosition = position;
-}
-
 // Drag a piece
-void Pieces::followMouse(Vector2i mousePos, Vector2i initialPosition) {
+void Pieces::followMouse(Vector2i mousePos) {
     int dx = abs(mousePos.x - initialPosition.x);
     int dy = abs(mousePos.y - initialPosition.y);
     if (!(dx > 5 || dy > 5)) {
@@ -123,7 +119,12 @@ void Pieces::followMouse(Vector2i mousePos, Vector2i initialPosition) {
     sprite.setPosition(x, y);
 }
 
+void Pieces::unfollowMouse(void) {
+    this->setPosition(getCol(), getRow());
+}
+
 bool Pieces::canMoveTo(const int& row, const int& col, const vector<vector<unique_ptr<Pieces>>>& board) {
+    if (row < 0 || row >= 8 || col < 0 || col >= 8) return false;
     vector<pair<int, int>> possibleMoves = this->getPossibleMoves(board);
     return find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end();
 }

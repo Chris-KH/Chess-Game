@@ -577,10 +577,6 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         }
         isCheck(1 - whiteTurn, true); // Delete old check highlight if it exists
     }
-
-    // Bỏ chọn quân cờ này
-    board[row][col]->resetNumPress();
-    selectedPiece = nullptr;
 }
 
 
