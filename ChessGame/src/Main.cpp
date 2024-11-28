@@ -54,7 +54,7 @@ int main() {
                 if (chessBoard.isOver() == 0) chessBoard.update(event);
                 // Update the side board
                 if (sideBoard.update(event)) {
-
+                    while (window.pollEvent(event));
                 }
                 // If game becomes over for the first time
                 if (chessBoard.isOver() != 0 && gameOver == 0) {

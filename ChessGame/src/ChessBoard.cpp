@@ -181,7 +181,7 @@ void ChessBoard::update(const Event& event) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMousePress(mouseX, mouseY, 1, 0);
-        cout << "Press\n";
+        //cout << "Press\n";
     }
     // Release left mouse
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
@@ -277,8 +277,6 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY, bool enableClick, bool
     int col = (mouseX - leftMargin) / cellSize;
     Pieces* lastPiece = selectedPiece;
     selectedPiece = (0 <= row && row < 8 && 0 <= col && col < 8 ? board[row][col].get() : nullptr);
-
-    cout << (!selectedPiece ? "nullptr" : selectedPiece->getType()) << '\n';
 
     if (enableClick) {
         // Giả sử đang tới lượt của quân trắng

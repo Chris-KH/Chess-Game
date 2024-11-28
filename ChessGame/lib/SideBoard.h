@@ -15,10 +15,10 @@ public:
     //SideBoard() {}
     SideBoard(RenderWindow *window, ChessBoard *chessboard);
     // Update
-    bool update(Event& event);
+    bool update(Event& event); // return true if any window is open while running, false if otherwise
     // Handle mouse click
     void handleButtonPress(int mouseX, int mouseY);
-    void handleButtonRelease(int mouseX, int mouseY); // Return true if any window is opened, false otherwise
+    bool handleButtonRelease(int mouseX, int mouseY); // Return true if any window is opened, false otherwise
     // Draw
     void draw();
 };
