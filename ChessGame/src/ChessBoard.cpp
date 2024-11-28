@@ -181,14 +181,14 @@ void ChessBoard::update(const Event& event) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMousePress(mouseX, mouseY, 0, 1);
-        cout << "Press\n";
+        //cout << "Press\n";
     }
     // Release left mouse
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMouseRelease(mouseX, mouseY, 0, 1);
-        cout << "Release\n";
+        //cout << "Release\n";
     }
     // Drag a piece
     if (pieceFollowingMouse) {

@@ -43,12 +43,12 @@ int main() {
         while (window.isOpen()) {
             while (window.pollEvent(event)) {
                 if (event.type == Event::Closed) window.close();
-                if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
-                    cout << "Press\n";
-                }
-                if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
-                    cout << "Release\n";
-                }
+                //if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+                //    cout << "Press\n";
+                //}
+                //if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
+                //    cout << "Release\n";
+                //}
                 int gameOver = chessBoard.isOver();
                 // Update the chessboard
                 if (chessBoard.isOver() == 0) chessBoard.update(event);
