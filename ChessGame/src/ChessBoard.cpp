@@ -180,14 +180,14 @@ void ChessBoard::update(const Event& event) {
     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
-        handleMousePress(mouseX, mouseY, 0, 1);
-        //cout << "Press\n";
+        handleMousePress(mouseX, mouseY, 1, 0);
+        cout << "Press\n";
     }
     // Release left mouse
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
-        handleMouseRelease(mouseX, mouseY, 0, 1);
+        handleMouseRelease(mouseX, mouseY, 1, 0);
         //cout << "Release\n";
     }
     // Drag a piece
@@ -278,6 +278,8 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY, bool enableClick, bool
     Pieces* lastPiece = selectedPiece;
     selectedPiece = (0 <= row && row < 8 && 0 <= col && col < 8 ? board[row][col].get() : nullptr);
 
+    cout << (!selectedPiece ? "nullptr" : selectedPiece->getType()) << '\n';
+
     if (enableClick) {
         // Giả sử đang tới lượt của quân trắng
         // Đang không chọn quân cờ
@@ -322,13 +324,13 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY, bool enableClick, bool
         }
     }
     if (enableDrag) {
-        /*if (lastPiece != nullptr) {
+        if (lastPiece != nullptr) {
             if (pieceFollowingMouse == lastPiece) {
                 lastPiece->unfollowMouse();
                 pieceFollowingMouse = nullptr;
                 lastPiece = nullptr;
             }
-        }*/
+        }
         assert(pieceFollowingMouse == nullptr);
         // Chọn ô được press
         lastPiece = selectedPiece;
@@ -346,6 +348,9 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY, bool enableClick, bool
 }
 
 void ChessBoard::handleMouseRelease(int mouseX, int mouseY, bool enableClick, bool enableDrag) {
+    // Đang thao tác theo kiểu click thì không thao tác theo kiểu drag
+    if (enableClick == true) return;
+
     int row = (mouseY - topMargin) / cellSize;
     int col = (mouseX - leftMargin) / cellSize;
     Pieces* lastPiece = selectedPiece;
@@ -367,6 +372,7 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY, bool enableClick, bo
             lastPiece = nullptr;
         }
         assert(pieceFollowingMouse == nullptr);
+        highlightTiles.clear();
     }
 }
 
