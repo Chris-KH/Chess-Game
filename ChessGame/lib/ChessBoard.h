@@ -1,9 +1,21 @@
 ﻿#pragma once
+
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
+#include <SFML/Audio.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/Network.hpp>
+#include <SFML/OpenGL.hpp>
+#include <bits/stdc++.h>
+
 #include "GUI.h"
 #include "Move.h"
 #include "Button.h"
 
 #include"Stockfish.h"
+
+using namespace std;
+using namespace sf;
 
 class ChessBoard {
 private:
@@ -31,22 +43,14 @@ private:
     Pieces* selectedPiece = nullptr;
     Pieces* pieceFollowingMouse = nullptr;
     vector<RectangleShape> highlightTiles; // List of squares need to highlight
-    vector<RectangleShape> highlightTilesJustMove;
-
-    bool isDragging = false;          
-    Vector2i initialPosition;         
+    vector<RectangleShape> highlightTilesJustMove;    
 
     // Indicate checks
     bool inCheck[2];
     vector<RectangleShape> checkTiles[2];
 
     // Game over
-    /*
-    * gameOver = 0: the game is not over
-    * gameOver = 1: white won
-    * gameOver = 2: black won
-    * gameOver = 3: Taiwan
-    */
+    // gameOver = 0, 1, 2, and 3 means game is not over, white won, black won, and tie, respectively
     int gameOver;
 
     // Undo operator

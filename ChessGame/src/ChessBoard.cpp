@@ -181,14 +181,12 @@ void ChessBoard::update(const Event& event) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMousePress(mouseX, mouseY, 1, 0);
-        //cout << "Press\n";
     }
     // Release left mouse
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
         handleMouseRelease(mouseX, mouseY, 1, 0);
-        //cout << "Release\n";
     }
     // Drag a piece
     if (pieceFollowingMouse) {
@@ -418,14 +416,14 @@ bool ChessBoard::isCheck(bool color, bool save) {
         @Return :
             True nếu đang bị chiếu tướng
             False nếu không bị
-        @Brief : xét xem quân cờ có màu hiện tại có bị chiếu hay không? True = có, False = không
+        @Brief : xét xem quân cờ có màu color có bị chiếu hay không?
             Nếu bị chiếu thì tô đỏ quân cờ đang chiếu và quân vua bị chiếu
             Nếu tham số save = 1, mình sẽ cập nhật: inCheck[color], nếu đang bị chiếu thì tô màu quân chiếu và bị chiếu
             Nếu tham số save = 0, mình chỉ trả về: có bị chiếu hay không
         @Idea : Ý tưởng :
             1. Tìm vị trí của con vua
-            2. Ta sẽ duyệt hết bàn cờ, mỗi quân cờ ta lấy các nước đi có thể của quân cờ đó.
-               Nếu quân cờ này có thể ăn được con vua thì ta tô màu đỏ cho ô của con cờ này và con vua.
+            2. Ta sẽ duyệt hết bàn cờ: 
+                Mỗi quân cờ ta xét nếu quân cờ này có thể ăn được con vua thì ta tô màu đỏ cho ô của con cờ này và con vua.
     */
     if (save) {
         inCheck[color] = false;
@@ -535,15 +533,14 @@ bool ChessBoard::isCheck(bool color, bool save) {
     return false;
 }
 
-bool ChessBoard::cannotMove(void) {
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            if (board[i][j] && board[i][j]->getColor() == whiteTurn) {
-                vector<pair<int, int>> moves;
-                getPossibleMoves(board[i][j].get(), moves);
-                if (moves.size() > 0) {
-                    return false;
-                }
+bool ChessBoard::cannotMove(void) { 
+    // Quân cờ của màu hiện tại không thể đi được thì trả về true
+    for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++) {
+        if (board[i][j] && board[i][j]->getColor() == whiteTurn) {
+            vector<pair<int, int>> moves;
+            getPossibleMoves(board[i][j].get(), moves);
+            if ((int)moves.size() > 0) {
+                return false;
             }
         }
     }

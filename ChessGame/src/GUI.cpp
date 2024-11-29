@@ -148,7 +148,9 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
         color + "-pawn.png",
     };
     Font fontTitle;
-    assert(fontTitle.loadFromFile("../assets/fonts/ZenOldMincho.ttf") == true);
+    if (!fontTitle.loadFromFile("../assets/fonts/ZenOldMincho.ttf")) {
+        throw runtime_error("Cannot load font for setting");
+    }
 
     // Sizes and spaces
     const float wdWidth = 550.f, wdHeight = 800.f;
@@ -350,7 +352,9 @@ void GUI::gameOver(ChessBoard& chessBoard) {
 
     // Sprite for game over
     Font fontGameOver;
-    assert(fontGameOver.loadFromFile("../assets/fonts/Holen Vintage.otf"));
+    if (!fontGameOver.loadFromFile("../assets/fonts/Holen Vintage.otf")) {
+        throw runtime_error("Cannot load font game over");
+    }
     Text textGameOver;
     textGameOver.setFont(fontGameOver);
     textGameOver.setString("GAME OVER");
@@ -360,10 +364,14 @@ void GUI::gameOver(ChessBoard& chessBoard) {
 
     // Text for statement
     Font fontStatement;
-    assert(fontStatement.loadFromFile("../assets/fonts/Holen Vintage.otf") == true);
+    if (!fontStatement.loadFromFile("../assets/fonts/Holen Vintage.otf")) {
+        throw runtime_error("Cannot load font statement");
+    }
     Text textStatement;
     textStatement.setFont(fontStatement);
-    assert(chessBoard.isOver() != 0);
+    if (chessBoard.isOver() == 0) {
+        throw runtime_error("The game should have ended");
+    }
     if (chessBoard.isOver() == 1)
         textStatement.setString("White won!");
     else if (chessBoard.isOver() == 2)
@@ -465,12 +473,16 @@ void GUI::saveGame(ChessBoard* chessBoard) {
     // Window
     RenderWindow window(VideoMode((unsigned)wdWidth, (unsigned)wdHeight), "Save Game", Style::Close | Style::Titlebar);
     Image icon;
-    assert(icon.loadFromFile("../assets/Icon/saveGameIcon.png") == true);
+    if (!icon.loadFromFile("../assets/Icon/saveGameIcon.png")) {
+        throw runtime_error("Cannot load Save Game icon");
+    }
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     // Font
     Font font;
-    assert(font.loadFromFile("../assets/fonts/Holen Vintage.otf"));
+    if (!font.loadFromFile("../assets/fonts/Holen Vintage.otf")) {
+        throw runtime_error("Cannot load font save game");
+    }
     
     // Khai báo biến để nhập tên tệp
     string filename;
@@ -607,7 +619,9 @@ void GUI::loadGame(ChessBoard& chessBoard, string path) {
     RenderWindow loadWD(VideoMode((unsigned)wdWidth, (unsigned)wdHeight), "Load game", Style::Close | Style::Titlebar);
     loadWD.setFramerateLimit(120);
     Image icon;
-    assert(icon.loadFromFile("../assets/Icon/LoadGameIcon.png") == true);
+    if (!icon.loadFromFile("../assets/Icon/LoadGameIcon.png")) {
+        throw runtime_error("Cannot load file load game icon");
+    }
     loadWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     
     string folderPath = "../save";

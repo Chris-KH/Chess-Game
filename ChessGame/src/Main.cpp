@@ -24,7 +24,9 @@ int main() {
         RenderWindow window(VideoMode(1400, 930), "Chess Game", Style::Close | Style::Titlebar);
         window.setFramerateLimit(120);
         Image icon;
-        assert(icon.loadFromFile("../assets/Icon/ChessGameIcon.png") == true);
+        if (!icon.loadFromFile("../assets/Icon/ChessGameIcon.png")) {
+            throw runtime_error("Failed to load Chess Game icon!\n");
+        }
         // Set icon for window
         window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
@@ -43,12 +45,6 @@ int main() {
         while (window.isOpen()) {
             while (window.pollEvent(event)) {
                 if (event.type == Event::Closed) window.close();
-                //if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
-                //    cout << "Press\n";
-                //}
-                //if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
-                //    cout << "Release\n";
-                //}
                 int gameOver = chessBoard.isOver();
                 // Update the chessboard
                 if (chessBoard.isOver() == 0) chessBoard.update(event);
@@ -113,6 +109,5 @@ int main() {
     catch (const exception& e) {
         cerr << "Error: " << e.what() << endl;
     }
-
     return 0;
 }
