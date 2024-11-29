@@ -156,7 +156,7 @@ void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
 }
 
 // Phát hiện phần tử được nhấn
-int ScrollableArea::detectClickedItem(Vector2i& mousePosition, RenderWindow& window) {
+int ScrollableArea::detectClickedItem(Vector2i mousePosition, RenderWindow& window) {
     Vector2f worldPos = window.mapPixelToCoords(mousePosition, view);
 
     for (int i = 0; i < items.size(); ++i) {

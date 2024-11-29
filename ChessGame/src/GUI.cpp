@@ -638,11 +638,11 @@ void GUI::loadGame(ChessBoard& chessBoard, string path) {
 
     size_t numberOfFile = fileName.size();
 
-    ScrollableArea scroll(Vector2f(0, 0), Vector2f(wdWidth, 20 + 60 * numberOfFile), loadWD);
+    ScrollableArea scroll(Vector2f(0.f, 0.f), Vector2f(wdWidth, 20.f + 60.f * numberOfFile), loadWD);
 
     for (size_t i = 0; i < numberOfFile; i++) {
         unique_ptr<Button> item = make_unique<Button>();
-        item->setTextButton(string("Button") + to_string(i + 1), fileName[i], "../assets/fonts/TimesNewRoman.ttf", 600, 40, 40, i * 60 + 20);
+        item->setTextButton(string("Button") + to_string(i + 1), fileName[i], "../assets/fonts/TimesNewRoman.ttf", 600.f, 40.f, 40.f, i * 60.f + 20.f);
         scroll.addItem(item);
     }
 
@@ -657,6 +657,10 @@ void GUI::loadGame(ChessBoard& chessBoard, string path) {
             }
 
             scroll.handleEvent(event, loadWD);
+            if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+                int index = scroll.detectClickedItem(Mouse::getPosition(loadWD), loadWD);
+                if (index != -1) cout << fileName[index] << '\n';
+            }
         }
 
         loadWD.clear(Color(80, 80, 80, 255));

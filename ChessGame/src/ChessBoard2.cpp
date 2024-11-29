@@ -14,7 +14,6 @@ void ChessBoard::undoMove() {
     checkTiles[1].clear();
 
     highlightTiles.clear();
-    window->clear();
     draw();
     window->display();
 
@@ -121,7 +120,6 @@ void ChessBoard::redoMove() {
     checkTiles[1].clear();
 
     highlightTiles.clear();
-    window->clear();
     draw();
     window->display();
 
@@ -270,6 +268,9 @@ void ChessBoard::newGame() {
     addPiece(make_unique<Pawn>(false, 6, 1), 6, 1);
     addPiece(make_unique<Pawn>(false, 7, 1), 7, 1);
 
+    changePieces(this->currentPieceIndex);
+    changeBoard(this->currentBoardIndex);
+
     selectedPiece = pieceFollowingMouse = nullptr;
     highlightTiles.clear();
     highlightTilesJustMove.clear();
@@ -303,7 +304,6 @@ void ChessBoard::newGame() {
     justMovePiece = nullptr;
     selectedPiece = nullptr;
     pieceFollowingMouse = nullptr;
-    
 }
 
 //Save game
