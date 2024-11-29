@@ -3,6 +3,10 @@
 // Undo-feature
 void ChessBoard::undoMove() {
     if (undoStack.empty() == true) return;
+
+    // Repetition state (threefold repetition)
+    repState[generateFENPositionOnly()]--;
+
     Move* move = undoStack.back();
     undoStack.pop_back();
     redoStack.push_back(move);
@@ -204,6 +208,9 @@ void ChessBoard::redoMove() {
     this->numPieces = countPieces();
 
     stockfish->setBoardState(generateFEN());
+
+    // Repetition state (threefold repetition)
+    repState[generateFENPositionOnly()]++;
 }
 
 void ChessBoard::freeUndoStack() {
@@ -304,6 +311,10 @@ void ChessBoard::newGame() {
     justMovePiece = nullptr;
     selectedPiece = nullptr;
     pieceFollowingMouse = nullptr;
+
+    // 
+    repState.clear();
+    repState[generateFENPositionOnly()]++;
 }
 
 //Save game
@@ -458,6 +469,30 @@ string ChessBoard::generateFEN() {
     return fen;
 }
 
+string ChessBoard::generateFENPositionOnly() {
+    string fen;
+    //cout << "Function called\n";
+
+    //Position
+    for (int i = 0; i < 8; i++) {
+        int freePosition = 0;
+        for (int j = 0; j < 8; j++) {
+            if (board[i][j]) {
+                if (freePosition != 0) fen += to_string(freePosition);
+                freePosition = 0;
+                fen += board[i][j]->getTypeKey();
+            }
+            else {
+                freePosition++;
+            }
+        }
+        if (freePosition != 0) fen += to_string(freePosition);
+        if (i != 7) fen += '/';
+    }
+
+    return fen;
+}
+
 void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove, char promotionPiece) {
     //cout << generateFEN() << '\n';
     if (whiteTurn == false) fullMoveNumber++;
@@ -562,6 +597,9 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     highlightTiles.clear();
     highlightTilesJustMove.clear();
     highLightAfterMove(lastRow, lastCol, row, col);
+
+    // Repetition state (threefold repetition)
+    repState[generateFENPositionOnly()]++;
 
     //Check checkmate...
     {

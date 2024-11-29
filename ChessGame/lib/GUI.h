@@ -43,7 +43,7 @@ public:
 		New game window
 		Two option, AI or Human
 	*/
-	static bool newGame(ChessBoard& chessBoard);
+	static bool newGame(ChessBoard& chessBoard); // Trả về true nếu người chọn chế độ chơi cho ván mới, nếu người chơi đóng của sổ thì trả về false
 
 	//Get name of file to save game
 	static void saveGame(ChessBoard* chessBoard);

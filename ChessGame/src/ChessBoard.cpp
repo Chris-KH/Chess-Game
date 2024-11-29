@@ -102,7 +102,9 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
     // Game Over
     gameOver = 0;
 
-    //Drag pieces
+    // Repetition State
+    repState.clear();
+    repState[generateFENPositionOnly()]++;
 }
 
 ChessBoard::~ChessBoard() {
@@ -151,13 +153,7 @@ void ChessBoard::updateBoardScale() {
 }
 
 bool ChessBoard::changeBoard(int newIndex) {
-    /*
-        @return bool = 
-            true: nếu đổi bàn cờ hợp lệ, 
-            false: nếu đổi bàn cờ không hợp lệ.
-
-        Dùng để đổi bàn cờ thành bàn cờ có chỉ số là newIndex
-    */
+    // Dùng để đổi bàn cờ thành bàn cờ có chỉ số là newIndex
     if (newIndex >= 0 && newIndex < boardFiles.size()) {
         currentBoardIndex = newIndex;
         return loadBoardTexture(boardFiles[currentBoardIndex]);
@@ -165,15 +161,17 @@ bool ChessBoard::changeBoard(int newIndex) {
     return false;
 }
 
-void ChessBoard::changePieces(int newIndex) {
+bool ChessBoard::changePieces(int newIndex) {
     currentPieceIndex = newIndex;
-    for (auto& pieces : board) {
-        for (auto& piece : pieces) {
+    if(newIndex >= 0 && newIndex < (int)pieceName.size()) {
+        for (auto& pieces : board) for (auto& piece : pieces) {
             if (!piece) continue;
             piece->changeTexture(newIndex);
             piece->setPosition(piece->getCol(), piece->getRow(), cellSize);
         }
+        return true;
     }
+    return false;
 }
 
 void ChessBoard::update(const Event& event) {
@@ -181,13 +179,13 @@ void ChessBoard::update(const Event& event) {
     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
-        handleMousePress(mouseX, mouseY, 1, 0);
+        handleMousePress(mouseX, mouseY, 0, 1);
     }
     // Release left mouse
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
-        handleMouseRelease(mouseX, mouseY, 1, 0);
+        handleMouseRelease(mouseX, mouseY, 0, 1);
     }
     // Drag a piece
     if (pieceFollowingMouse) {
@@ -730,13 +728,16 @@ bool ChessBoard::isTie(void) {
     }
 
     // III. Threefold Repetition
+    if (repState[generateFENPositionOnly()] >= 3) {
+        // May make button for requesting draw later...
+        return true;
+    }
 
     // IV. 50-Move Rule
-     
-    /*
-        If haftMoveClock = 100, 50 for each player then a player can claim a draw.
-
-    */
+    if (haftMoveClock == 100) {
+        // May make button for requesting draw later...
+        return true;
+    }
 
     return false;
 }

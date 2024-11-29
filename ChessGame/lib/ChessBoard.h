@@ -70,6 +70,7 @@ private:
     */
     bool castlingAvailability[4]; 
     string enPassantTargetSquare;
+    map<string, int> repState;
 
     //AI mode
     bool isAI;
@@ -84,7 +85,7 @@ public:
     bool loadBoardTexture(const string& filePath);
     void updateBoardScale();
     bool changeBoard(int newIndex);
-    void changePieces(int newIndex);
+    bool changePieces(int newIndex);
     void addPiece(unique_ptr<Pieces> piece, int col, int row);
     void setGameOver(int val) { gameOver = val; }
     size_t countPieces();
@@ -103,7 +104,7 @@ public:
     void update(const Event& ev);
     void draw();
 
-    // Handle mouse click
+    // Handle mouse click or drag
     void getPossibleMoves(Pieces* clickedPiece, vector<pair<int, int>>& vpii);
     void handleMousePress(int mouseX, int mouseY, bool enableClick, bool enableDrag);
     void handleMouseRelease(int mouseX, int mouseY, bool enableClick, bool enableDrag);
@@ -137,6 +138,7 @@ public:
     string generateLongAlgebraicNotation(Move*& moved);
     string generateMoveNotation(Move*& moved);
     string generateFEN();
+    string generateFENPositionOnly();
     void makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove, char promotionPiece = '0');
     void highLightAfterMove(int lastRow, int lastCol, int row, int col);
 
