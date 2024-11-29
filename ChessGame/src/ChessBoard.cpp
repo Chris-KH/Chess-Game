@@ -104,7 +104,7 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
 
     // Repetition State
     repState.clear();
-    repState[generateFENPositionOnly()]++;
+    repState[FENToCheckThreefold()]++;
 }
 
 ChessBoard::~ChessBoard() {
@@ -179,13 +179,13 @@ void ChessBoard::update(const Event& event) {
     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
-        handleMousePress(mouseX, mouseY, 0, 1);
+        handleMousePress(mouseX, mouseY, 1, 0);
     }
     // Release left mouse
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
-        handleMouseRelease(mouseX, mouseY, 0, 1);
+        handleMouseRelease(mouseX, mouseY, 1, 0);
     }
     // Drag a piece
     if (pieceFollowingMouse) {
@@ -728,7 +728,7 @@ bool ChessBoard::isTie(void) {
     }
 
     // III. Threefold Repetition
-    if (repState[generateFENPositionOnly()] >= 3) {
+    if (repState[FENToCheckThreefold()] >= 3) {
         // May make button for requesting draw later...
         return true;
     }

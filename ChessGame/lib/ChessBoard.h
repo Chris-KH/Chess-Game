@@ -138,7 +138,7 @@ public:
     string generateLongAlgebraicNotation(Move*& moved);
     string generateMoveNotation(Move*& moved);
     string generateFEN();
-    string generateFENPositionOnly();
+    string FENToCheckThreefold();
     void makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove, char promotionPiece = '0');
     void highLightAfterMove(int lastRow, int lastCol, int row, int col);
 

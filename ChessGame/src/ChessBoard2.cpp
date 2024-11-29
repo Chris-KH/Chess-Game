@@ -5,7 +5,7 @@ void ChessBoard::undoMove() {
     if (undoStack.empty() == true) return;
 
     // Repetition state (threefold repetition)
-    repState[generateFENPositionOnly()]--;
+    repState[FENToCheckThreefold()]--;
 
     Move* move = undoStack.back();
     undoStack.pop_back();
@@ -210,7 +210,7 @@ void ChessBoard::redoMove() {
     stockfish->setBoardState(generateFEN());
 
     // Repetition state (threefold repetition)
-    repState[generateFENPositionOnly()]++;
+    repState[FENToCheckThreefold()]++;
 }
 
 void ChessBoard::freeUndoStack() {
@@ -314,7 +314,7 @@ void ChessBoard::newGame() {
 
     // 
     repState.clear();
-    repState[generateFENPositionOnly()]++;
+    repState[FENToCheckThreefold()]++;
 }
 
 //Save game
@@ -469,28 +469,17 @@ string ChessBoard::generateFEN() {
     return fen;
 }
 
-string ChessBoard::generateFENPositionOnly() {
-    string fen;
-    //cout << "Function called\n";
+string ChessBoard::FENToCheckThreefold() {
+    string fen = generateFEN();
 
-    //Position
-    for (int i = 0; i < 8; i++) {
-        int freePosition = 0;
-        for (int j = 0; j < 8; j++) {
-            if (board[i][j]) {
-                if (freePosition != 0) fen += to_string(freePosition);
-                freePosition = 0;
-                fen += board[i][j]->getTypeKey();
-            }
-            else {
-                freePosition++;
-            }
-        }
-        if (freePosition != 0) fen += to_string(freePosition);
-        if (i != 7) fen += '/';
+    int i = fen.size() - 1, cntSpace = 0;
+    while(cntSpace < 2) {
+        if (fen[i] == ' ') cntSpace++;
+        i--;
     }
+    // fen[0..i] -> len = i + 1
 
-    return fen;
+    return fen.substr(0, size_t(i + 1));
 }
 
 void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row, const int& col, const vector<pair<int, int>>& possibleMoves, Move*& curMove, char promotionPiece) {
@@ -599,7 +588,7 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     highLightAfterMove(lastRow, lastCol, row, col);
 
     // Repetition state (threefold repetition)
-    repState[generateFENPositionOnly()]++;
+    repState[FENToCheckThreefold()]++;
 
     //Check checkmate...
     {
