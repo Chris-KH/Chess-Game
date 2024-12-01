@@ -106,6 +106,20 @@ void ChessBoard::undoMove() {
         this->haftMoveClock--;
     }
 
+    {
+        if (isCheck(whiteTurn, true)) {
+            if (cannotMove()) {
+                gameOver = whiteTurn + 1; // Checkmate
+            }
+        }
+        else {
+            if (cannotMove() || isTie()) {
+                gameOver = 3; // Tie state
+            }
+        }
+        isCheck(1 - whiteTurn, true); // Delete old check highlight if it exists
+    }
+
     this->numPieces = countPieces();
 
     stockfish->setBoardState(generateFEN());
@@ -573,6 +587,7 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         curMove->setPromotionPiece(board[row][col]);
     }
 
+    undoPress = false;
     undoStack.push_back(curMove);
     freeRedoStack();
     if (justMovePiece) justMovePiece->setJustMove(false);
