@@ -65,7 +65,7 @@ int main() {
             }
             int gameOver = chessBoard.isOver();
 
-            if (chessBoard.getAI() && chessBoard.isAITurn()) {
+            if (chessBoard.getAI() && chessBoard.isAITurn() && chessBoard.getUndoPress() == false) {
                 window.clear(Color(60, 60, 60, 255));
                 window.draw(background);
                 chessBoard.draw();

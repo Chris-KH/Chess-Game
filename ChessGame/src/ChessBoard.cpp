@@ -270,8 +270,8 @@ Pieces* ChessBoard::getPieceAtIndex(int row, int col) {
 }
 
 void ChessBoard::handleMousePress(int mouseX, int mouseY, bool enableClick, bool enableDrag) {
-    int row = (mouseY - topMargin) / cellSize;
-    int col = (mouseX - leftMargin) / cellSize;
+    int row = int((mouseY - topMargin) / cellSize);
+    int col = int((mouseX - leftMargin) / cellSize);
     Pieces* lastPiece = selectedPiece;
     selectedPiece = (0 <= row && row < 8 && 0 <= col && col < 8 ? board[row][col].get() : nullptr);
 
@@ -285,6 +285,10 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY, bool enableClick, bool
         // Đang chọn quân cờ
         else {
             // Có thể di chuyển tới ô click
+            /*if (undoPress == true && isAITurn()) {
+                undoPress = false;
+                return;
+            }*/
             if (lastPiece->getColor() == isWhiteTurn() && lastPiece->canMoveTo(row, col, this->board) == true) {
                 vector<pair<int, int>> possibleMoves;
                 getPossibleMoves(lastPiece, possibleMoves);
@@ -346,15 +350,25 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY, bool enableClick, bo
     // Đang thao tác theo kiểu click thì không thao tác theo kiểu drag
     if (enableClick == true) return;
 
-    int row = (mouseY - topMargin) / cellSize;
-    int col = (mouseX - leftMargin) / cellSize;
+    int row = int((mouseY - topMargin) / cellSize);
+    int col = int((mouseX - leftMargin) / cellSize);
     Pieces* lastPiece = selectedPiece;
     selectedPiece = (0 <= row && row < 8 && 0 <= col && col < 8 ? board[row][col].get() : nullptr);
 
     if (enableDrag) {
         // Đang press quân cờ
         if (lastPiece != nullptr) {
-            if (lastPiece->getColor() == isWhiteTurn() && lastPiece->canMoveTo(row, col, this->board)) {
+            /*if (undoPress == true && isAITurn()) {
+                undoPress = false;
+                lastPiece->unfollowMouse();
+                pieceFollowingMouse = nullptr;
+                lastPiece = nullptr;
+                assert(pieceFollowingMouse == nullptr);
+                highlightTiles.clear();
+                while (redoStack.empty() == false) redoMove();
+                return;
+            }
+            else */if (lastPiece->getColor() == isWhiteTurn() && lastPiece->canMoveTo(row, col, this->board)) {
                 vector<pair<int, int>> possibleMoves;
                 getPossibleMoves(lastPiece, possibleMoves);
                 Move* curMove = nullptr;

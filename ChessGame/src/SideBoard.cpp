@@ -4,14 +4,14 @@ SideBoard::SideBoard(RenderWindow* window, ChessBoard* chessboard) {
     this->chessboard = chessboard;
     // Buttons
     const int buttonW = 55, buttonH = 55;
-    addButton("new", "../assets/Button/new.png", buttonW, buttonH, 960, 30); // 1. New
-    addButton("undo", "../assets/Button/undo.png", buttonW, buttonH, 1035, 30); // 2. Undo
-    addButton("redo", "../assets/Button/redo.png", buttonW, buttonH, 1110, 30); // 3. Redo
-    addButton("surrender", "../assets/Button/surrender.png", buttonW, buttonH, 1185, 30); // 4. Surrender
-    addButton("save", "../assets/Button/save.png", buttonW, buttonH, 960, 100); // 5. Save
-    addButton("load", "../assets/Button/LoadGame.png", buttonW, buttonH, 1035, 100); // 6. Load
-    addButton("setting", "../assets/Button/settings.png", buttonW, buttonH, 1110, 100); // 7. Setting
-    addButton("tie", "../assets/Button/Tie.png", buttonW, buttonH, 1185, 100); // 8. Tie
+    addButton("new", "../assets/Button/new.png", buttonW, buttonH, 960, 20); // 1. New
+    addButton("undo", "../assets/Button/undo.png", buttonW, buttonH, 1035, 20); // 2. Undo
+    addButton("redo", "../assets/Button/redo.png", buttonW, buttonH, 1110, 20); // 3. Redo
+    addButton("surrender", "../assets/Button/surrender.png", buttonW, buttonH, 1185, 20); // 4. Surrender
+    addButton("save", "../assets/Button/save.png", buttonW, buttonH, 960, 90); // 5. Save
+    addButton("load", "../assets/Button/LoadGame.png", buttonW, buttonH, 1035, 90); // 6. Load
+    addButton("setting", "../assets/Button/settings.png", buttonW, buttonH, 1110, 90); // 7. Setting
+    addButton("tie", "../assets/Button/Tie.png", buttonW, buttonH, 1185, 90); // 8. Tie
     buttonList.back()->setAvailable(false);
 
     gameOver = 0;
