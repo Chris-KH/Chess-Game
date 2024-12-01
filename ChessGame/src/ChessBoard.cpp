@@ -179,13 +179,13 @@ void ChessBoard::update(const Event& event) {
     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
-        handleMousePress(mouseX, mouseY, 0, 1);
+        handleMousePress(mouseX, mouseY, 1, 0);
     }
     // Release left mouse
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
-        handleMouseRelease(mouseX, mouseY, 0, 1);
+        handleMouseRelease(mouseX, mouseY, 1, 0);
     }
     // Drag a piece
     if (pieceFollowingMouse) {
@@ -285,17 +285,29 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY, bool enableClick, bool
         // Đang chọn quân cờ
         else {
             // Có thể di chuyển tới ô click
-            /*if (undoPress == true && isAITurn()) {
-                undoPress = false;
-                return;
-            }*/
-            if (lastPiece->getColor() == isWhiteTurn() && lastPiece->canMoveTo(row, col, this->board) == true) {
-                vector<pair<int, int>> possibleMoves;
-                getPossibleMoves(lastPiece, possibleMoves);
-                Move* curMove = nullptr;
-                // Di chuyển quân cờ
-                makeMove(lastPiece->getRow(), lastPiece->getCol(), row, col, possibleMoves, curMove);
-                // Bỏ chọn quân cờ
+            vector<pair<int, int>> possibleMoves;
+            getPossibleMoves(lastPiece, possibleMoves);
+            if (lastPiece->getColor() == isWhiteTurn() && lastPiece->canMoveTo(row, col, possibleMoves)) {
+                if (undoPress == true && isAITurn()) {
+                    if (lastPiece->getCol() != col || lastPiece->getRow() != row) {
+                        undoPress = false;
+                        while (redoStack.empty() == false) {
+                            draw();
+                            window->display();
+                            redoMove();
+                            Sleep(100);
+                        }
+                        draw();
+                        window->display();
+                        Sleep(50);
+                    }
+                    return;
+                }
+                else {
+                    Move* curMove = nullptr;
+                    //Make piece move
+                    makeMove(lastPiece->getRow(), lastPiece->getCol(), row, col, possibleMoves, curMove);
+                }
                 lastPiece = nullptr;
             }
             // Không thể di chuyển tới ô click
@@ -359,36 +371,40 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY, bool enableClick, bo
         // Đang press quân cờ
         if (lastPiece != nullptr) {
             if (undoPress == true && isAITurn()) {
-                undoPress = false;
+                highlightTiles.clear();
                 lastPiece->unfollowMouse();
+                if (lastPiece->getCol() != col || lastPiece->getRow() != row) {
+                    undoPress = false;
+                    while (redoStack.empty() == false) {
+                        draw();
+                        window->display();
+                        redoMove();
+                        Sleep(100);
+                    }
+                    draw();
+                    window->display();
+                    Sleep(50);
+                }
                 pieceFollowingMouse = nullptr;
                 lastPiece = nullptr;
                 assert(pieceFollowingMouse == nullptr);
-                highlightTiles.clear();
-                while (redoStack.empty() == false) {  
-                    draw();
-                    window->display();
-                    redoMove();
-                    Sleep(100);
-                }
-                draw();
-                window->display();
-                Sleep(50);
                 return;
             }
-            else if (lastPiece->getColor() == isWhiteTurn() && lastPiece->canMoveTo(row, col, this->board)) {
+            else if (lastPiece->getColor() == isWhiteTurn()) {
                 vector<pair<int, int>> possibleMoves;
                 getPossibleMoves(lastPiece, possibleMoves);
-                Move* curMove = nullptr;
-                // Di chuyển quân cờ
-                makeMove(lastPiece->getRow(), lastPiece->getCol(), row, col, possibleMoves, curMove);
+                if (lastPiece->canMoveTo(row, col, possibleMoves)) {
+                    Move* curMove = nullptr;
+                    //Make piece move
+                    makeMove(lastPiece->getRow(), lastPiece->getCol(), row, col, possibleMoves, curMove);
+                }
+
             }
-            // Bỏ chọn quân cờ
+            //Undrag piece
             lastPiece->unfollowMouse();
             pieceFollowingMouse = nullptr;
             lastPiece = nullptr;
         }
-        undoPress = false;
         assert(pieceFollowingMouse == nullptr);
         highlightTiles.clear();
     }

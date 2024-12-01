@@ -123,9 +123,8 @@ void Pieces::unfollowMouse(void) {
     this->setPosition(getCol(), getRow());
 }
 
-bool Pieces::canMoveTo(const int& row, const int& col, const vector<vector<unique_ptr<Pieces>>>& board) {
+bool Pieces::canMoveTo(const int& row, const int& col, const vector<pair<int, int>>& possibleMoves) {
     if (row < 0 || row >= 8 || col < 0 || col >= 8) return false;
-    vector<pair<int, int>> possibleMoves = this->getPossibleMoves(board);
     return find(possibleMoves.begin(), possibleMoves.end(), make_pair(row, col)) != possibleMoves.end();
 }
 

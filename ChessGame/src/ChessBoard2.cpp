@@ -586,6 +586,7 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         curMove->setPromotionPiece(board[row][col]);
     }
 
+    undoPress = false;
     undoStack.push_back(curMove);
     freeRedoStack();
     if (justMovePiece) justMovePiece->setJustMove(false);

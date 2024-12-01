@@ -70,7 +70,7 @@ public:
 
     //Possible move
     virtual vector<pair<int, int>> getPossibleMoves(const vector<vector<unique_ptr<Pieces>>>& board) = 0;
-    bool canMoveTo(const int& row, const int& col, const vector<vector<unique_ptr<Pieces>>>& board);
+    bool canMoveTo(const int& row, const int& col, const vector<pair<int, int>>& possibleMoves);
     bool isThreatened(int row, int col, const vector<vector<unique_ptr<Pieces>>>& board) const;
 
     //Promotion
