@@ -308,7 +308,6 @@ void ChessBoard::newGame() {
     this->undoPress = false;
 
     this->stockfish->newGame();
-    cout << "AI is set to " << AIDifficulty << " difficulty\n";
     this->stockfish->setSkillLevel(AIDifficulty);
     this->stockfish->setBoardState(generateFEN());
 
@@ -317,6 +316,7 @@ void ChessBoard::newGame() {
 
     // Game Over
     gameOver = false;
+    stateOver.clear();
 
     // Clear stack
     freeUndoStack();
@@ -610,12 +610,17 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     {
         if (isCheck(whiteTurn, true)) {
             if (cannotMove()) {
-                gameOver = whiteTurn + 1; // Checkmate
+                gameOver = whiteTurn + 1;
+                stateOver = "Checkmate";
             }
         }
         else {
-            if (cannotMove() || isTie()) {
-                gameOver = 3; // Tie state
+            if (cannotMove()) {
+                gameOver = 3; // Stalemate
+                stateOver = "Stalemate";
+            }
+            else if (isTie()) {
+                gameOver = 3; // Other kinds of tie
             }
         }
         isCheck(1 - whiteTurn, true); // Delete old check highlight if it exists

@@ -52,6 +52,7 @@ private:
     // Game over
     // gameOver = 0, 1, 2, and 3 means game is not over, white won, black won, and tie, respectively
     int gameOver;
+    string stateOver;
 
     // Undo operator
     // Stack store piece move
@@ -89,6 +90,7 @@ public:
     bool changePieces(int newIndex);
     void addPiece(unique_ptr<Pieces> piece, int col, int row);
     void setGameOver(int val) { gameOver = val; }
+    void setStateOver(string state) { stateOver = state; }
     size_t countPieces();
 
     // Get
@@ -96,6 +98,7 @@ public:
     vector<string>& getPieceList(void) { return pieceName; }
     bool isWhiteTurn(void) const { return this->whiteTurn; }
     int isOver(void) const { return gameOver; }
+    string getStateOver(void) const { return stateOver; }
     int getBoardIndex(void) const { return currentBoardIndex; }
     int getPieceIndex(void) const { return currentPieceIndex; }
     Sprite getBoardSprite(void) const { return boardSprite; }

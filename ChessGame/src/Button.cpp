@@ -30,7 +30,7 @@ void Button::setTextButton(string name, string content, string fontPath, float w
 	this->content = content;
 	// Set the rectangle
 	rectangle.setSize(Vector2f(width, height));
-	rectangle.setOutlineThickness(3);
+	rectangle.setOutlineThickness(-3);
 	rectangle.setFillColor(Color::White);
 	rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64));
 	rectangle.setPosition(posX, posY);
@@ -44,8 +44,8 @@ void Button::setTextButton(string name, string content, string fontPath, float w
 	text.setString(content);
 	text.setFillColor(Color::Black);
 	text.setCharacterSize(height - 10);
-	//text.setPosition(rectangle.getPosition().x + (rectangle.getGlobalBounds().width - text.getGlobalBounds().width) / 2.f, rectangle.getPosition().y + 10);
-	text.setPosition(rectangle.getPosition().x + 10, rectangle.getPosition().y + 5);
+	text.setPosition(rectangle.getPosition().x + (rectangle.getGlobalBounds().width - text.getGlobalBounds().width) / 2.f, rectangle.getPosition().y);
+	//text.setPosition(rectangle.getPosition().x + 10, rectangle.getPosition().y + 5);
 }
 
 void Button::setSpriteAndTextButton(string name, string imagePath, string content, string fontPath, float width, float height, float posX, float posY, float spriteWidth, float spriteHeight, float spriteX, float spriteY, float textWidth, float textHeight, float textX, float textY) {
@@ -138,6 +138,7 @@ void Button::setWidth(float width) { this->width = width; }
 void Button::setHeight(float height) { this->height = height; }
 void Button::setX(float x) { this->posX = x; }
 void Button::setY(float y) { this->posY = y; }
+void Button::setTextContent(std::string content) { text.setString(content); }
 
 bool Button::getAvailable(void) { return this->available; }
 float Button::getWidth() const { return this->width; }

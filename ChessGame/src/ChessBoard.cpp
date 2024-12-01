@@ -102,6 +102,7 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
 
     // Game Over
     gameOver = 0;
+    stateOver.clear();
 
     // Repetition State
     repState.clear();

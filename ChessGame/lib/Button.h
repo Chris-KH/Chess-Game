@@ -52,6 +52,7 @@ public:
 	void setHeight(float height);
 	void setX(float x);
 	void setY(float y);
+	void setTextContent(std::string content);
 
 	bool getAvailable(void);
 	float getWidth() const;
