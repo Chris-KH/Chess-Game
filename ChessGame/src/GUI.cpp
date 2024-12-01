@@ -461,7 +461,92 @@ bool GUI::newGame(ChessBoard& chessBoard) {
         newGameWD.display();
     }
 
+    if (chessBoard.getAI() == true) {
+        return chooseDifficulty(chessBoard);
+    }
+
     return true;
+}
+
+bool GUI::chooseDifficulty(ChessBoard& chessBoard) {
+    Font font;
+    if (font.loadFromFile("../assets/fonts/CherryBombOne.ttf") == false) {
+        throw runtime_error("Cannot load font for choose difficulty\n");
+    }
+
+    const int wdWidth = 500, wdHeight = 270;
+    const int insHeight = 35;
+    const int slideWidth = 400, slideHeight = 10;
+    const int numDiff = 20;
+    const int labelHeight = 25;
+    const int buttonWidth = 100, buttonHeight = 40;
+
+    const int space = 20;
+    const int leftSpace = 50;
+    const int botSpace = 20;
+
+    const int insY = 20;
+    const int slideY = insY + insHeight + space;
+    const int labelY = slideY + slideHeight + space;
+    const int applyButtonY = wdHeight - 2 * botSpace - buttonHeight;
+
+    Text instruction;
+    instruction.setFont(font);
+    instruction.setCharacterSize(insHeight);
+    instruction.setString("Slide to choose difficulty");
+    instruction.setFillColor(Color(255, 255, 255));
+    instruction.setPosition((wdWidth - instruction.getGlobalBounds().width) / 2.f, insY);
+
+    string labels[numDiff];
+    for (int i = 0; i < numDiff; i++) {
+        labels[i] = to_string(i + 1);
+        if (i < 9) labels[i] = '0' + labels[i];
+    }
+    Slider slider((wdWidth - slideWidth) / 2.f, slideY, slideWidth, slideHeight, numDiff);
+    slider.setChangeKnobColor(true);
+
+    Text labelText;
+    labelText.setFont(font);
+    labelText.setCharacterSize(labelHeight);
+    labelText.setFillColor(Color(255, 255, 255));
+    labelText.setPosition(leftSpace, labelY);
+
+    Button applyButton;
+    applyButton.setTextButton("apply", "Apply", "../assets/fonts/CherryBombOne.ttf", buttonWidth, buttonHeight, (wdWidth - buttonWidth) / 2.f, applyButtonY);
+    
+    RenderWindow AIDiffWD(VideoMode(wdWidth, wdHeight), "Choose difficulty", Style::Close | Style::Titlebar);
+
+    while (AIDiffWD.isOpen()) {
+        AIDiffWD.requestFocus();
+
+        Event event;
+        while (AIDiffWD.pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                AIDiffWD.close();
+                return false;
+            }
+            else if (event.type == Event::MouseButtonPressed) {
+                if (applyButton.contain(event.mouseButton.x, event.mouseButton.y)) {
+                    AIDiffWD.close();
+                }
+            }
+            slider.handleEvent(event, AIDiffWD);
+        }
+
+        labelText.setFillColor(slider.getKnobFillColor());
+
+        AIDiffWD.clear();
+
+        AIDiffWD.draw(instruction);
+        slider.draw(AIDiffWD);
+        labelText.setString("Difficulty: " + labels[slider.getCurrentStep()]);
+        AIDiffWD.draw(labelText);
+        applyButton.drawText(AIDiffWD);
+
+        AIDiffWD.display();
+    }
+
+    chessBoard.setAISkillLevel(slider.getCurrentStep() + 1);
 }
 
 void GUI::saveGame(ChessBoard* chessBoard) {

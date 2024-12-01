@@ -146,6 +146,7 @@ public:
     //AI mode
     void setAI(bool isAI);
     bool getAI() const;
+    void setAISkillLevel(int level);
     void setHumanColor(bool humanColor);
     bool getHumanColor() const;
     bool getUndoPress() const { return undoPress; };

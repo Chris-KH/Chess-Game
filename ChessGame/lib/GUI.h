@@ -11,6 +11,7 @@
 using namespace std;
 using namespace sf;
 
+#include "ChessBoard.h"
 #include "Pieces.h"
 #include "Pawn.h"
 #include "King.h"
@@ -19,8 +20,8 @@ using namespace sf;
 #include "Knight.h"
 #include "Bishop.h"
 #include "ScrollableArea.h"
+#include "Slider.h"
 #include "DropDownButton.h"
-#include "ChessBoard.h"
 
 
 class GUI {
@@ -44,7 +45,7 @@ public:
 		Two option, AI or Human
 	*/
 	static bool newGame(ChessBoard& chessBoard); // Trả về true nếu người chọn chế độ chơi cho ván mới, nếu người chơi đóng của sổ thì trả về false
-
+	static bool chooseDifficulty(ChessBoard& chessBoard); // Chọn độ khó cho chế độ chơi Player Versus AI
 	//Get name of file to save game
 	static void saveGame(ChessBoard* chessBoard);
 

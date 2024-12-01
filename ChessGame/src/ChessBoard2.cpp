@@ -625,6 +625,10 @@ bool ChessBoard::getAI() const {
     return this->isAI;
 }
 
+void ChessBoard::setAISkillLevel(int level) {
+    stockfish->setSkillLevel(level);
+}
+
 void ChessBoard::setHumanColor(bool humanColor) {
     this->humanColor = humanColor;
 }
