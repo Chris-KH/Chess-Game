@@ -117,6 +117,7 @@ public:
     bool isCheck(bool color, bool save); // To check if current player is in check
     bool cannotMove(void); // To check if current player is in checkmate
     bool isTie(void); // To check if current player is in draw
+    bool canRequestTie(void); // To check if current player can ask for peace
 
     //In ChessBoard2.cpp
     // Undo-feature

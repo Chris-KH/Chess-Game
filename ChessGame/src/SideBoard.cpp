@@ -3,34 +3,29 @@ SideBoard::SideBoard(RenderWindow* window, ChessBoard* chessboard) {
     this->window = window;
     this->chessboard = chessboard;
     // Buttons
-    unique_ptr<Button> newBut = make_unique<Button>();
-    newBut->setSpriteButton("new", "../assets/Button/new.png", 35, 35, 960, 30);
-    buttonList.push_back(move(newBut));
-    unique_ptr<Button> undoBut = make_unique<Button>();
-    undoBut->setSpriteButton("undo", "../assets/Button/undo.png", 35, 35, 1035, 30);
-    buttonList.push_back(move(undoBut));
-    unique_ptr<Button> redoBut = make_unique<Button>();
-    redoBut->setSpriteButton("redo", "../assets/Button/redo.png", 35, 35, 1110, 30);
-    buttonList.push_back(move(redoBut));
-    unique_ptr<Button> surrenderBut = make_unique<Button>();
-    surrenderBut->setSpriteButton("surrender", "../assets/Button/surrender.png", 35, 35, 1185, 30);
-    buttonList.push_back(move(surrenderBut));
-
-    unique_ptr<Button> saveBut = make_unique<Button>();
-    saveBut->setSpriteButton("save", "../assets/Button/save.png", 35, 35, 960, 100);
-    buttonList.push_back(move(saveBut));
-    unique_ptr<Button> loadBut = make_unique<Button>();
-    loadBut->setSpriteButton("load", "../assets/Button/LoadGame.png", 35, 35, 1035, 100);
-    buttonList.push_back(move(loadBut));
-    unique_ptr<Button> settingBut = make_unique<Button>();
-    settingBut->setSpriteButton("setting", "../assets/Button/settings.png", 35, 35, 1110, 100);
-    buttonList.push_back(move(settingBut));
+    addButton("new", "../assets/Button/new.png", 35, 35, 960, 30); // 1. New
+    addButton("undo", "../assets/Button/undo.png", 35, 35, 1035, 30); // 2. Undo
+    addButton("redo", "../assets/Button/redo.png", 35, 35, 1110, 30); // 3. Redo
+    addButton("surrender", "../assets/Button/surrender.png", 35, 35, 1185, 30); // 4. Surrender
+    addButton("save", "../assets/Button/save.png", 35, 35, 960, 100); // 5. Save
+    addButton("load", "../assets/Button/LoadGame.png", 35, 35, 1035, 100); // 6. Load
+    addButton("setting", "../assets/Button/settings.png", 35, 35, 1110, 100); // 7. Setting
+    addButton("tie", "../assets/Button/tie.png", 35, 35, 1185, 100); // 8. Tie
+    buttonList.back()->setAvailable(false);
 
     gameOver = 0;
 }
 
+void SideBoard::addButton(std::string name, std::string path, int sizeX, int sizeY, int posX, int posY) {
+    unique_ptr<Button> button = make_unique<Button>();
+    button->setSpriteButton(name, path, sizeX, sizeY, posX, posY);
+    buttonList.push_back(move(button));
+}
+
 bool SideBoard::update(Event& event) {
     this->gameOver = chessboard->isOver();
+    if (chessboard->canRequestTie()) buttonList[7]->setAvailable(true);
+    else buttonList[7]->setAvailable(false);
     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         handleButtonPress(event.mouseButton.x, event.mouseButton.y);
     }
@@ -53,7 +48,7 @@ bool SideBoard::handleButtonRelease(int mouseX, int mouseY) {
     // Find which button the mouse released
     selectedBut = nullptr;
     for (unique_ptr<Button>& button : buttonList) {
-        if (button->contain(mouseX, mouseY)) selectedBut = button.get();
+        if (button->contain(mouseX, mouseY) && button->getAvailable()) selectedBut = button.get();
     }
     // Click and release on the same button
     if (selectedBut && selectedBut == lastBut) {
@@ -91,6 +86,11 @@ bool SideBoard::handleButtonRelease(int mouseX, int mouseY) {
             chessboard->loadGame("");
             // Opened a window
             return true;
+        }
+        else if (selectedBut->getName() == "tie") {
+            chessboard->setGameOver(3);
+            // No window was opened
+            return false;
         }
     }
     // No window was opened

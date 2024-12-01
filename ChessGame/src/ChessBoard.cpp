@@ -727,17 +727,13 @@ bool ChessBoard::isTie(void) {
         }
     }
 
+    return false;
+}
+
+bool ChessBoard::canRequestTie(void) {
     // III. Threefold Repetition
-    if (repState[FENToCheckThreefold()] >= 3) {
-        // May make button for requesting draw later...
-        return true;
-    }
-
+    if (repState[FENToCheckThreefold()] >= 3) return true;
     // IV. 50-Move Rule
-    if (haftMoveClock == 100) {
-        // May make button for requesting draw later...
-        return true;
-    }
-
+    if (haftMoveClock >= 100) return true;
     return false;
 }

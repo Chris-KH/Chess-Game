@@ -12,6 +12,7 @@ using namespace sf;
 
 class Button {
 private:
+	bool available;
 	float width, height, posX, posY;
 	Texture texture;
 	Sprite sprite;
@@ -25,6 +26,7 @@ private:
 public:
 	Button();
 	Button(const Button& other) {
+		available = other.available;
 		width = other.width;
 		height = other.height;
 		posX = other.posX;
@@ -45,19 +47,20 @@ public:
 	void printPosText(void) { cout << text.getPosition().x << ' ' << text.getPosition().y << '\n'; }
 	bool contain(int x, int y); // Check if point(x, y) lie in the button area
 
+	void setAvailable(bool available);
 	void setWidth(float width);
 	void setHeight(float height);
 	void setX(float x);
 	void setY(float y);
 
-	float getWidth() const { return this->width; }
-	float getHeight() const { return this->height; }
-	float getX() const { return this->posX; }
-	float getY() const { return this->posY; }
-	string& getName(void) { return name; }
-	string& getContent(void) { return content; }
-	string& getImagePath(void) { return imagePath; }
-	string& getFontPath(void) { return fontPath; }
-
-	RectangleShape& getRectangle();
+	bool getAvailable(void);
+	float getWidth() const;
+	float getHeight() const;
+	float getX() const;
+	float getY() const;
+	string& getName(void);
+	string& getContent(void);
+	string& getImagePath(void);
+	string& getFontPath(void);
+	RectangleShape& getRectangle(void);
 };
