@@ -7,22 +7,21 @@ Button::Button() : available(true), width(0), height(0), posX(0), posY(0) {
 void Button::setSpriteButton(string name, string imagePath, float width, float height, float posX, float posY) {
 	// Update name, width, height, posX, posY
 	this->name = name, this->imagePath = imagePath, this->width = width, this->height = height, this->posX = posX, this->posY = posY;
-	// Load the texture
+	// Set back rectangle
+	rectangle.setOutlineThickness(-3);
+	rectangle.setFillColor(Color::White);
+	rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64));
+	rectangle.setSize(Vector2f(width, height));
+	rectangle.setPosition(posX, posY);
+	// Set sprite
 	if (!texture.loadFromFile(imagePath)) {
 		throw runtime_error("Cannot load " + imagePath + "!\n");
 	}
 	sprite.setTexture(texture);
-	// Set sprite
-	float r = min(width / (float)sprite.getGlobalBounds().width, 
-				height / (float)sprite.getGlobalBounds().height);
+	float r = min((width - 15) / (float)sprite.getGlobalBounds().width, 
+				(height - 15) / (float)sprite.getGlobalBounds().height);
 	sprite.setScale(r, r);
-	sprite.setPosition(posX, posY);
-	// Set back rectangle
-	rectangle.setOutlineThickness(3);
-	rectangle.setFillColor(Color::White);
-	rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64));
-	rectangle.setSize(Vector2f(width + 20, height + 20)); // Rectangle's thickness is 20 / 2 = 10
-	rectangle.setPosition(posX - 10, posY - 10); // Minus rectangle's thickness: -10
+	sprite.setPosition(posX + (width - sprite.getGlobalBounds().width) / 2.f, posY + (height - sprite.getGlobalBounds().height) / 2.f);
 }
 
 void Button::setTextButton(string name, string content, string fontPath, float width, float height, float posX, float posY) {

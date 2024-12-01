@@ -727,6 +727,9 @@ bool ChessBoard::isTie(void) {
         }
     }
 
+    // V. Judge tie when there are 75 consecutive moves with out any capture or pawn move
+    if (haftMoveClock >= 150) return true;
+
     return false;
 }
 
