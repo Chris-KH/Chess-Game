@@ -179,13 +179,13 @@ void ChessBoard::update(const Event& event) {
     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
-        handleMousePress(mouseX, mouseY, 1, 0);
+        handleMousePress(mouseX, mouseY, 0, 1);
     }
     // Release left mouse
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
-        handleMouseRelease(mouseX, mouseY, 1, 0);
+        handleMouseRelease(mouseX, mouseY, 0, 1);
     }
     // Drag a piece
     if (pieceFollowingMouse) {
@@ -358,17 +358,25 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY, bool enableClick, bo
     if (enableDrag) {
         // Đang press quân cờ
         if (lastPiece != nullptr) {
-            /*if (undoPress == true && isAITurn()) {
+            if (undoPress == true && isAITurn()) {
                 undoPress = false;
                 lastPiece->unfollowMouse();
                 pieceFollowingMouse = nullptr;
                 lastPiece = nullptr;
                 assert(pieceFollowingMouse == nullptr);
                 highlightTiles.clear();
-                while (redoStack.empty() == false) redoMove();
+                while (redoStack.empty() == false) {  
+                    draw();
+                    window->display();
+                    redoMove();
+                    Sleep(100);
+                }
+                draw();
+                window->display();
+                Sleep(50);
                 return;
             }
-            else */if (lastPiece->getColor() == isWhiteTurn() && lastPiece->canMoveTo(row, col, this->board)) {
+            else if (lastPiece->getColor() == isWhiteTurn() && lastPiece->canMoveTo(row, col, this->board)) {
                 vector<pair<int, int>> possibleMoves;
                 getPossibleMoves(lastPiece, possibleMoves);
                 Move* curMove = nullptr;
@@ -380,6 +388,7 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY, bool enableClick, bo
             pieceFollowingMouse = nullptr;
             lastPiece = nullptr;
         }
+        undoPress = false;
         assert(pieceFollowingMouse == nullptr);
         highlightTiles.clear();
     }
