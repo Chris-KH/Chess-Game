@@ -294,7 +294,8 @@ void ChessBoard::newGame() {
     this->undoPress = false;
 
     this->stockfish->newGame();
-    this->stockfish->setSkillLevel(20);
+    cout << "AI is set to " << AIDifficulty << " difficulty\n";
+    this->stockfish->setSkillLevel(AIDifficulty);
     this->stockfish->setBoardState(generateFEN());
 
     // Check
@@ -626,7 +627,7 @@ bool ChessBoard::getAI() const {
 }
 
 void ChessBoard::setAISkillLevel(int level) {
-    stockfish->setSkillLevel(level);
+    AIDifficulty = level;
 }
 
 void ChessBoard::setHumanColor(bool humanColor) {

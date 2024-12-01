@@ -91,7 +91,8 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
 
     //Set Stockfish
     this->stockfish->newGame();
-    this->stockfish->setSkillLevel(20);
+    AIDifficulty = 20;
+    this->stockfish->setSkillLevel(AIDifficulty);
     this->stockfish->setBoardState(generateFEN());
     this->humanColor = true;
     this->undoPress = false;

@@ -33,11 +33,11 @@ int main() {
         ChessBoard chessBoard(&window, &stockfish, false);
         SideBoard sideBoard(&window, &chessBoard);
 
-        RectangleShape background(Vector2f((float)window.getSize().x - (float)window.getSize().y - 6, 165.0f));
+        RectangleShape background(Vector2f((float)window.getSize().x - (float)window.getSize().y, 165.0f));
         background.setFillColor(Color::Black);
-        background.setOutlineThickness(3);
+        background.setOutlineThickness(-3);
         background.setOutlineColor(Color(255, 140, 0, 255));
-        background.setPosition(Vector2f(933.0f, 3.0f));
+        background.setPosition(Vector2f(930.0f, 0.f));
         window.draw(background);
 
         //Main loop

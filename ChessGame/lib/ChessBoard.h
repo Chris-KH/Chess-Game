@@ -76,6 +76,7 @@ private:
     bool isAI;
     bool humanColor; //true = white, false = black
     bool undoPress;
+    int AIDifficulty;
 public:
     // Constructor
     ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI = false);
