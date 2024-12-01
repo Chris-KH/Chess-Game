@@ -91,7 +91,16 @@ void Button::setSpriteAndTextButton(string name, string imagePath, string conten
 }
 
 void Button::drawSprite(RenderWindow& window) {
-	if (!available) return;
+	if (available) {
+		sprite.setColor(Color(255, 255, 255, 255));
+		rectangle.setFillColor(Color(255, 255, 255, 255));
+		rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64, 255));
+	}
+	else {
+		sprite.setColor(Color(255, 255, 255, 63));
+		rectangle.setFillColor(Color(255, 255, 255, 63));
+		rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64, 63));
+	}
 	window.draw(rectangle);
 	window.draw(sprite);
 }

@@ -10,7 +10,7 @@ SideBoard::SideBoard(RenderWindow* window, ChessBoard* chessboard) {
     addButton("save", "../assets/Button/save.png", 35, 35, 960, 100); // 5. Save
     addButton("load", "../assets/Button/LoadGame.png", 35, 35, 1035, 100); // 6. Load
     addButton("setting", "../assets/Button/settings.png", 35, 35, 1110, 100); // 7. Setting
-    addButton("tie", "../assets/Button/tie.png", 35, 35, 1185, 100); // 8. Tie
+    addButton("tie", "../assets/Button/Tie.png", 35, 35, 1185, 100); // 8. Tie
     buttonList.back()->setAvailable(false);
 
     gameOver = 0;
