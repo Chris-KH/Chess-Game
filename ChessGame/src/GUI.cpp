@@ -490,6 +490,11 @@ bool GUI::chooseDifficulty(ChessBoard& chessBoard) {
     const int labelY = slideY + slideHeight + space;
     const int applyButtonY = wdHeight - 2 * botSpace - buttonHeight;
 
+    Image icon;
+    if (icon.loadFromFile("../assets/Icon/NewGameIcon.png") == false) {
+        throw runtime_error("Cannot load the new game icon\n");
+    }
+
     Text instruction;
     instruction.setFont(font);
     instruction.setCharacterSize(insHeight);
@@ -515,6 +520,7 @@ bool GUI::chooseDifficulty(ChessBoard& chessBoard) {
     applyButton.setTextButton("apply", "Apply", "../assets/fonts/CherryBombOne.ttf", buttonWidth, buttonHeight, (wdWidth - buttonWidth) / 2.f, applyButtonY);
     
     RenderWindow AIDiffWD(VideoMode(wdWidth, wdHeight), "Choose difficulty", Style::Close | Style::Titlebar);
+    AIDiffWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     while (AIDiffWD.isOpen()) {
         AIDiffWD.requestFocus();
