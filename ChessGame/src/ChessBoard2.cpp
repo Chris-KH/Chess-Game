@@ -487,7 +487,7 @@ string ChessBoard::generateFEN() {
 string ChessBoard::FENToCheckThreefold() {
     string fen = generateFEN();
 
-    int i = fen.size() - 1, cntSpace = 0;
+    int i = (int)fen.size() - 1, cntSpace = 0;
     while(cntSpace < 2) {
         if (fen[i] == ' ') cntSpace++;
         i--;

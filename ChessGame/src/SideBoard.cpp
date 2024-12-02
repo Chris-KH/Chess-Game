@@ -21,13 +21,13 @@ SideBoard::SideBoard(RenderWindow* window, ChessBoard* chessboard) {
 
 void SideBoard::addSpriteButton(std::string name, std::string path, int sizeX, int sizeY, int posX, int posY) {
     unique_ptr<Button> button = make_unique<Button>();
-    button->setSpriteButton(name, path, sizeX, sizeY, posX, posY);
+    button->setSpriteButton(name, path, (float)sizeX, (float)sizeY, (float)posX, (float)posY);
     spriteButtons.push_back(move(button));
 }
 
 void SideBoard::addTextButton(std::string name, std::string content, std::string font, int width, int height, int posX, int posY) {
     unique_ptr<Button> button = make_unique<Button>();
-    button->setTextButton(name, content, font, width, height, posX, posY);
+    button->setTextButton(name, content, font, (float)width, (float)height, (float)posX, (float)posY);
     textButtons.push_back(move(button));
 }
 

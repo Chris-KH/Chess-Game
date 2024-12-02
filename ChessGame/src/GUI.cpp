@@ -561,6 +561,8 @@ bool GUI::chooseDifficulty(ChessBoard& chessBoard) {
     }
 
     chessBoard.setAISkillLevel(slider.getCurrentStep() + 1);
+
+    return true;
 }
 
 void GUI::saveGame(ChessBoard* chessBoard) {
