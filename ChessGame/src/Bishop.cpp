@@ -9,6 +9,8 @@ Bishop::Bishop(bool isWhite, int originCol, int originRow) : Pieces(isWhite, ori
 	texturePaths.push_back("../assets/Cartoon Theme/" + color + this->type + ".png");
 	texturePaths.push_back("../assets/Pixel Theme/" + color + this->type + ".png");
     texturePaths.push_back("../assets/Neo Theme/" + color + this->type + ".png");
+    texturePaths.push_back("../assets/Game Room Theme/" + color + this->type + ".png");
+    texturePaths.push_back("../assets/Neon Theme/" + color + this->type + ".png");
 
 	loadTexture(texturePaths);
 }
