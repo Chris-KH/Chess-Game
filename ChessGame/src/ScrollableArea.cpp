@@ -1,9 +1,9 @@
 ﻿#include "../lib/ScrollableArea.h"
 
-ScrollableArea::ScrollableArea(Vector2f position, Vector2f size, RenderWindow& window) {
+ScrollableArea::ScrollableArea(Vector2f position, Vector2f size, RenderWindow& window) : window(window) {
     // Khu vực hiển thị
     container.setPosition(position);
-    container.setSize(Vector2f(size.x, max(size.y, (float)window.getSize().y)));
+    container.setSize(Vector2f(size.x, max(size.y, 1200.f)));
     container.setFillColor(Color(50, 50, 50)); // Màu nền
     container.setOutlineColor(Color::Black);
 
@@ -34,13 +34,73 @@ ScrollableArea::ScrollableArea(Vector2f position, Vector2f size, RenderWindow& w
     //cout << scrollBarThumb.getSize().y << '\n';
 }
 
-// Thêm phần tử vào danh sách
-void ScrollableArea::addItem(unique_ptr<Button>& item) {
-    items.emplace_back(move(item));
+// Set & get
+View ScrollableArea::getView() const {
+    return view;
 }
 
-void ScrollableArea::addDeleteItem(unique_ptr<Button>& item) {
-    deleteButton.emplace_back(move(item));
+// Thêm các phần tử bị kéo
+// Bên trong
+void ScrollableArea::addButtonItem(unique_ptr<Button>& item) {
+    buttonItems.push_back(move(item));
+}
+
+void ScrollableArea::addSpriteItem(unique_ptr<Sprite>& item) {
+    spriteItems.push_back(move(item));
+}
+
+void ScrollableArea::addDropDownButtonItem(unique_ptr<DropDownButton>& item) {
+    dropDownButtonItems.push_back(move(item));
+}
+
+// Bên ngoài
+void ScrollableArea::addExternalButton(Button* item) {
+    extButs.push_back(item);
+}
+
+void ScrollableArea::addExternalSprite(Sprite* item) {
+    extSprites.push_back(item);
+}
+
+void ScrollableArea::addExternalDropDownButton(DropDownButton* item) {
+    extDropDownButs.push_back(item);
+}
+
+void ScrollableArea::addExternalText(Text* item) {
+    extTexts.push_back(item);
+}
+
+// Thêm các phần tử cố định
+// Bên trong
+// Bên ngoài
+void ScrollableArea::addFixedExternalRectangleShape(RectangleShape* item) {
+    fixedExtRectShapes.push_back(item);
+}
+
+void ScrollableArea::addFixedExternalButton(Button* item) {
+    fixedExtButs.push_back(item);
+}
+
+void ScrollableArea::removeButtonItem(int index) {
+    int size = buttonItems.size() / 2;
+    if (index < 0 && index >= size) return;
+    
+    buttonItems.erase(buttonItems.begin() + size + index);
+    buttonItems.erase(buttonItems.begin() + index);
+
+    size--;
+
+    for (size_t i = 0; i < size; i++) {
+        buttonItems[i]->setTextButton(string("Button") + to_string(i + 1), buttonItems[i]->getContent(), "../assets/fonts/TimesNewRoman.ttf", 600.f, 40.f, 40.f, i * 60.f + 20.f);
+    }
+
+    for (size_t i = 0; i < size; i++) {
+        buttonItems[i + size]->setTextButton(string("Delete") + to_string(i + 1), string("X"), "../assets/fonts/TimesNewRoman.ttf", 100.f, 40.f, 670.f, i * 60.f + 20.f);
+    }
+
+    lastButton = -1;
+
+    draw(this->window);
 }
 
 // Xử lý sự kiện
@@ -147,31 +207,13 @@ void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
     if (event.type == Event::MouseWheelScrolled || event.type == Event::MouseMoved) {
         // Đổi màu nếu chuột đang trên thumb
         Vector2i mousePos = Mouse::getPosition(window);
-        int but = detectClickedItem(mousePos, window);
-        if (but != lastButton && lastButton != -1) {
-            items[lastButton]->getRectangle().setFillColor(Color::White);
-            if (deleteButton.empty() == false) deleteButton[lastButton]->getRectangle().setFillColor(Color::White);
-        }
+        
+        int but = detectClickedButtonItem(mousePos, window);
+        if (but != lastButton && lastButton != -1) buttonItems[lastButton]->getRectangle().setFillColor(Color::White);
         if (but != -1) {
             lastButton = but;
-            items[but]->getRectangle().setFillColor(Color(180, 180, 180));
-        }
-        else {
-            lastButton = -1;
-        }
-    }
-
-    if (event.type == Event::MouseWheelScrolled || event.type == Event::MouseMoved) {
-        // Đổi màu nếu chuột đang trên thumb
-        Vector2i mousePos = Mouse::getPosition(window);
-        int but = detectClickedDelete(mousePos, window);
-        if (but != lastButton && lastButton != -1) {
-            items[lastButton]->getRectangle().setFillColor(Color::White);
-            deleteButton[lastButton]->getRectangle().setFillColor(Color::White);
-        }
-        if (but != -1) {
-            lastButton = but;
-            deleteButton[but]->getRectangle().setFillColor(Color::Red);
+            if (but >= (int)buttonItems.size() / 2) buttonItems[but]->getRectangle().setFillColor(Color::Red);
+            else buttonItems[but]->getRectangle().setFillColor(Color(180, 180, 180));
         }
         else {
             lastButton = -1;
@@ -180,22 +222,50 @@ void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
 }
 
 // Phát hiện phần tử được nhấn
-int ScrollableArea::detectClickedItem(Vector2i mousePosition, RenderWindow& window) {
+// Bên trong
+int ScrollableArea::detectClickedButtonItem(Vector2i mousePosition, RenderWindow& window) {
     Vector2f worldPos = window.mapPixelToCoords(mousePosition, view);
 
-    for (int i = 0; i < items.size(); ++i) {
-        if (items[i]->getRectangle().getGlobalBounds().contains(worldPos)) {
+    for (int i = 0; i < buttonItems.size(); ++i) {
+
+        if (buttonItems[i]->getRectangle().getGlobalBounds().contains(worldPos)) {
             return i; // Trả về chỉ số phần tử được nhấn
         }
     }
     return -1; // Không nhấn vào phần tử nào
 }
 
-int ScrollableArea::detectClickedDelete(Vector2i mousePosition, RenderWindow& window) {
+int ScrollableArea::detectClickedDropDownButtonItem(Vector2i mousePosition, RenderWindow& window) {
     Vector2f worldPos = window.mapPixelToCoords(mousePosition, view);
 
-    for (int i = 0; i < deleteButton.size(); ++i) {
-        if (deleteButton[i]->getRectangle().getGlobalBounds().contains(worldPos)) {
+    for (int i = 0; i < dropDownButtonItems.size(); ++i) {
+
+        if (dropDownButtonItems[i]->contain(worldPos.x, worldPos.y)) {
+            return i; // Trả về chỉ số phần tử được nhấn
+        }
+    }
+    return -1; // Không nhấn vào phần tử nào
+}
+
+// Bên ngoài
+int ScrollableArea::detectClickedExternalButton(Vector2i mousePosition, RenderWindow& window) {
+    Vector2f worldPos = window.mapPixelToCoords(mousePosition, view);
+
+    for (int i = 0; i < extButs.size(); ++i) {
+
+        if (buttonItems[i]->getRectangle().getGlobalBounds().contains(worldPos)) {
+            return i; // Trả về chỉ số phần tử được nhấn
+        }
+    }
+    return -1; // Không nhấn vào phần tử nào
+}
+
+int ScrollableArea::detectClickedExternalDropDownButton(Vector2i mousePosition, RenderWindow& window) {
+    Vector2f worldPos = window.mapPixelToCoords(mousePosition, view);
+
+    for (int i = 0; i < extDropDownButs.size(); ++i) {
+
+        if (dropDownButtonItems[i]->contain(worldPos.x, worldPos.y)) {
             return i; // Trả về chỉ số phần tử được nhấn
         }
     }
@@ -207,19 +277,59 @@ void ScrollableArea::draw(RenderWindow& window) {
     window.clear();
 
     window.setView(view);
+    window.draw(container);
+
+    window.setView(window.getDefaultView());
+    // Vẽ các phần tử cố định
+    for (RectangleShape* rectShape : fixedExtRectShapes) {
+        window.draw(*rectShape);
+    }
+    for (Button* but : fixedExtButs) {
+        but->drawText(window);
+    }
+
+    window.setView(view);
 
     // Vẽ khu vực và thanh cuộn
-    window.draw(container);
+    
     window.draw(scrollBarTrack);
     window.draw(scrollBarThumb);
 
     // Vẽ các phần tử
-    for (unique_ptr<Button>& but : items) {
+    for (unique_ptr<Button>& but : buttonItems) {
         but->drawText(window);
     }
 
-    for (unique_ptr<Button>& but : deleteButton) {
+    for (unique_ptr<Sprite>& sprite : spriteItems) {
+        window.draw(*sprite);
+    }
+
+    for (unique_ptr<DropDownButton>& but : dropDownButtonItems) {
+        but->draw(window);
+    }
+
+    for (Button* but : extButs) {
         but->drawText(window);
+    }
+
+    for (Sprite* sprite : extSprites) {
+        window.draw(*sprite);
+    }
+
+    for (DropDownButton* but : extDropDownButs) {
+        but->draw(window);
+    }
+
+    for (Text* text : extTexts) {
+        window.draw(*text);
+    }
+
+    for (unique_ptr<DropDownButton>& but : dropDownButtonItems) {
+        but->drawOption(window);
+    }
+
+    for (DropDownButton* but : extDropDownButs) {
+        but->drawOption(window);
     }
 
     // Khôi phục view gốc
