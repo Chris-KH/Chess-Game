@@ -165,38 +165,6 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     const float changeBoardSpace = previewBoardSpace + previewBoardHeight + lineSpace;
     const float changePieceSpace = changeBoardSpace + dropDownButtonHeight + lineSpace;
 
-    // Board preview
-    Sprite previewBoard(chessBoard.getBoardSprite());
-    previewBoard.setPosition((wdWidth - previewBoardWidth) / 2.f, previewBoardSpace);
-    previewBoard.setTextureRect(IntRect(65, 65, 5 * 100, 2 * 100));
-    vector<Texture> pieceTexture(10);
-    vector<Sprite> reviewPiece(10);
-    for (int i = 0; i < 5; i++) reviewPiece[i].setPosition(leftSpace + i * 100, previewBoardSpace);
-    for (int i = 5; i < 10; i++) reviewPiece[i].setPosition(leftSpace + (i - 5) * 100, previewBoardSpace + 100);
-    setPiece(initPiece, pieceThemePath, piecePath, pieceTexture, reviewPiece);
-
-    
-
-    // Change board button
-    Text textBoard("Board", fontTitle, (unsigned)dropDownButtonTitleHeight);
-    textBoard.setFillColor(Color::White);
-    textBoard.setPosition(leftSpace, changeBoardSpace);
-    DropDownButton board("Board", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, changeBoardSpace, chessBoard.getBoardList(), chessBoard.getBoardIndex());
-
-    // Change piece button
-    Text textPiece("Pieces", fontTitle, (unsigned)dropDownButtonTitleHeight);
-    textPiece.setFillColor(Color::White);
-    textPiece.setPosition(leftSpace, changePieceSpace);
-    DropDownButton piece("Pieces", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, changePieceSpace, chessBoard.getPieceList(), chessBoard.getPieceIndex());
-
-    // Cancel button
-    Button cancel;
-    cancel.setTextButton("cancel", "Cancel", "../assets/fonts/Holen Vintage.otf", buttonWidth, buttonHeight, leftSpace, wdHeight - botSpace - buttonHeight);
-
-    // Save button
-    Button apply;
-    apply.setTextButton("apply", "Apply", "../assets/fonts/Holen Vintage.otf", buttonWidth, buttonHeight, wdWidth - rightSpace - buttonWidth, wdHeight - botSpace - buttonHeight);
-
     // Open setting window
     RenderWindow settingWD(VideoMode((unsigned)wdWidth, (unsigned)wdHeight), "Setting", Style::Close | Style::Titlebar);
 
@@ -207,14 +175,81 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
         return;
     }
     settingWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
+    // Board preview
+    Sprite previewBoard(chessBoard.getBoardSprite());
+    previewBoard.setPosition((wdWidth - previewBoardWidth) / 2.f, previewBoardSpace);
+    previewBoard.setTextureRect(IntRect(65, 65, 5 * 100, 2 * 100));
+    vector<Texture> pieceTexture(10);
+    vector<Sprite> reviewPiece(10);
+    for (int i = 0; i < 5; i++) reviewPiece[i].setPosition(leftSpace + i * 100, previewBoardSpace);
+    for (int i = 5; i < 10; i++) reviewPiece[i].setPosition(leftSpace + (i - 5) * 100, previewBoardSpace + 100);
+    setPiece(initPiece, pieceThemePath, piecePath, pieceTexture, reviewPiece);
+
+    // Change board button
+    Text textBoard("Board", fontTitle, (unsigned)dropDownButtonTitleHeight);
+    textBoard.setFillColor(Color::White);
+    textBoard.setPosition(leftSpace, changeBoardSpace);
+    DropDownButton board(&settingWD, "Board", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, changeBoardSpace, chessBoard.getBoardList(), chessBoard.getBoardIndex());
+
+    // Change piece button
+    Text textPiece("Pieces", fontTitle, (unsigned)dropDownButtonTitleHeight);
+    textPiece.setFillColor(Color::White);
+    textPiece.setPosition(leftSpace, changePieceSpace);
+    DropDownButton piece(&settingWD, "Pieces", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, changePieceSpace, chessBoard.getPieceList(), chessBoard.getPieceIndex());
+
+    // Background
+    RectangleShape background(Vector2f((float)settingWD.getSize().x, 100.0f));
+    background.setFillColor(Color::Black);
+    background.setPosition(Vector2f(0.0f, settingWD.getSize().y - 100.0f));
+
+    // Cancel button
+    Button cancel;
+    cancel.setTextButton("cancel", "Cancel", "../assets/fonts/Holen Vintage.otf", buttonWidth, buttonHeight, leftSpace, wdHeight - botSpace - buttonHeight);
+
+    // Save button
+    Button apply;
+    apply.setTextButton("apply", "Apply", "../assets/fonts/Holen Vintage.otf", buttonWidth, buttonHeight, wdWidth - rightSpace - buttonWidth, wdHeight - botSpace - buttonHeight);
+
+    // Scrollable setting
+    ScrollableArea scroll(Vector2f(0.f, 0.f), Vector2f(wdWidth, wdHeight * 2), settingWD);
+
     Event event;
     Button* selectedButton = nullptr;
     DropDownButton* selectedDropDownButton = nullptr;
-    vector<Sprite*> spriteList = { &previewBoard };
-    for (int i = 0; i < 10; i++) spriteList.push_back(&reviewPiece[i]);
-    vector<Text*> textList = { &textBoard, &textPiece };
-    vector<Button*> buttonList = { &apply, &cancel };
-    vector<DropDownButton*> dropDownButtonList = { &board, &piece };
+    
+    vector<Button*> buttonList(2, nullptr);
+    vector<Sprite*> spriteList(11, nullptr);
+    vector<DropDownButton*> dropDownButtonList(2, nullptr);
+    vector<Text*> textList(2, nullptr);
+    vector<RectangleShape*> rectangleShapeList(1, nullptr);
+
+    spriteList[0] = &previewBoard;
+    for (int i = 0; i < 10; i++) spriteList[i + 1] = &reviewPiece[i];
+    textList[0] = &textBoard, textList[1] = &textPiece;
+    buttonList[0] = &apply, buttonList[1] = &cancel;
+    dropDownButtonList[0] = &board, dropDownButtonList[1] = &piece;
+    rectangleShapeList[0] = &background;
+
+    for (int i = 0; i < (int)spriteList.size(); i++) {
+        scroll.addExternalSprite(spriteList[i]);
+    }
+
+    for (int i = 0; i < (int)dropDownButtonList.size(); i++) {
+        scroll.addExternalDropDownButton(dropDownButtonList[i]);
+    }
+
+    for (int i = 0; i < (int)textList.size(); i++) {
+        scroll.addExternalText(textList[i]);
+    }
+
+    for (int i = 0; i < (int)rectangleShapeList.size(); i++) {
+        scroll.addFixedExternalRectangleShape(rectangleShapeList[i]);
+    }
+
+    for (int i = 0; i < (int)buttonList.size(); i++) {
+        scroll.addFixedExternalButton(buttonList[i]);
+    }
 
     // Poll events and handle them
     while (settingWD.isOpen()) {
@@ -234,9 +269,12 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
             else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
                 handleReleaseSetting(selectedButton, selectedDropDownButton, event.mouseButton, buttonList, dropDownButtonList, initBoard, initPiece, chessBoard, settingWD);
             }
+            scroll.handleEvent(event, settingWD);
         }
 
-        drawSetting(settingWD, selectedDropDownButton, spriteList, textList, buttonList, dropDownButtonList);
+        settingWD.clear(Color(60, 60, 60, 255));
+        scroll.draw(settingWD);
+        settingWD.display();
     }
 }
 
@@ -310,30 +348,6 @@ void GUI::handleReleaseSetting(Button *&selectedButton, DropDownButton *&selecte
             window.close();
         }
     }
-}
-
-void GUI::drawSetting(RenderWindow& window, DropDownButton* selectedDropDownButton, vector<Sprite*> &spriteList, vector<Text*> &textList, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList) {
-    RectangleShape background(Vector2f((float)window.getSize().x, 100.0f));
-    background.setFillColor(Color::Black);
-    background.setPosition(Vector2f(0.0f, window.getSize().y - 100.0f));
-    window.clear(Color(60, 60, 60, 255));
-    window.draw(background);
-    for (Sprite* sprite : spriteList) {
-        window.draw(*sprite);
-    }
-    for (Text* text : textList) {
-        window.draw(*text);
-    }
-    for (Button* button : buttonList) {
-        button->drawText(window);
-    }
-    for(DropDownButton* button : dropDownButtonList) {
-        button->draw(window);
-    }
-    if (selectedDropDownButton && selectedDropDownButton->getClick()) {
-        selectedDropDownButton->drawOptions(window);
-    }
-    window.display();
 }
 
 void GUI::gameOver(ChessBoard& chessBoard) {
@@ -742,7 +756,7 @@ void GUI::loadGame(ChessBoard& chessBoard, string path) {
     for (size_t i = 0; i < numberOfFile; i++) {
         unique_ptr<Button> item = make_unique<Button>();
         item->setTextButton(string("Button") + to_string(i + 1), fileName[i], "../assets/fonts/TimesNewRoman.ttf", 600.f, 40.f, 40.f, i * 60.f + 20.f);
-        scroll.addItem(item);
+        scroll.addButtonItem(item);
     }
 
     Event event;
@@ -757,7 +771,7 @@ void GUI::loadGame(ChessBoard& chessBoard, string path) {
 
             scroll.handleEvent(event, loadWD);
             if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
-                int index = scroll.detectClickedItem(Mouse::getPosition(loadWD), loadWD);
+                int index = scroll.detectClickedButtonItem(Mouse::getPosition(loadWD), loadWD);
                 if (index != -1) cout << fileName[index] << '\n';
             }
         }
