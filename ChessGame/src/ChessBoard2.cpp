@@ -238,9 +238,14 @@ void ChessBoard::freeRedoStack() {
 }
 
 //Reset game (new game)
-void ChessBoard::newGame() {
-    if (GUI::newGame(*this) == false) {
-        return;
+void ChessBoard::newGame(bool isReset) {
+    // Không bấm reset thì sẽ làm những thao tác sau
+    if (isReset == false) {
+        if (GUI::newGame(*this) == false) {
+            // Nếu người chơi bấm new game và người chơi không chọn chế độ chơi mới
+            // Thì game sẽ không tạo ra ván mới
+            return;
+        }
     }
 
     // CLear old pieces

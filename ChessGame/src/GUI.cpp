@@ -456,6 +456,7 @@ bool GUI::newGame(ChessBoard& chessBoard) {
                 selectedButton = nullptr;
                 if (onePButton.contain(mouse.x, mouse.y)) selectedButton = &onePButton;
                 else if (twoPButton.contain(mouse.x, mouse.y)) selectedButton = &twoPButton;
+
                 if (selectedButton && lastSelectedButton == selectedButton) {
                     if (selectedButton->getName() == "playerVersusAI") {
                         chessBoard.setAI(true);
