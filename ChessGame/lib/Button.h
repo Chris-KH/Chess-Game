@@ -46,6 +46,7 @@ public:
 	void move(float addX, float addY); // Shift from (posX, posY) to (posX + addX, posY + addY)
 	void printPosText(void) { cout << text.getPosition().x << ' ' << text.getPosition().y << '\n'; }
 	bool contain(int x, int y); // Check if point(x, y) lie in the button area
+	bool contain(float x, float y); // Check if point(x, y) lie in the button area
 
 	void setAvailable(bool available);
 	void setWidth(float width);

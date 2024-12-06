@@ -34,6 +34,11 @@ ScrollableArea::ScrollableArea(Vector2f position, Vector2f size, RenderWindow& w
     //cout << scrollBarThumb.getSize().y << '\n';
 }
 
+// Set & get
+View ScrollableArea::getView() const {
+    return view;
+}
+
 // Thêm các phần tử bị kéo
 // Bên trong
 void ScrollableArea::addButtonItem(unique_ptr<Button>& item) {

@@ -31,6 +31,10 @@ bool DropDownButton::contain(int x, int y) {
 	return list[0]->contain(x, y);
 }
 
+bool DropDownButton::contain(float x, float y) {
+	return list[0]->contain(x, y);
+}
+
 int DropDownButton::eventOption(int x, int y) {
 	if (list[curBut]->contain(x, y)) return curBut;
 	for (int i = 0; i < (int)list.size(); i++) {

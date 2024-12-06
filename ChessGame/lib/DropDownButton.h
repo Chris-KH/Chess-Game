@@ -22,6 +22,7 @@ public:
 	void setClick(int val);
 	void click(void);
 	bool contain(int x, int y);
+	bool contain(float x, float y);
 	int eventOption(int x, int y);
 
 	// Draw

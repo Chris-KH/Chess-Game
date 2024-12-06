@@ -133,6 +133,10 @@ bool Button::contain(int x, int y) {
 	return rectangle.getGlobalBounds().contains((float)x, (float)y);
 }
 
+bool Button::contain(float x, float y) {
+	return rectangle.getGlobalBounds().contains(x, y);
+}
+
 void Button::setAvailable(bool available) { this->available = available; }
 void Button::setWidth(float width) { this->width = width; }
 void Button::setHeight(float height) { this->height = height; }

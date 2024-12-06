@@ -33,8 +33,7 @@ public:
 	//Setting window
 	static void settingChoice(ChessBoard &chessBoard);
 	static void setPiece(int num, const vector<std::string>& pieceThemePath, const vector<std::string>& piecePath, vector<Texture>& pieceTexture, vector<Sprite>& reviewPiece);
-	static void handlePressSetting(Button *&selectedButton, DropDownButton *&selectedDropDownButton, Event::MouseButtonEvent &mouse, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList, ChessBoard &chessBoard);
-	static void handleReleaseSetting(Button*& selectedButton, DropDownButton*& selectedDropDownButton, Event::MouseButtonEvent &mouse, vector<Button*>& buttonList, vector<DropDownButton*>& dropDownButtonList, int initBoard, int initPiece, ChessBoard &chessBoard, RenderWindow &window);
+	static void handlePressSetting(Event::MouseButtonEvent mouse, const View& view, Button *&selectedButton, DropDownButton *&selectedDropDownButton, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList, int initBoard, int initPiece, ChessBoard& chessBoard, RenderWindow& window);
 
 	//Game Over window
 	static void gameOver(ChessBoard &chessBoard);

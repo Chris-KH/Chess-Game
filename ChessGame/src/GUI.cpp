@@ -257,19 +257,17 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     while (settingWD.isOpen()) {
         settingWD.requestFocus();
         while (settingWD.pollEvent(event)) {
+            Event::MouseButtonEvent mouse = event.mouseButton;
             if (event.type == Event::Closed) {
                 chessBoard.changeBoard(initBoard);
                 chessBoard.changePieces(initPiece);
                 settingWD.close();
             }
-            else if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
+            else if (event.type == Event::MouseButtonPressed && mouse.button == Mouse::Left) {
                 int lastPieceIndex = chessBoard.getPieceIndex();
-                handlePressSetting(selectedButton, selectedDropDownButton, event.mouseButton, buttonList, dropDownButtonList, chessBoard);
+                handlePressSetting(mouse, scroll.getView(), selectedButton, selectedDropDownButton, buttonList, dropDownButtonList, initBoard, initPiece, chessBoard, settingWD);
                 if(lastPieceIndex != chessBoard.getPieceIndex()) 
                     setPiece(chessBoard.getPieceIndex(), pieceThemePath, piecePath, pieceTexture, reviewPiece);
-            }
-            else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
-                handleReleaseSetting(selectedButton, selectedDropDownButton, event.mouseButton, buttonList, dropDownButtonList, initBoard, initPiece, chessBoard, settingWD);
             }
             scroll.handleEvent(event, settingWD);
         }
@@ -294,19 +292,33 @@ void GUI::setPiece(int num, const vector<std::string>& pieceThemePath, const vec
     }
 }
 
-void GUI::handlePressSetting(Button *&selectedButton, DropDownButton *&selectedDropDownButton, Event::MouseButtonEvent &mouse, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList, ChessBoard& chessBoard) {
+void GUI::handlePressSetting(Event::MouseButtonEvent mouse, const View& view, Button*& selectedButton, DropDownButton*& selectedDropDownButton, vector<Button*>& buttonList, vector<DropDownButton*>& dropDownButtonList, int initBoard, int initPiece, ChessBoard& chessBoard, RenderWindow& window) {
+    Vector2f mouseWindow = window.mapPixelToCoords({ mouse.x, mouse.y }); // Mouse cho phần tử cố định
+    Vector2f mouseView = window.mapPixelToCoords({ mouse.x, mouse.y }, view); // Mouse cho phần tử không cố định
+    
     selectedButton = nullptr;
     for (Button*& button : buttonList) {
-        if (button->contain(mouse.x, mouse.y)) {
+        if (button->contain(mouseWindow.x, mouseWindow.y)) {
             selectedButton = button;
             break;
+        }
+    }
+
+    if (selectedButton) {
+        if (selectedButton->getName() == "apply") {
+            window.close();
+        }
+        else if (selectedButton->getName() == "cancel") {
+            chessBoard.changeBoard(initBoard);
+            chessBoard.changePieces(initPiece);
+            window.close();
         }
     }
 
     DropDownButton* lastDropDownButton = selectedDropDownButton;
     selectedDropDownButton = nullptr;
     if (lastDropDownButton && lastDropDownButton->getClick()) {
-        int optionVal = lastDropDownButton->eventOption(mouse.x, mouse.y);
+        int optionVal = lastDropDownButton->eventOption(mouseView.x, mouseView.y);
         if (lastDropDownButton->getName() == "Board") {
             chessBoard.changeBoard(optionVal);
         }
@@ -317,7 +329,7 @@ void GUI::handlePressSetting(Button *&selectedButton, DropDownButton *&selectedD
         return;
     }
     for (DropDownButton*& button : dropDownButtonList) {
-        if (button->contain(mouse.x, mouse.y)) {
+        if (button->contain(mouseView.x, mouseView.y)) {
             selectedDropDownButton = button;
         }
     }
@@ -326,29 +338,6 @@ void GUI::handlePressSetting(Button *&selectedButton, DropDownButton *&selectedD
     }
     if (selectedDropDownButton) {
         selectedDropDownButton->click();
-    }
-}
-
-void GUI::handleReleaseSetting(Button *&selectedButton, DropDownButton *&selectedDropDownButton, Event::MouseButtonEvent &mouse, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList, int initBoard, int initPiece, ChessBoard &chessBoard, RenderWindow &window) {
-    Button* lastSelectedButton = selectedButton;
-    selectedButton = nullptr;
-    for (Button*& button : buttonList) {
-        if (button->contain(mouse.x, mouse.y)) {
-            selectedButton = button;
-            break;
-        }
-    }
-
-    // If click (press and release) on a button then do operations
-    if (selectedButton && selectedButton == lastSelectedButton) {
-        if (selectedButton->getName() == "apply") {
-            window.close();
-        }
-        else if (selectedButton->getName() == "cancel") {
-            chessBoard.changeBoard(initBoard);
-            chessBoard.changePieces(initPiece);
-            window.close();
-        }
     }
 }
 

@@ -37,6 +37,9 @@ private:
 public:
     ScrollableArea(Vector2f position, Vector2f size, RenderWindow& window);
 
+    // Set & get
+    View getView() const;
+
     // Thêm các phần tử bị kéo
     // Bên trong
     void addButtonItem(unique_ptr<Button>& item);
