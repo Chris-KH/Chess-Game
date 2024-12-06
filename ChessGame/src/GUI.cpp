@@ -799,33 +799,22 @@ string GUI::loadGame(ChessBoard& chessBoard) {
 
 bool GUI::YesNo() {
     // Tạo cửa sổ với kích thước 300x200 và không có viền
-    RenderWindow window(VideoMode(300, 200), "Yes No", Style::None);
+    RenderWindow window(VideoMode(300, 150), "Yes No", Style::None);
 
     // Đặt màu nền và kiểu chữ
-    Color backgroundColor = Color(50, 50, 50);
+    Color backgroundColor = Color(160, 206, 235); // Sky blue
     Font font;
     if (!font.loadFromFile("../assets/fonts/TimesNewRoman.ttf")) {
         // Thay "Arial.ttf" bằng đường dẫn đến file font
         return false;
     }
 
-    // Tạo văn bản cho các nút
-    Text yesButton("YES", font, 24);
-    Text noButton("NO", font, 24);
-    yesButton.setFillColor(Color::White);
-    noButton.setFillColor(Color::White);
 
-    // Đặt vị trí cho các nút
-    yesButton.setPosition(50, 120);
-    noButton.setPosition(200, 120);
+    Button yesButton;
+    yesButton.setTextButton(string("Button yes"), "YES", "../assets/fonts/TimesNewRoman.ttf", 100.f, 40.f, 40.f, 60.f);
 
-    // Tạo hình chữ nhật cho hai nút
-    RectangleShape yesRect(Vector2f(100, 50));
-    RectangleShape noRect(Vector2f(100, 50));
-    yesRect.setPosition(50, 120);
-    noRect.setPosition(200, 120);
-    yesRect.setFillColor(Color(100, 200, 100));
-    noRect.setFillColor(Color(200, 100, 100));
+    Button noButton;
+    noButton.setTextButton(string("Button no"), "NO", "../assets/fonts/TimesNewRoman.ttf", 100.f, 40.f, 160.f, 60.f);
 
     while (window.isOpen()) {
         Event event;
@@ -838,13 +827,13 @@ bool GUI::YesNo() {
                 Vector2i mousePos = Mouse::getPosition(window);
 
                 // Kiểm tra nếu nhấn nút YES
-                if (yesRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                if (yesButton.contain(mousePos.x, mousePos.y)) {
                     window.close();
                     return true;
                 }
 
                 // Kiểm tra nếu nhấn nút NO
-                if (noRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                if (noButton.contain(mousePos.x, mousePos.y)) {
                     window.close();
                     return false;
                 }
@@ -853,10 +842,8 @@ bool GUI::YesNo() {
 
         // Vẽ cửa sổ
         window.clear(backgroundColor);
-        window.draw(yesRect);
-        window.draw(noRect);
-        window.draw(yesButton);
-        window.draw(noButton);
+        yesButton.drawText(window);
+        noButton.drawText(window);
         window.display();
     }
 
