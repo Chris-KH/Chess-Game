@@ -771,10 +771,11 @@ string GUI::loadGame(ChessBoard& chessBoard) {
             scroll.handleEvent(event, loadWD);
             if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                 int index = scroll.detectClickedButtonItem(Mouse::getPosition(loadWD), loadWD);
-                if (0 <= index && index < numberOfFile) {
+                if (index == -1) continue;
+                if (0 <= index && index < numberOfFile && GUI::YesNo()) {
                     return fileName.at(index);
                 }
-                else if (numberOfFile <= index && index < 2 * numberOfFile) {
+                else if (numberOfFile <= index && index < 2 * numberOfFile && GUI::YesNo()) {
                     index = index % numberOfFile;
                     if (filesystem::remove(folderPath + "/" + fileName.at(index))) {
                         string tmp = fileName.at(index);
@@ -794,4 +795,70 @@ string GUI::loadGame(ChessBoard& chessBoard) {
     }
 
     return "";
+}
+
+bool GUI::YesNo() {
+    // Tạo cửa sổ với kích thước 300x200 và không có viền
+    RenderWindow window(VideoMode(300, 200), "Yes No", Style::None);
+
+    // Đặt màu nền và kiểu chữ
+    Color backgroundColor = Color(50, 50, 50);
+    Font font;
+    if (!font.loadFromFile("../assets/fonts/TimesNewRoman.ttf")) {
+        // Thay "Arial.ttf" bằng đường dẫn đến file font
+        return false;
+    }
+
+    // Tạo văn bản cho các nút
+    Text yesButton("YES", font, 24);
+    Text noButton("NO", font, 24);
+    yesButton.setFillColor(Color::White);
+    noButton.setFillColor(Color::White);
+
+    // Đặt vị trí cho các nút
+    yesButton.setPosition(50, 120);
+    noButton.setPosition(200, 120);
+
+    // Tạo hình chữ nhật cho hai nút
+    RectangleShape yesRect(Vector2f(100, 50));
+    RectangleShape noRect(Vector2f(100, 50));
+    yesRect.setPosition(50, 120);
+    noRect.setPosition(200, 120);
+    yesRect.setFillColor(Color(100, 200, 100));
+    noRect.setFillColor(Color(200, 100, 100));
+
+    while (window.isOpen()) {
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                window.close();
+                return false;
+            }
+            if (event.type == Event::MouseButtonPressed) {
+                Vector2i mousePos = Mouse::getPosition(window);
+
+                // Kiểm tra nếu nhấn nút YES
+                if (yesRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    window.close();
+                    return true;
+                }
+
+                // Kiểm tra nếu nhấn nút NO
+                if (noRect.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    window.close();
+                    return false;
+                }
+            }
+        }
+
+        // Vẽ cửa sổ
+        window.clear(backgroundColor);
+        window.draw(yesRect);
+        window.draw(noRect);
+        window.draw(yesButton);
+        window.draw(noButton);
+        window.display();
+    }
+
+    return false;
 }

@@ -49,4 +49,6 @@ public:
 
 	//Load Game window
 	static string loadGame(ChessBoard& chessBoard);
+
+	static bool YesNo();
 };
