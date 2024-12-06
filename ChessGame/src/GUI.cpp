@@ -133,7 +133,9 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
         "../assets/Standard Theme/",
         "../assets/Cartoon Theme/",
         "../assets/Pixel Theme/",
-        "../assets/Neo Theme/"
+        "../assets/Neo Theme/",
+        "../assets/Game Room Theme/",
+        "../assets/Neon Theme/"
     };
     vector<std::string> piecePath = {
         color + "-king.png",
@@ -575,6 +577,8 @@ bool GUI::chooseDifficulty(ChessBoard& chessBoard) {
     }
 
     chessBoard.setAISkillLevel(slider.getCurrentStep() + 1);
+
+    return true;
 }
 
 void GUI::saveGame(ChessBoard* chessBoard) {

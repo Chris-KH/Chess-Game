@@ -43,7 +43,7 @@ void Button::setTextButton(string name, string content, string fontPath, float w
 	text.setFont(font);
 	text.setString(content);
 	text.setFillColor(Color::Black);
-	text.setCharacterSize(height - 10);
+	text.setCharacterSize(unsigned(height - 10));
 	text.setPosition(rectangle.getPosition().x + (rectangle.getGlobalBounds().width - text.getGlobalBounds().width) / 2.f, rectangle.getPosition().y);
 	//text.setPosition(rectangle.getPosition().x + 10, rectangle.getPosition().y + 5);
 }
@@ -77,7 +77,7 @@ void Button::setSpriteAndTextButton(string name, string imagePath, string conten
 
 	text.setFont(font);
 	// Text: Text
-	text.setCharacterSize(textHeight + 15);
+	text.setCharacterSize(unsigned(textHeight + 15));
 	text.setFillColor(Color::Black);
 	text.setString(content);
 	// Scale if the text width exceeds the desired width
@@ -130,7 +130,7 @@ void Button::move(float addX, float addY) {
 }
 
 bool Button::contain(int x, int y) {
-	return rectangle.getGlobalBounds().contains(x, y);
+	return rectangle.getGlobalBounds().contains((float)x, (float)y);
 }
 
 void Button::setAvailable(bool available) { this->available = available; }

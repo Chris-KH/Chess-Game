@@ -24,7 +24,9 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
         "Standard",
         "Cartoon",
         "Pixel",
-        "Neo"
+        "Neo",
+        "Game Room",
+        "Neon"
     };
     this->currentBoardIndex = 0;
     this->currentPieceIndex = 0;
