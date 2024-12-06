@@ -39,6 +39,10 @@ void ScrollableArea::addItem(unique_ptr<Button>& item) {
     items.emplace_back(move(item));
 }
 
+void ScrollableArea::addDeleteItem(unique_ptr<Button>& item) {
+    deleteButton.emplace_back(move(item));
+}
+
 // Xử lý sự kiện
 void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
     if (event.type == Event::MouseMoved) {
@@ -144,10 +148,30 @@ void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
         // Đổi màu nếu chuột đang trên thumb
         Vector2i mousePos = Mouse::getPosition(window);
         int but = detectClickedItem(mousePos, window);
-        if (but != lastButton && lastButton != -1) items[lastButton]->getRectangle().setFillColor(Color::White);
+        if (but != lastButton && lastButton != -1) {
+            items[lastButton]->getRectangle().setFillColor(Color::White);
+            if (deleteButton.empty() == false) deleteButton[lastButton]->getRectangle().setFillColor(Color::White);
+        }
         if (but != -1) {
             lastButton = but;
             items[but]->getRectangle().setFillColor(Color(180, 180, 180));
+        }
+        else {
+            lastButton = -1;
+        }
+    }
+
+    if (event.type == Event::MouseWheelScrolled || event.type == Event::MouseMoved) {
+        // Đổi màu nếu chuột đang trên thumb
+        Vector2i mousePos = Mouse::getPosition(window);
+        int but = detectClickedDelete(mousePos, window);
+        if (but != lastButton && lastButton != -1) {
+            items[lastButton]->getRectangle().setFillColor(Color::White);
+            deleteButton[lastButton]->getRectangle().setFillColor(Color::White);
+        }
+        if (but != -1) {
+            lastButton = but;
+            deleteButton[but]->getRectangle().setFillColor(Color::Red);
         }
         else {
             lastButton = -1;
@@ -160,8 +184,18 @@ int ScrollableArea::detectClickedItem(Vector2i mousePosition, RenderWindow& wind
     Vector2f worldPos = window.mapPixelToCoords(mousePosition, view);
 
     for (int i = 0; i < items.size(); ++i) {
-
         if (items[i]->getRectangle().getGlobalBounds().contains(worldPos)) {
+            return i; // Trả về chỉ số phần tử được nhấn
+        }
+    }
+    return -1; // Không nhấn vào phần tử nào
+}
+
+int ScrollableArea::detectClickedDelete(Vector2i mousePosition, RenderWindow& window) {
+    Vector2f worldPos = window.mapPixelToCoords(mousePosition, view);
+
+    for (int i = 0; i < deleteButton.size(); ++i) {
+        if (deleteButton[i]->getRectangle().getGlobalBounds().contains(worldPos)) {
             return i; // Trả về chỉ số phần tử được nhấn
         }
     }
@@ -181,6 +215,10 @@ void ScrollableArea::draw(RenderWindow& window) {
 
     // Vẽ các phần tử
     for (unique_ptr<Button>& but : items) {
+        but->drawText(window);
+    }
+
+    for (unique_ptr<Button>& but : deleteButton) {
         but->drawText(window);
     }
 

@@ -341,6 +341,10 @@ bool ChessBoard::saveGame(const string& path) {
     //Create file
     ofstream fout(srcPath);
 
+    //Is AI<
+    fout << "isAI:" << isAI << '\n';
+    fout << "AILevel:" << AIDifficulty << '\n';
+
     //Get FEN (Forsyth-Edwards Notation)
     string FEN = generateFEN();
     fout << FEN << '\n';
@@ -356,8 +360,8 @@ bool ChessBoard::saveGame(const string& path) {
 }
 
 //Load game
-void ChessBoard::loadGame(const string& path) {
-    GUI::loadGame(*this, path);
+void ChessBoard::loadGame() {
+    string loadFileName = GUI::loadGame(*this);
 }
 
 string ChessBoard::generateLongAlgebraicNotation(Move*& moved) {

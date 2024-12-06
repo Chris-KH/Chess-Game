@@ -714,7 +714,7 @@ void GUI::saveGame(ChessBoard* chessBoard) {
     }
 }
 
-void GUI::loadGame(ChessBoard& chessBoard, string path) {
+string GUI::loadGame(ChessBoard& chessBoard) {
     // Sizes
     const float wdWidth = 800.f, wdHeight = 600.f;
 
@@ -749,6 +749,12 @@ void GUI::loadGame(ChessBoard& chessBoard, string path) {
         scroll.addItem(item);
     }
 
+    for (size_t i = 0; i < numberOfFile; i++) {
+        unique_ptr<Button> deleteItem = make_unique<Button>();
+        deleteItem->setTextButton(string("Delete") + to_string(i + 1), string("X"), "../assets/fonts/TimesNewRoman.ttf", 100.f, 40.f, 670.f, i * 60.f + 20.f);
+        scroll.addDeleteItem(deleteItem);
+    }
+
     Event event;
     // Poll events and handle
     while (loadWD.isOpen()) {
@@ -762,7 +768,10 @@ void GUI::loadGame(ChessBoard& chessBoard, string path) {
             scroll.handleEvent(event, loadWD);
             if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                 int index = scroll.detectClickedItem(Mouse::getPosition(loadWD), loadWD);
-                if (index != -1) cout << fileName[index] << '\n';
+                if (index == -1) {
+                    index = scroll.detectClickedDelete(Mouse::getPosition(loadWD), loadWD);
+                }
+
             }
         }
 
@@ -770,4 +779,6 @@ void GUI::loadGame(ChessBoard& chessBoard, string path) {
         scroll.draw(loadWD);
         loadWD.display();
     }
+
+    return "";
 }

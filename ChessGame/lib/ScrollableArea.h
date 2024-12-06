@@ -7,6 +7,7 @@ private:
     RectangleShape scrollBarThumb;  // Tay cầm thanh cuộn
 
     vector<unique_ptr<Button>> items; // Các phần tử bên trong
+    vector<unique_ptr<Button>> deleteButton;
     float scrollOffset;                   // Độ lệch cuộn
     bool isDragging;                      // Kiểm tra có đang kéo thanh cuộn không
 
@@ -22,10 +23,12 @@ public:
     ScrollableArea(Vector2f position, Vector2f size, RenderWindow& window);
 
     void addItem(unique_ptr<Button>& item);
+    void addDeleteItem(unique_ptr<Button>& item);
     void handleEvent(Event& event, RenderWindow& window);
 
     // Phát hiện phần tử được nhấn
     int detectClickedItem(Vector2i mousePosition, RenderWindow& window);
+    int detectClickedDelete(Vector2i mousePosition, RenderWindow& window);
 
     // Vẽ khu vực cuộn
     void draw(RenderWindow& window);
