@@ -131,7 +131,7 @@ public:
     void freeRedoStack();
 
     //Reset game (new game)
-    void newGame();
+    void newGame(bool isReset = false);
 
     //Save game
     bool saveGame(const string& path);

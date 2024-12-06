@@ -72,7 +72,7 @@ int main() {
                 sideBoard.draw();
                 window.display();
 
-                string bestmove = stockfish.calculateBestMoveWithDepth(10, 1000);
+                string bestmove = stockfish.calculateBestMoveWithDepth(1, 50);
                 tuple<int, int, int, int, char> movePos = chessBoard.processStockfishMove(bestmove);
                 int lastRow = get<0>(movePos);
                 int lastCol = get<1>(movePos);

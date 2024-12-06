@@ -13,8 +13,9 @@ SideBoard::SideBoard(RenderWindow* window, ChessBoard* chessboard) {
     addSpriteButton("setting", "../assets/Button/settings.png", buttonW, buttonH, 1110, 90); // 7. Setting
     addSpriteButton("tie", "../assets/Button/Tie.png", buttonW, buttonH, 1185, 90); // 8. Tie
     spriteButtons.back()->setAvailable(false);
+    addSpriteButton("reset", "../assets/Button/reset.png", buttonW, buttonH, 960, 160); // 9. Reset
 
-    addTextButton("turn indicator", "White's turn", "../assets/fonts/CherryBombOne.ttf", 300, 55, 960, 165);
+    addTextButton("turn indicator", "White's turn", "../assets/fonts/CherryBombOne.ttf", 300, 55, 960, 230);
 
     gameOver = 0;
 }
@@ -85,7 +86,7 @@ bool SideBoard::handleButtonRelease(int mouseX, int mouseY) {
             openedWindow = true;
         }
         else if (selectedBut->getName() == "new") {
-            chessboard->newGame();
+            chessboard->newGame(false);
             openedWindow = true;
         }
         else if (selectedBut->getName() == "surrender" && gameOver == 0) {
@@ -103,6 +104,9 @@ bool SideBoard::handleButtonRelease(int mouseX, int mouseY) {
         else if (selectedBut->getName() == "tie") {
             chessboard->setGameOver(3);
             chessboard->setStateOver("Asked for peace");
+        }
+        else if (selectedBut->getName() == "reset") {
+            chessboard->newGame(true);
         }
     }
 
