@@ -349,10 +349,7 @@ bool ChessBoard::saveGame(const string& path) {
     //Is AI<
     fout << "isAI:" << isAI << '\n';
     fout << "AILevel:" << AIDifficulty << '\n';
-
-    //Get FEN (Forsyth-Edwards Notation)
-    string FEN = generateFEN();
-    fout << FEN << '\n';
+    fout << "HumanColor:" << humanColor << '\n';
 
     //Get Algebraic Notation
     /*  
@@ -361,12 +358,71 @@ bool ChessBoard::saveGame(const string& path) {
         LAN (Long algebraic notation)
     */
 
+    for (int i = 0; i < (int)undoStack.size(); i++) {
+        fout << generateLongAlgebraicNotation(undoStack[i]) << " ";
+    }
+
+    for (int i = (int)redoStack.size() - 1; i >= 0; i--) {
+        fout << generateLongAlgebraicNotation(redoStack[i]) << " ";
+    }
+
     return true;
 }
 
 //Load game
 void ChessBoard::loadGame() {
-    string loadFileName = GUI::loadGame(*this);
+    string fileName = GUI::loadGame(*this);
+    string filePath = "../save/" + fileName;
+
+    ifstream fin(filePath);
+
+    if (fin.is_open() == false) return;
+
+    string isAIMode;
+    getline(fin, isAIMode);
+
+    string AILevel;
+    getline(fin, AILevel);
+
+    string humanColor;
+    getline(fin, humanColor);
+
+    string moveSequence;
+    getline(fin, moveSequence);
+
+    newGame(true);
+    this->stockfish->newGame();
+    this->isAI = true;
+    this->stockfish->setSkillLevel(stoi(AILevel.substr(8)));
+    this->humanColor = (humanColor.at(11) == '1' ? true : false);
+
+    draw();
+    window->display();
+
+    stringstream ss(moveSequence);
+    string move;
+    while (ss >> move) {
+        tuple<int, int, int, int, char> movePos = processStockfishMove(move);
+        int lastRow = get<0>(movePos);
+        int lastCol = get<1>(movePos);
+        int row = get<2>(movePos);
+        int col = get<3>(movePos);
+        char promotionPiece = get<4>(movePos);
+
+        Move* curMove = nullptr;
+
+        vector<pair<int, int>> possibleMoves;
+        getPossibleMoves(getPieceAtIndex(lastRow, lastCol), possibleMoves);
+
+        makeMove(lastRow, lastCol, row, col, possibleMoves, curMove, promotionPiece);
+
+        draw();
+        window->display();
+
+        Sleep(100);
+    }
+
+    this->isAI = (isAIMode.at(5) == '1' ? true : false);
 }
 
 string ChessBoard::generateLongAlgebraicNotation(Move*& moved) {
