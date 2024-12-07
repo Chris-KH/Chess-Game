@@ -514,7 +514,10 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     else haftMoveClock++;
 
     curMove->setPieceMoved(board[lastRow][lastCol]);
-    if (deletePiece) curMove->setPieceCaptured(deletePiece);
+    if (deletePiece) {
+        curMove->setPieceCaptured(deletePiece);
+        playSound(4);
+    }
     selectedPiece = nullptr;
     board[row][col].reset();
     board[row][col] = move(board[lastRow][lastCol]);
@@ -538,6 +541,8 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         }
     }
 
+    bool ordinaryMove = true;
+
     //Check enPassant
     if (board[row][col]->getType() == "pawn" && abs(col - lastCol) == 1 && !deletePiece) {
         if (board[row][col]->getColor()) {
@@ -550,6 +555,8 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
             curMove->setEnPassant(true);
             board[row - 1][col].reset();
         }
+        playSound(4);
+        ordinaryMove = false;
     }
 
     //Check Castling
@@ -565,6 +572,8 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
             curMove->setIsKingSide(false);
             board[row][col]->attemptCastling(board, false);
         }
+        playSound(5);
+        ordinaryMove = false;
     }
     // Check promotion
     else if (board[row][col]->getType() == "pawn" && board[row][col]->checkPromote()) {
@@ -590,7 +599,11 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         board[row][col]->setPosition(col, row);
         curMove->setPromotion(true);
         curMove->setPromotionPiece(board[row][col]);
+        playSound(6);
+        ordinaryMove = false;
     }
+
+    if (ordinaryMove) playSound(0);
 
     undoPress = false;
     undoStack.push_back(curMove);
@@ -615,17 +628,23 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     {
         if (isCheck(whiteTurn, true)) {
             if (cannotMove()) {
+                playSound(2);
                 gameOver = whiteTurn + 1;
                 stateOver = "Checkmate";
+            }
+            else {
+                playSound(1);
             }
         }
         else {
             if (cannotMove()) {
                 gameOver = 3; // Stalemate
                 stateOver = "Stalemate";
+                playSound(3);
             }
             else if (isTie()) {
                 gameOver = 3; // Other kinds of tie
+                playSound(3);
             }
         }
         isCheck(1 - whiteTurn, true); // Delete old check highlight if it exists

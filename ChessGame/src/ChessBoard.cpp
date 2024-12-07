@@ -7,11 +7,11 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
     this->stockfish = stockfish;
     this->isAI = isAI;
     boardFiles = {
-            "../assets/Chess Board/ChessBoard1.png",
-            "../assets/Chess Board/ChessBoard2.png",
-            "../assets/Chess Board/ChessBoard3.png",
-            "../assets/Chess Board/ChessBoard4.png",
-            "../assets/Chess Board/ChessBoard5.png"
+        "../assets/Chess Board/ChessBoard1.png",
+        "../assets/Chess Board/ChessBoard2.png",
+        "../assets/Chess Board/ChessBoard3.png",
+        "../assets/Chess Board/ChessBoard4.png",
+        "../assets/Chess Board/ChessBoard5.png"
     };
     boardName = {
         "Gray",
@@ -28,8 +28,30 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
         "Game Room",
         "Neon"
     };
+    soundThemePath = {
+        "",
+        "../assets/sounds/standard",
+        "../assets/sounds/metal",
+        "../assets/sounds/space"
+    };
+    soundThemeName = {
+        "None",
+        "Standard",
+        "Metal",
+        "Space"
+    };
+    soundName = {
+        "move-self",
+        "move-check",
+        "game-win",
+        "game-draw",
+        "capture",
+        "castle",
+        "promote"
+    };
     this->currentBoardIndex = 0;
     this->currentPieceIndex = 0;
+    this->currentSoundIndex = 0;
 
     // Set texture for chess board
     // Load first texture
@@ -84,6 +106,9 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
     addPiece(make_unique<Pawn>(false, 6, 1), 6, 1);
     addPiece(make_unique<Pawn>(false, 7, 1), 7, 1);
 
+    // Sound
+    sounds.resize(7);
+
     // Player turn
     whiteTurn = true;
     fullMoveNumber = 1;
@@ -122,6 +147,19 @@ void ChessBoard::addPiece(unique_ptr<Pieces> piece, int col, int row) {
     board[row][col].reset();
     board[row][col] = move(piece);
 }
+
+void ChessBoard::setGameOver(int val) { gameOver = val; }
+void ChessBoard::setStateOver(string state) { stateOver = state; }
+vector<string>& ChessBoard::getBoardList(void) { return boardName; }
+vector<string>& ChessBoard::getPieceList(void) { return pieceName; }
+vector<string>& ChessBoard::getSoundList(void) { return soundThemeName; }
+bool ChessBoard::isWhiteTurn(void) const { return this->whiteTurn; }
+int ChessBoard::isOver(void) const { return gameOver; }
+string ChessBoard::getStateOver(void) const { return stateOver; }
+int ChessBoard::getBoardIndex(void) const { return currentBoardIndex; }
+int ChessBoard::getPieceIndex(void) const { return currentPieceIndex; }
+int ChessBoard::getSoundIndex(void) const { return currentSoundIndex; }
+Sprite ChessBoard::getBoardSprite(void) const { return boardSprite; }
 
 bool ChessBoard::loadBoardTexture(const string& filePath) {
     //Dùng để khởi tạo / thay đổi bàn cờ
@@ -176,6 +214,19 @@ bool ChessBoard::changePieces(int newIndex) {
         return true;
     }
     return false;
+}
+
+bool ChessBoard::changeSound(int newIndex) {
+    currentSoundIndex = newIndex;
+    // nexIndex == 0 --> No music
+    if (newIndex > 0 && newIndex < (int)soundName.size()) {
+        for(int i = 0; i < (int)sounds.size(); i++) {
+            if (!sounds[i].first.loadFromFile(soundThemePath[newIndex] + "/" + soundName[i] + ".mp3")) {
+                throw runtime_error("Cannot load sound files: " + soundThemePath[newIndex] + "/" + soundName[i] + ".mp3");
+            }
+            sounds[i].second.setBuffer(sounds[i].first);
+        }
+    }
 }
 
 void ChessBoard::update(const Event& event) {
@@ -271,6 +322,11 @@ Pieces* ChessBoard::getPieceAtIndex(int row, int col) {
     if (!board[row][col]) return nullptr;
 
     return board[row][col].get();
+}
+
+void ChessBoard::playSound(int id) {
+    if (currentSoundIndex == 0) return;
+    sounds[id].second.play();
 }
 
 void ChessBoard::handleMousePress(int mouseX, int mouseY, bool enableClick, bool enableDrag) {

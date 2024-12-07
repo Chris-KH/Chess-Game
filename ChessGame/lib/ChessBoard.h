@@ -28,9 +28,23 @@ private:
     RenderWindow* window; // SFML window
     Texture boardTexture; // Texture of chessBoard
     Sprite boardSprite;   // Sprite of chessBoard
+    
+    // Sound
+    /* 
+    * sounds[0] = move
+    * sounds[1] = check
+    * sounds[2] = checkmate
+    */
+    vector<pair<SoundBuffer, Sound>> sounds; 
+
     vector<string> boardFiles; // Path list of chessBoard
+    vector<string> soundThemePath; // Path list of sounds
     vector<string> boardName; // Name of each corresponding board
-    vector<string> pieceName; // Name of each corresponding board
+    vector<string> pieceName; // Name of each corresponding piece
+    vector<string> soundThemeName; // Name of each corresponding sound theme
+    vector<string> soundName; // Name of each corresponding sound
+
+    int currentSoundIndex; // sound index
     int currentBoardIndex; // board indexing
     int currentPieceIndex; // piece index
 
@@ -88,21 +102,25 @@ public:
     void updateBoardScale();
     bool changeBoard(int newIndex);
     bool changePieces(int newIndex);
+    bool changeSound(int newIndex);
     void addPiece(unique_ptr<Pieces> piece, int col, int row);
-    void setGameOver(int val) { gameOver = val; }
-    void setStateOver(string state) { stateOver = state; }
+    void setGameOver(int val);
+    void setStateOver(string state);
     size_t countPieces();
 
     // Get
-    vector<string>& getBoardList(void) { return boardName; }
-    vector<string>& getPieceList(void) { return pieceName; }
-    bool isWhiteTurn(void) const { return this->whiteTurn; }
-    int isOver(void) const { return gameOver; }
-    string getStateOver(void) const { return stateOver; }
-    int getBoardIndex(void) const { return currentBoardIndex; }
-    int getPieceIndex(void) const { return currentPieceIndex; }
-    Sprite getBoardSprite(void) const { return boardSprite; }
+    vector<string>& getBoardList(void);
+    vector<string>& getPieceList(void);
+    vector<string>& getSoundList(void);
+    bool isWhiteTurn(void) const;
+    int isOver(void) const;
+    string getStateOver(void) const;
+    int getBoardIndex(void) const;
+    int getPieceIndex(void) const;
+    int getSoundIndex(void) const;
+    Sprite getBoardSprite(void) const;
     Pieces* getPieceAtIndex(int row, int col);
+    void playSound(int id);
 
     // Draw
     void update(const Event& ev);

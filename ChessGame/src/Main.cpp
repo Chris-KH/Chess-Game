@@ -85,9 +85,8 @@ int main() {
                 vector<pair<int, int>> possibleMoves;
                 chessBoard.getPossibleMoves(chessBoard.getPieceAtIndex(lastRow, lastCol), possibleMoves);
 
+                Sleep(500);
                 chessBoard.makeMove(lastRow, lastCol, row, col, possibleMoves, curMove, promotionPiece);
-
-                Sleep(300);
 
                 if (chessBoard.isOver() != 0 && gameOver == 0) {
                     window.clear(Color(60, 60, 60, 255));
