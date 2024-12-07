@@ -1,0 +1,4 @@
+isAI:0
+AILevel:20
+HumanColor:1
+e2e4 b7b5 e4e5 d7d5 e5d6 e7e6 d6c7 d8e7 c7b8q e7b7 b8b7 

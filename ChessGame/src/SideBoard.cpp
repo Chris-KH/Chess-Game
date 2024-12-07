@@ -98,7 +98,7 @@ bool SideBoard::handleButtonRelease(int mouseX, int mouseY) {
             openedWindow = true;
         }
         else if (selectedBut->getName() == "load") {
-            chessboard->loadGame("");
+            chessboard->loadGame();
             openedWindow = true;
         }
         else if (selectedBut->getName() == "tie") {

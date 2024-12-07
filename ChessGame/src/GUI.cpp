@@ -730,7 +730,7 @@ void GUI::saveGame(ChessBoard* chessBoard) {
     }
 }
 
-void GUI::loadGame(ChessBoard& chessBoard, string path) {
+string GUI::loadGame(ChessBoard& chessBoard) {
     // Sizes
     const float wdWidth = 800.f, wdHeight = 600.f;
 
@@ -765,11 +765,16 @@ void GUI::loadGame(ChessBoard& chessBoard, string path) {
         scroll.addButtonItem(item);
     }
 
+    for (size_t i = 0; i < numberOfFile; i++) {
+        unique_ptr<Button> deleteItem = make_unique<Button>();
+        deleteItem->setTextButton(string("Delete") + to_string(i + 1), string("X"), "../assets/fonts/TimesNewRoman.ttf", 100.f, 40.f, 670.f, i * 60.f + 20.f);
+        scroll.addButtonItem(deleteItem);
+    }
+
     Event event;
     // Poll events and handle
     while (loadWD.isOpen()) {
         loadWD.requestFocus();
-
         while (loadWD.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 loadWD.close();
@@ -778,7 +783,21 @@ void GUI::loadGame(ChessBoard& chessBoard, string path) {
             scroll.handleEvent(event, loadWD);
             if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
                 int index = scroll.detectClickedButtonItem(Mouse::getPosition(loadWD), loadWD);
-                if (index != -1) cout << fileName[index] << '\n';
+                if (index == -1) continue;
+                if (0 <= index && index < numberOfFile && GUI::YesNo()) {
+                    return fileName.at(index);
+                }
+                else if (numberOfFile <= index && index < 2 * numberOfFile && GUI::YesNo()) {
+                    index = index % numberOfFile;
+                    if (filesystem::remove(folderPath + "/" + fileName.at(index))) {
+                        string tmp = fileName.at(index);
+                        scroll.removeButtonItem(index);
+                        fileName.erase(fileName.begin() + index);
+                        numberOfFile--;
+                        cout << "Delete file " << tmp << "\n";
+                    }
+                    
+                }
             }
         }
 
@@ -786,4 +805,59 @@ void GUI::loadGame(ChessBoard& chessBoard, string path) {
         scroll.draw(loadWD);
         loadWD.display();
     }
+
+    return "";
+}
+
+bool GUI::YesNo() {
+    // Tạo cửa sổ với kích thước 300x200 và không có viền
+    RenderWindow window(VideoMode(300, 150), "Yes No", Style::None);
+
+    // Đặt màu nền và kiểu chữ
+    Color backgroundColor = Color(160, 206, 235); // Sky blue
+    Font font;
+    if (!font.loadFromFile("../assets/fonts/TimesNewRoman.ttf")) {
+        // Thay "Arial.ttf" bằng đường dẫn đến file font
+        return false;
+    }
+
+
+    Button yesButton;
+    yesButton.setTextButton(string("Button yes"), "YES", "../assets/fonts/TimesNewRoman.ttf", 100.f, 40.f, 40.f, 60.f);
+
+    Button noButton;
+    noButton.setTextButton(string("Button no"), "NO", "../assets/fonts/TimesNewRoman.ttf", 100.f, 40.f, 160.f, 60.f);
+
+    while (window.isOpen()) {
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                window.close();
+                return false;
+            }
+            if (event.type == Event::MouseButtonPressed) {
+                Vector2i mousePos = Mouse::getPosition(window);
+
+                // Kiểm tra nếu nhấn nút YES
+                if (yesButton.contain(mousePos.x, mousePos.y)) {
+                    window.close();
+                    return true;
+                }
+
+                // Kiểm tra nếu nhấn nút NO
+                if (noButton.contain(mousePos.x, mousePos.y)) {
+                    window.close();
+                    return false;
+                }
+            }
+        }
+
+        // Vẽ cửa sổ
+        window.clear(backgroundColor);
+        yesButton.drawText(window);
+        noButton.drawText(window);
+        window.display();
+    }
+
+    return false;
 }

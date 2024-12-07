@@ -1,9 +1,9 @@
 ﻿#include "../lib/ScrollableArea.h"
 
-ScrollableArea::ScrollableArea(Vector2f position, Vector2f size, RenderWindow& window) {
+ScrollableArea::ScrollableArea(Vector2f position, Vector2f size, RenderWindow& window) : window(window) {
     // Khu vực hiển thị
     container.setPosition(position);
-    container.setSize(Vector2f(size.x, max(size.y, (float)window.getSize().y)));
+    container.setSize(Vector2f(size.x, max(size.y, 1200.f)));
     container.setFillColor(Color(50, 50, 50)); // Màu nền
     container.setOutlineColor(Color::Black);
 
@@ -79,6 +79,28 @@ void ScrollableArea::addFixedExternalRectangleShape(RectangleShape* item) {
 
 void ScrollableArea::addFixedExternalButton(Button* item) {
     fixedExtButs.push_back(item);
+}
+
+void ScrollableArea::removeButtonItem(int index) {
+    int size = buttonItems.size() / 2;
+    if (index < 0 && index >= size) return;
+    
+    buttonItems.erase(buttonItems.begin() + size + index);
+    buttonItems.erase(buttonItems.begin() + index);
+
+    size--;
+
+    for (size_t i = 0; i < size; i++) {
+        buttonItems[i]->setTextButton(string("Button") + to_string(i + 1), buttonItems[i]->getContent(), "../assets/fonts/TimesNewRoman.ttf", 600.f, 40.f, 40.f, i * 60.f + 20.f);
+    }
+
+    for (size_t i = 0; i < size; i++) {
+        buttonItems[i + size]->setTextButton(string("Delete") + to_string(i + 1), string("X"), "../assets/fonts/TimesNewRoman.ttf", 100.f, 40.f, 670.f, i * 60.f + 20.f);
+    }
+
+    lastButton = -1;
+
+    draw(this->window);
 }
 
 // Xử lý sự kiện
@@ -190,7 +212,8 @@ void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
         if (but != lastButton && lastButton != -1) buttonItems[lastButton]->getRectangle().setFillColor(Color::White);
         if (but != -1) {
             lastButton = but;
-            buttonItems[but]->getRectangle().setFillColor(Color(180, 180, 180));
+            if (but >= (int)buttonItems.size() / 2) buttonItems[but]->getRectangle().setFillColor(Color::Red);
+            else buttonItems[but]->getRectangle().setFillColor(Color(180, 180, 180));
         }
         else {
             lastButton = -1;

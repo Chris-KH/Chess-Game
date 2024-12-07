@@ -48,5 +48,7 @@ public:
 	static void saveGame(ChessBoard* chessBoard);
 
 	//Load Game window
-	static void loadGame(ChessBoard& chessBoard, string path);
+	static string loadGame(ChessBoard& chessBoard);
+
+	static bool YesNo();
 };

@@ -3,6 +3,7 @@
 
 class ScrollableArea {
 private:
+    RenderWindow& window;
     RectangleShape container;       // Khu vực hiển thị
     RectangleShape scrollBarTrack;  // Đường dẫn thanh cuộn
     RectangleShape scrollBarThumb;  // Tay cầm thanh cuộn
@@ -45,6 +46,7 @@ public:
     void addButtonItem(unique_ptr<Button>& item);
     void addSpriteItem(unique_ptr<Sprite>& item);
     void addDropDownButtonItem(unique_ptr<DropDownButton>& item);
+    void removeButtonItem(int index);
 
     // Bên ngoài
     void addExternalButton(Button* item);
