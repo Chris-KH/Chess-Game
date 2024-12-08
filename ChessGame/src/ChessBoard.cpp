@@ -218,7 +218,7 @@ bool ChessBoard::changePieces(int newIndex) {
 
 bool ChessBoard::changeSound(int newIndex) {
     currentSoundIndex = newIndex;
-    // nexIndex == 0 --> No music
+    // nexIndex == 0 --> No sound
     if (newIndex > 0 && newIndex < (int)soundName.size()) {
         for(int i = 0; i < (int)sounds.size(); i++) {
             if (!sounds[i].first.loadFromFile(soundThemePath[newIndex] + "/" + soundName[i] + ".mp3")) {

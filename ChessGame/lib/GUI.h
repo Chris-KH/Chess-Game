@@ -22,6 +22,7 @@ using namespace sf;
 #include "ScrollableArea.h"
 #include "Slider.h"
 #include "DropDownButton.h"
+#include "BGM.h"
 
 
 class GUI {
@@ -31,9 +32,12 @@ public:
 	static unique_ptr<Pieces> promoteChoice(unique_ptr<Pieces>& piece);
 
 	//Setting window
-	static void settingChoice(ChessBoard &chessBoard);
+	static void settingChoice(ChessBoard &chessBoard, BGM &backgroundMusic);
 	static void setPiece(int num, const vector<std::string>& pieceThemePath, const vector<std::string>& piecePath, vector<Texture>& pieceTexture, vector<Sprite>& reviewPiece);
-	static void handlePressSetting(Event::MouseButtonEvent mouse, const View& view, Button *&selectedButton, DropDownButton *&selectedDropDownButton, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList, int initBoard, int initPiece, int initSound, ChessBoard& chessBoard, RenderWindow& window);
+	static void handlePressSetting(Event::MouseButtonEvent mouse, const View& view, 
+		Button *&selectedButton, DropDownButton *&selectedDropDownButton, vector<Button*> &buttonList, vector<DropDownButton*> &dropDownButtonList, 
+		int initBoard, int initPiece, int initSound, int initMusic, 
+		ChessBoard& chessBoard, BGM& backgroundMusic, RenderWindow& window);
 
 	//Game Over window
 	static void gameOver(ChessBoard &chessBoard);

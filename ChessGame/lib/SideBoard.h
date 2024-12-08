@@ -5,6 +5,7 @@ class SideBoard {
 private:
     RenderWindow* window;
     ChessBoard* chessboard;
+    BGM* backgroundMusic;
     // Buttons
     vector<unique_ptr<Button>> spriteButtons, textButtons;
     Button* selectedBut = nullptr;
@@ -13,7 +14,7 @@ private:
 public:
     // Constructor
     //SideBoard() {}
-    SideBoard(RenderWindow *window, ChessBoard *chessboard);
+    SideBoard(RenderWindow *window, ChessBoard *chessboard, BGM *backgroundMusic);
     // Update
     void addSpriteButton(std::string name, std::string path, int sizeX, int sizeY, int posX, int posY); // Add a new button with name, path to the image file, width, height, position x, and y
     void addTextButton(std::string name, std::string content, std::string font, int width, int height, int posX, int posY); // Add a text button

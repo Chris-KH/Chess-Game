@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\BGM.cpp" />
     <ClCompile Include="..\src\Bishop.cpp" />
     <ClCompile Include="..\src\Button.cpp" />
     <ClCompile Include="..\src\ChessBoard.cpp" />
@@ -41,6 +42,7 @@
     <ClCompile Include="..\src\StockFish.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\lib\BGM.h" />
     <ClInclude Include="..\lib\Bishop.h" />
     <ClInclude Include="..\lib\Button.h" />
     <ClInclude Include="..\lib\ChessBoard.h" />

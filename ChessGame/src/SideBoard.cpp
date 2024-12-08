@@ -1,7 +1,6 @@
 ﻿#include "../lib/SideBoard.h"
-SideBoard::SideBoard(RenderWindow* window, ChessBoard* chessboard) {
-    this->window = window;
-    this->chessboard = chessboard;
+SideBoard::SideBoard(RenderWindow* window, ChessBoard* chessboard, BGM* backgroundMusic) 
+    : window(window), chessboard(chessboard), backgroundMusic(backgroundMusic) {
     // Buttons
     const int buttonW = 55, buttonH = 55;
     addSpriteButton("new", "../assets/Button/new.png", buttonW, buttonH, 960, 20); // 1. New
@@ -94,7 +93,7 @@ bool SideBoard::handleButtonRelease(int mouseX, int mouseY) {
             chessboard->setStateOver("Surrendered");
         }
         else if (selectedBut->getName() == "setting") {
-            GUI::settingChoice(*chessboard);
+            GUI::settingChoice(*chessboard, *backgroundMusic);
             openedWindow = true;
         }
         else if (selectedBut->getName() == "load") {

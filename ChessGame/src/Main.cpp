@@ -14,6 +14,7 @@ using namespace sf;
 //#include "../lib/Game.h"
 #include "../lib/ChessBoard.h"
 #include "../lib/SideBoard.h"
+#include "../lib/BGM.h"
 #include "../lib/StockFish.h"
 
 int main() {
@@ -30,8 +31,9 @@ int main() {
         // Set icon for window
         window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
+        BGM backgroundMusic;
         ChessBoard chessBoard(&window, &stockfish, false);
-        SideBoard sideBoard(&window, &chessBoard);
+        SideBoard sideBoard(&window, &chessBoard, &backgroundMusic);
 
         RectangleShape background(Vector2f((float)window.getSize().x - (float)window.getSize().y, 300.f));
         background.setFillColor(Color::Black);

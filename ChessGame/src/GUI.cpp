@@ -117,7 +117,7 @@ unique_ptr<Pieces> GUI::promoteChoice(unique_ptr<Pieces>& piece) {
     return nullptr;
 }
 
-void GUI::settingChoice(ChessBoard &chessBoard) {
+void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
     /*
     * @Brief: Open a new setting window
     * @How to close: Click "Save" button to exit
@@ -127,6 +127,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     const int initBoard = chessBoard.getBoardIndex();
     const int initPiece = chessBoard.getPieceIndex();
     const int initSound = chessBoard.getSoundIndex();
+    const int initMusic = backgroundMusic.getID();
     const std::string color = chessBoard.isWhiteTurn() ? "white" : "black";
 
     // Paths
@@ -168,6 +169,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     const float changeBoardSpace = previewBoardSpace + previewBoardHeight + lineSpace;
     const float changePieceSpace = changeBoardSpace + dropDownButtonHeight + lineSpace;
     const float changeSoundSpace = changePieceSpace + dropDownButtonHeight + lineSpace;
+    const float changeMusicSpace = changeSoundSpace + dropDownButtonHeight + lineSpace;
 
     // Open setting window
     RenderWindow settingWD(VideoMode((unsigned)wdWidth, (unsigned)wdHeight), "Setting", Style::Close | Style::Titlebar);
@@ -208,6 +210,12 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     textSound.setPosition(leftSpace, changeSoundSpace);
     DropDownButton sound(&settingWD, "Sound", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, changeSoundSpace, chessBoard.getSoundList(), chessBoard.getSoundIndex());
 
+    // Change music button
+    Text textMusic("Music", fontTitle, (unsigned)dropDownButtonTitleHeight);
+    textMusic.setFillColor(Color::White);
+    textMusic.setPosition(leftSpace, changeMusicSpace);
+    DropDownButton music(&settingWD, "Music", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, changeMusicSpace, backgroundMusic.getNameList(), backgroundMusic.getID());
+
     // Background
     RectangleShape background(Vector2f((float)settingWD.getSize().x, 100.0f));
     background.setFillColor(Color::Black);
@@ -230,15 +238,22 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
     
     vector<Button*> buttonList(2, nullptr);
     vector<Sprite*> spriteList(11, nullptr);
-    vector<DropDownButton*> dropDownButtonList(3, nullptr);
-    vector<Text*> textList(3, nullptr);
+    vector<DropDownButton*> dropDownButtonList(4, nullptr);
+    vector<Text*> textList(4, nullptr);
     vector<RectangleShape*> rectangleShapeList(1, nullptr);
 
+    // Sprites
     spriteList[0] = &previewBoard;
     for (int i = 0; i < 10; i++) spriteList[i + 1] = &reviewPiece[i];
+    // Texts
     textList[0] = &textBoard, textList[1] = &textPiece, textList[2] = &textSound;
+    textList[3] = &textMusic;
+    // Buttons
     buttonList[0] = &apply, buttonList[1] = &cancel;
+    // Dropdown buttons
     dropDownButtonList[0] = &board, dropDownButtonList[1] = &piece, dropDownButtonList[2] = &sound;
+    dropDownButtonList[3] = &music;
+    // Rectange shapes
     rectangleShapeList[0] = &background;
 
     for (int i = 0; i < (int)spriteList.size(); i++) {
@@ -273,7 +288,7 @@ void GUI::settingChoice(ChessBoard &chessBoard) {
             }
             else if (event.type == Event::MouseButtonPressed && mouse.button == Mouse::Left) {
                 int lastPieceIndex = chessBoard.getPieceIndex();
-                handlePressSetting(mouse, scroll.getView(), selectedButton, selectedDropDownButton, buttonList, dropDownButtonList, initBoard, initPiece, initSound, chessBoard, settingWD);
+                handlePressSetting(mouse, scroll.getView(), selectedButton, selectedDropDownButton, buttonList, dropDownButtonList, initBoard, initPiece, initSound, initMusic, chessBoard, backgroundMusic, settingWD);
                 if(lastPieceIndex != chessBoard.getPieceIndex()) 
                     setPiece(chessBoard.getPieceIndex(), pieceThemePath, piecePath, pieceTexture, reviewPiece);
             }
@@ -300,7 +315,10 @@ void GUI::setPiece(int num, const vector<std::string>& pieceThemePath, const vec
     }
 }
 
-void GUI::handlePressSetting(Event::MouseButtonEvent mouse, const View& view, Button*& selectedButton, DropDownButton*& selectedDropDownButton, vector<Button*>& buttonList, vector<DropDownButton*>& dropDownButtonList, int initBoard, int initPiece, int initSound, ChessBoard& chessBoard, RenderWindow& window) {
+void GUI::handlePressSetting(Event::MouseButtonEvent mouse, const View& view, 
+    Button*& selectedButton, DropDownButton*& selectedDropDownButton, vector<Button*>& buttonList, vector<DropDownButton*>& dropDownButtonList, 
+    int initBoard, int initPiece, int initSound, int initMusic, 
+    ChessBoard& chessBoard, BGM& backgroundMusic, RenderWindow& window) {
     Vector2f mouseWindow = window.mapPixelToCoords({ mouse.x, mouse.y }); // Mouse cho phần tử cố định
     Vector2f mouseView = window.mapPixelToCoords({ mouse.x, mouse.y }, view); // Mouse cho phần tử không cố định
     
@@ -320,6 +338,7 @@ void GUI::handlePressSetting(Event::MouseButtonEvent mouse, const View& view, Bu
             chessBoard.changeBoard(initBoard);
             chessBoard.changePieces(initPiece);
             chessBoard.changeSound(initSound);
+            backgroundMusic.change(initMusic);
             window.close();
         }
     }
@@ -336,6 +355,9 @@ void GUI::handlePressSetting(Event::MouseButtonEvent mouse, const View& view, Bu
         }
         else if (lastDropDownButton->getName() == "Sound") {
             chessBoard.changeSound(optionVal);
+        }
+        else if (lastDropDownButton->getName() == "Music") {
+            backgroundMusic.change(optionVal);
         }
         lastDropDownButton->setClick(0);
         return;
