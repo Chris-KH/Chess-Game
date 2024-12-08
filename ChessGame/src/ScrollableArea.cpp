@@ -225,7 +225,7 @@ void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
     }
 
     for (int i = 0; i < (int)extSliders.size(); i++) {
-        extSliders[i]->handleEvent(event, window);
+        extSliders[i]->handleEvent(event, window, getView());
     }
 }
 

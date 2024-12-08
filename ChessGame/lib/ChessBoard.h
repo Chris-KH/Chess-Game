@@ -49,6 +49,7 @@ private:
 
     Font font; // Font of text and number
 
+    Pieces* lastPiece = nullptr;
     Pieces* selectedPiece = nullptr;
     Pieces* pieceFollowingMouse = nullptr;
     vector<RectangleShape> highlightTiles; // List of squares need to highlight

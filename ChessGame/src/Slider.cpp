@@ -19,11 +19,12 @@ Slider::Slider(float x, float y, float width, float height, int steps)
     currentStep = 0; // Start at the first step
 }
 
-void Slider::handleEvent(const sf::Event& event, sf::RenderWindow& window) {
+void Slider::handleEvent(const sf::Event& event, sf::RenderWindow& window, const View& view) {
+    Vector2f mousePos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y }, view);
     // Nhấn chuột trái
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         // Knob chứa con chuột
-        if (knob.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+        if (knob.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
             // Cập nhật knob đang bị kéo
             isDragging = true;
         }

@@ -655,6 +655,7 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         if (!promotePiece) promotePiece = make_unique<Queen>(board[row][col]->getColor(), col, row);
         promotePiece->changeTexture(board[row][col]->getCurrentTextureIndex());
         board[row][col].reset();
+        lastPiece = nullptr;
         board[row][col] = move(promotePiece);
         board[row][col]->setPosition(col, row);
         curMove->setPromotion(true);

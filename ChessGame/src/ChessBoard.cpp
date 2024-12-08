@@ -362,7 +362,7 @@ void ChessBoard::playSound(int id) {
 void ChessBoard::handleMousePress(int mouseX, int mouseY) {
     int row = int((mouseY - topMargin) / cellSize);
     int col = int((mouseX - leftMargin) / cellSize);
-    Pieces* lastPiece = selectedPiece;
+    lastPiece = selectedPiece;
     selectedPiece = (0 <= row && row < 8 && 0 <= col && col < 8 ? board[row][col].get() : nullptr);
 
     if (enableClick == true) { // Click-move style
@@ -454,7 +454,7 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
 
     int row = int((mouseY - topMargin) / cellSize);
     int col = int((mouseX - leftMargin) / cellSize);
-    Pieces* lastPiece = selectedPiece;
+    lastPiece = selectedPiece;
     selectedPiece = (0 <= row && row < 8 && 0 <= col && col < 8 ? board[row][col].get() : nullptr);
         
     // Đang press quân cờ
@@ -489,12 +489,13 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
             }
 
         }
-        //Undrag piece
-        lastPiece->unfollowMouse();
+        // Undrag piece
+        if (lastPiece != nullptr) {
+            lastPiece->unfollowMouse();
+        }
         pieceFollowingMouse = nullptr;
         lastPiece = nullptr;
     }
-    assert(pieceFollowingMouse == nullptr);
     highlightTiles.clear();
 }
 

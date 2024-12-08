@@ -10,7 +10,7 @@ using namespace sf;
 class Slider {
 public:
     Slider(float x, float y, float width, float height, int steps); // Khởi tạo thanh slider với vị trí (x, y), kích thước (width, height), và số lượng bước đi steps
-    void handleEvent(const Event& event, RenderWindow& window); // Xử lí các sự kiện
+    void handleEvent(const Event& event, RenderWindow& window, const View& view); // Xử lí các sự kiện
     void draw(RenderWindow& window); // Vẽ track và knob
     
     void setChangeKnobColor(bool change);

@@ -624,7 +624,7 @@ bool GUI::chooseDifficulty(ChessBoard& chessBoard) {
                     AIDiffWD.close();
                 }
             }
-            slider.handleEvent(event, AIDiffWD);
+            slider.handleEvent(event, AIDiffWD, AIDiffWD.getDefaultView());
         }
 
         labelText.setFillColor(slider.getKnobFillColor());
