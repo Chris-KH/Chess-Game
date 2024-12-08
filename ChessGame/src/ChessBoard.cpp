@@ -115,6 +115,9 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
     // Set initial sound
     changeSound(1);
 
+    // Set initial move style = click
+    setEnableClick(true);
+
     // Player turn
     whiteTurn = true;
     fullMoveNumber = 1;
@@ -240,13 +243,13 @@ void ChessBoard::update(const Event& event) {
     if (event.type == Event::MouseButtonPressed && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
-        handleMousePress(mouseX, mouseY, 1, 0);
+        handleMousePress(mouseX, mouseY);
     }
     // Release left mouse
     else if (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left) {
         int mouseX = event.mouseButton.x;
         int mouseY = event.mouseButton.y;
-        handleMouseRelease(mouseX, mouseY, 1, 0);
+        handleMouseRelease(mouseX, mouseY);
     }
     // Drag a piece
     if (pieceFollowingMouse) {
@@ -296,6 +299,10 @@ void ChessBoard::setSoundVolume(float x) {
     }
 }
 
+void ChessBoard::setEnableClick(bool ok) {
+    enableClick = ok;
+}
+
 // Handle mouse operators
 void ChessBoard::getPossibleMoves(Pieces* clickedPiece, vector<pair<int, int>>& vpii) {
     /*
@@ -343,18 +350,22 @@ float ChessBoard::getSoundVolume(void) {
     return sounds[0].second.getVolume();
 }
 
+bool ChessBoard::getEnableClick(void) {
+    return enableClick;
+}
+
 void ChessBoard::playSound(int id) {
     if (currentSoundIndex == 0) return;
     sounds[id].second.play();
 }
 
-void ChessBoard::handleMousePress(int mouseX, int mouseY, bool enableClick, bool enableDrag) {
+void ChessBoard::handleMousePress(int mouseX, int mouseY) {
     int row = int((mouseY - topMargin) / cellSize);
     int col = int((mouseX - leftMargin) / cellSize);
     Pieces* lastPiece = selectedPiece;
     selectedPiece = (0 <= row && row < 8 && 0 <= col && col < 8 ? board[row][col].get() : nullptr);
 
-    if (enableClick) {
+    if (enableClick == true) { // Click-move style
         // Giả sử đang tới lượt của quân trắng
         // Đang không chọn quân cờ
         if (lastPiece == nullptr) {
@@ -413,7 +424,7 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY, bool enableClick, bool
             highlightPossibleMove(selectedPiece);
         }
     }
-    if (enableDrag) {
+    if (enableClick == false) { // Drag-move style
         if (lastPiece != nullptr) {
             if (pieceFollowingMouse == lastPiece) {
                 lastPiece->unfollowMouse();
@@ -437,7 +448,7 @@ void ChessBoard::handleMousePress(int mouseX, int mouseY, bool enableClick, bool
     }
 }
 
-void ChessBoard::handleMouseRelease(int mouseX, int mouseY, bool enableClick, bool enableDrag) {
+void ChessBoard::handleMouseRelease(int mouseX, int mouseY) {
     // Đang thao tác theo kiểu click thì không thao tác theo kiểu drag
     if (enableClick == true) return;
 
@@ -445,48 +456,46 @@ void ChessBoard::handleMouseRelease(int mouseX, int mouseY, bool enableClick, bo
     int col = int((mouseX - leftMargin) / cellSize);
     Pieces* lastPiece = selectedPiece;
     selectedPiece = (0 <= row && row < 8 && 0 <= col && col < 8 ? board[row][col].get() : nullptr);
-
-    if (enableDrag) {
-        // Đang press quân cờ
-        if (lastPiece != nullptr) {
-            if (undoPress == true && isAITurn()) {
-                highlightTiles.clear();
-                lastPiece->unfollowMouse();
-                if (lastPiece->getCol() != col || lastPiece->getRow() != row) {
-                    undoPress = false;
-                    while (redoStack.empty() == false) {
-                        draw();
-                        window->display();
-                        redoMove();
-                        Sleep(100);
-                    }
+        
+    // Đang press quân cờ
+    if (lastPiece != nullptr) {
+        if (undoPress == true && isAITurn()) {
+            highlightTiles.clear();
+            lastPiece->unfollowMouse();
+            if (lastPiece->getCol() != col || lastPiece->getRow() != row) {
+                undoPress = false;
+                while (redoStack.empty() == false) {
                     draw();
                     window->display();
-                    Sleep(50);
+                    redoMove();
+                    Sleep(100);
                 }
-                pieceFollowingMouse = nullptr;
-                lastPiece = nullptr;
-                assert(pieceFollowingMouse == nullptr);
-                return;
+                draw();
+                window->display();
+                Sleep(50);
             }
-            else if (lastPiece->getColor() == isWhiteTurn()) {
-                vector<pair<int, int>> possibleMoves;
-                getPossibleMoves(lastPiece, possibleMoves);
-                if (lastPiece->canMoveTo(row, col, possibleMoves)) {
-                    Move* curMove = nullptr;
-                    //Make piece move
-                    makeMove(lastPiece->getRow(), lastPiece->getCol(), row, col, possibleMoves, curMove);
-                }
-
-            }
-            //Undrag piece
-            lastPiece->unfollowMouse();
             pieceFollowingMouse = nullptr;
             lastPiece = nullptr;
+            assert(pieceFollowingMouse == nullptr);
+            return;
         }
-        assert(pieceFollowingMouse == nullptr);
-        highlightTiles.clear();
+        else if (lastPiece->getColor() == isWhiteTurn()) {
+            vector<pair<int, int>> possibleMoves;
+            getPossibleMoves(lastPiece, possibleMoves);
+            if (lastPiece->canMoveTo(row, col, possibleMoves)) {
+                Move* curMove = nullptr;
+                //Make piece move
+                makeMove(lastPiece->getRow(), lastPiece->getCol(), row, col, possibleMoves, curMove);
+            }
+
+        }
+        //Undrag piece
+        lastPiece->unfollowMouse();
+        pieceFollowingMouse = nullptr;
+        lastPiece = nullptr;
     }
+    assert(pieceFollowingMouse == nullptr);
+    highlightTiles.clear();
 }
 
 void ChessBoard::highlightPossibleMove(Pieces* clickedPiece) {

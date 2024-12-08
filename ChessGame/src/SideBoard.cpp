@@ -13,6 +13,7 @@ SideBoard::SideBoard(RenderWindow* window, ChessBoard* chessboard, BGM* backgrou
     addSpriteButton("tie", "../assets/Button/Tie.png", buttonW, buttonH, 1185, 90); // 8. Tie
     spriteButtons.back()->setAvailable(false);
     addSpriteButton("reset", "../assets/Button/reset.png", buttonW, buttonH, 960, 160); // 9. Reset
+    addSpriteButton("exit", "../assets/Button/exit.png", buttonW, buttonH, 1035, 160); // 10. Exit
 
     addTextButton("turn indicator", "White's turn", "../assets/fonts/CherryBombOne.ttf", 300, 55, 960, 230);
 
@@ -106,6 +107,9 @@ bool SideBoard::handleButtonRelease(int mouseX, int mouseY) {
         }
         else if (selectedBut->getName() == "reset") {
             chessboard->newGame(true);
+        }
+        else if (selectedBut->getName() == "exit") {
+            exit(0);
         }
     }
 

@@ -173,6 +173,7 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
     const float soundSliderSpace = changeSoundSpace + dropDownButtonHeight + lineSpace;
     const float changeMusicSpace = soundSliderSpace + slideHeight + lineSpace;
     const float musicSliderSpace = changeMusicSpace + dropDownButtonHeight + lineSpace;
+    const float moveStyleSpace = musicSliderSpace + slideHeight + lineSpace;
 
     // Open setting window
     RenderWindow settingWD(VideoMode((unsigned)wdWidth, (unsigned)wdHeight), "Setting", Style::Close | Style::Titlebar);
@@ -227,6 +228,12 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
     Slider musicSlide((settingWD.getSize().x - slideWidth) / 2.f, musicSliderSpace, slideWidth, slideHeight, 101);
     musicSlide.setCurrentStep(backgroundMusic.getVolume());
 
+    // Move style button
+    Text textMoveStyle("Move style", fontTitle, (unsigned)dropDownButtonTitleHeight);
+    textMoveStyle.setFillColor(Color::White);
+    textMoveStyle.setPosition(leftSpace, moveStyleSpace);
+    DropDownButton moveStyle(&settingWD, "Move style", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, moveStyleSpace, vector<std::string>{"Drag pieces", "Click pieces"}, chessBoard.getEnableClick());
+
     // Background
     RectangleShape background(Vector2f((float)settingWD.getSize().x, 100.0f));
     background.setFillColor(Color::Black);
@@ -249,7 +256,7 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
     
     vector<Button*> buttonList(2, nullptr);
     vector<Sprite*> spriteList(11, nullptr);
-    vector<DropDownButton*> dropDownButtonList(4, nullptr);
+    vector<DropDownButton*> dropDownButtonList(5, nullptr);
     vector<Text*> textList(4, nullptr);
     vector<RectangleShape*> rectangleShapeList(1, nullptr);
     vector<Slider*> sliderList(2, nullptr);
@@ -258,13 +265,18 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
     spriteList[0] = &previewBoard;
     for (int i = 0; i < 10; i++) spriteList[i + 1] = &reviewPiece[i];
     // Texts
-    textList[0] = &textBoard, textList[1] = &textPiece, textList[2] = &textSound;
+    textList[0] = &textBoard;
+    textList[1] = &textPiece;
+    textList[2] = &textSound;
     textList[3] = &textMusic;
     // Buttons
     buttonList[0] = &apply, buttonList[1] = &cancel;
     // Dropdown buttons
-    dropDownButtonList[0] = &board, dropDownButtonList[1] = &piece, dropDownButtonList[2] = &sound;
+    dropDownButtonList[0] = &board;
+    dropDownButtonList[1] = &piece;
+    dropDownButtonList[2] = &sound;
     dropDownButtonList[3] = &music;
+    dropDownButtonList[4] = &moveStyle;
     // Rectange shapes
     rectangleShapeList[0] = &background;
     // Sliders
@@ -368,20 +380,24 @@ void GUI::handlePressSetting(Event::MouseButtonEvent mouse, const View& view,
     selectedDropDownButton = nullptr;
     if (lastDropDownButton && lastDropDownButton->getClick()) {
         int optionVal = lastDropDownButton->eventOption(mouseView.x, mouseView.y);
+        const string& buttonName = lastDropDownButton->getName();
         if (optionVal == -1) {
             // Unchanged options
         }
-        else if (lastDropDownButton->getName() == "Board") {
+        else if (buttonName == "Board") {
             chessBoard.changeBoard(optionVal);
         }
-        else if (lastDropDownButton->getName() == "Pieces") {
+        else if (buttonName == "Pieces") {
             chessBoard.changePieces(optionVal);
         }
-        else if (lastDropDownButton->getName() == "Sound") {
+        else if (buttonName == "Sound") {
             chessBoard.changeSound(optionVal);
         }
-        else if (lastDropDownButton->getName() == "Music") {
+        else if (buttonName == "Music") {
             backgroundMusic.change(optionVal);
+        }
+        else if (buttonName == "Move style") {
+            chessBoard.setEnableClick(optionVal);
         }
         lastDropDownButton->setClick(0);
         return;

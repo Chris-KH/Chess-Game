@@ -87,6 +87,12 @@ private:
     bool humanColor; //true = white, false = black
     bool undoPress;
     int AIDifficulty;
+
+    // Move style
+    
+    // enableClick = 1: user can click but can't drag pieces,
+    // enableClick = 0: user can drag but can't click pieces
+    bool enableClick;
 public:
     // Constructor
     ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI = false);
@@ -103,6 +109,9 @@ public:
     void setStateOver(string state);
     size_t countPieces();
     void setSoundVolume(float x);
+    void setEnableClick(bool ok);
+
+    void update(const Event& event);
 
     // Get
     vector<string>& getBoardList(void);
@@ -117,17 +126,17 @@ public:
     Sprite getBoardSprite(void) const;
     Pieces* getPieceAtIndex(int row, int col);
     float getSoundVolume(void);
+    bool getEnableClick(void);
 
     void playSound(int id);
 
     // Draw
-    void update(const Event& ev);
     void draw();
 
     // Handle mouse click or drag
     void getPossibleMoves(Pieces* clickedPiece, vector<pair<int, int>>& vpii);
-    void handleMousePress(int mouseX, int mouseY, bool enableClick, bool enableDrag);
-    void handleMouseRelease(int mouseX, int mouseY, bool enableClick, bool enableDrag);
+    void handleMousePress(int mouseX, int mouseY);
+    void handleMouseRelease(int mouseX, int mouseY);
     void highlightPossibleMove(Pieces* clickedPiece);
 
     // Player turn
