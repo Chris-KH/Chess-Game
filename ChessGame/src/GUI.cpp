@@ -158,18 +158,21 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
 
     // Sizes and spaces
     const float wdWidth = 550.f, wdHeight = 800.f;
-    const float topSpace = 25.f, botSpace = 25.f, leftSpace = 25.f, rightSpace = 25.f;
+    const float topSpace = 25.f, botSpace = 25.f, leftSpace = 25.f, rightSpace = 35.f;
     const float lineSpace = 30.f;
     const float previewBoardWidth = 500.f, previewBoardHeight = 200.f;
     const float dropDownButtonWidth = 300.f, dropDownButtonHeight = 40.f;
     const float dropDownButtonTitleHeight = 25.f;
     const float buttonWidth = 200.f, buttonHeight = 40.f;
+    const float slideWidth = 450.f, slideHeight = 10.f;
     // Elements' space
     const float previewBoardSpace = topSpace;
     const float changeBoardSpace = previewBoardSpace + previewBoardHeight + lineSpace;
     const float changePieceSpace = changeBoardSpace + dropDownButtonHeight + lineSpace;
     const float changeSoundSpace = changePieceSpace + dropDownButtonHeight + lineSpace;
-    const float changeMusicSpace = changeSoundSpace + dropDownButtonHeight + lineSpace;
+    const float soundSliderSpace = changeSoundSpace + dropDownButtonHeight + lineSpace;
+    const float changeMusicSpace = soundSliderSpace + slideHeight + lineSpace;
+    const float musicSliderSpace = changeMusicSpace + dropDownButtonHeight + lineSpace;
 
     // Open setting window
     RenderWindow settingWD(VideoMode((unsigned)wdWidth, (unsigned)wdHeight), "Setting", Style::Close | Style::Titlebar);
@@ -210,11 +213,19 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
     textSound.setPosition(leftSpace, changeSoundSpace);
     DropDownButton sound(&settingWD, "Sound", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, changeSoundSpace, chessBoard.getSoundList(), chessBoard.getSoundIndex());
 
+    // Sound's volume slide
+    Slider soundSlide((settingWD.getSize().x - slideWidth) / 2.f, soundSliderSpace, slideWidth, slideHeight, 101);
+    soundSlide.setCurrentStep(chessBoard.getSoundVolume());
+
     // Change music button
     Text textMusic("Music", fontTitle, (unsigned)dropDownButtonTitleHeight);
     textMusic.setFillColor(Color::White);
     textMusic.setPosition(leftSpace, changeMusicSpace);
     DropDownButton music(&settingWD, "Music", dropDownButtonWidth, dropDownButtonHeight, wdWidth - rightSpace - dropDownButtonWidth, changeMusicSpace, backgroundMusic.getNameList(), backgroundMusic.getID());
+
+    // Music's volume slide
+    Slider musicSlide((settingWD.getSize().x - slideWidth) / 2.f, musicSliderSpace, slideWidth, slideHeight, 101);
+    musicSlide.setCurrentStep(backgroundMusic.getVolume());
 
     // Background
     RectangleShape background(Vector2f((float)settingWD.getSize().x, 100.0f));
@@ -293,10 +304,18 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
                     setPiece(chessBoard.getPieceIndex(), pieceThemePath, piecePath, pieceTexture, reviewPiece);
             }
             scroll.handleEvent(event, settingWD);
+            
+            soundSlide.handleEvent(event, settingWD);
+            chessBoard.setSoundVolume(soundSlide.getCurrentStep());
+
+            musicSlide.handleEvent(event, settingWD);
+            backgroundMusic.setVolume(musicSlide.getCurrentStep());
         }
 
         settingWD.clear(Color(60, 60, 60, 255));
         scroll.draw(settingWD);
+        soundSlide.draw(settingWD);
+        musicSlide.draw(settingWD);
         settingWD.display();
     }
 }

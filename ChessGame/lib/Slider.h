@@ -14,6 +14,7 @@ public:
     void draw(RenderWindow& window); // Vẽ track và knob
     
     void setChangeKnobColor(bool change);
+    void setCurrentStep(int x);
     int getCurrentStep() const;
     Color getKnobFillColor(void) const;
 

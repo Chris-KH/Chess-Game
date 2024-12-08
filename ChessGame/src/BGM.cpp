@@ -15,12 +15,16 @@ BGM::BGM(void) {
 	nameList[1] = "Morning Mood";
 	nameList[2] = "Path of The Wind";
 	nameList[3] = "Scatman";
+
+	// Set loop
+	music.setLoop(true);
+
+	// Set volume
+	music.setVolume(50.f);
 }
 
 void BGM::play(void) {
 	if (ID == 0) return;
-	music.setVolume(25.f);
-	music.setLoop(true);
 	music.play();
 }
 
@@ -39,6 +43,13 @@ void BGM::change(int id) {
 	play();
 }
 
+void BGM::setVolume(float volume) {
+	if (volume < 0.f || volume > 100.f) {
+		throw runtime_error("BGM error -> setVolume()");
+	}
+	music.setVolume(volume);
+}
+
 int BGM::getID(void) const {
 	return ID;
 }
@@ -49,4 +60,8 @@ vector<string> BGM::getPathList(void) const {
 
 vector<string> BGM::getNameList(void) const {
 	return nameList;
+}
+
+int BGM::getVolume(void) {
+	return music.getVolume();
 }

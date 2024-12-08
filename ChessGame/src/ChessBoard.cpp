@@ -108,6 +108,9 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
 
     // Sound
     sounds.resize(7);
+    for (int i = 0; i < (int)sounds.size(); i++) {
+        sounds[i].second.setVolume(100.f);
+    }
 
     // Player turn
     whiteTurn = true;
@@ -281,6 +284,15 @@ size_t ChessBoard::countPieces() {
     return count;
 }
 
+void ChessBoard::setSoundVolume(float x) {
+    if (x < 0.f || x > 100.f) {
+        throw runtime_error("Error in ChessBoard::setSoundVolume");
+    }
+    for (int i = 0; i < (int)sounds.size(); i++) {
+        sounds[i].second.setVolume(x);
+    }
+}
+
 // Handle mouse operators
 void ChessBoard::getPossibleMoves(Pieces* clickedPiece, vector<pair<int, int>>& vpii) {
     /*
@@ -322,6 +334,10 @@ Pieces* ChessBoard::getPieceAtIndex(int row, int col) {
     if (!board[row][col]) return nullptr;
 
     return board[row][col].get();
+}
+
+float ChessBoard::getSoundVolume(void) {
+    return sounds[0].second.getVolume();
 }
 
 void ChessBoard::playSound(int id) {

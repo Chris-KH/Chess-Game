@@ -65,6 +65,13 @@ void Slider::setChangeKnobColor(bool change) {
         idDown[i] = 255 - 255 * i / (steps - 1);
 }
 
+void Slider::setCurrentStep(int x) {
+    currentStep = x;
+    knob.setPosition(position.x + x * stepSize, knob.getPosition().y);
+    if (changeKnobColor)
+        knob.setFillColor(Color(idUp[x], 0, idDown[x]));
+}
+
 int Slider::getCurrentStep() const {
     return currentStep;
 }

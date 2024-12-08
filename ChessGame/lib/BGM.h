@@ -28,8 +28,12 @@ public:
 	// Change music track
 	void change(int id);
 
+	// Set volume
+	void setVolume(float volume);
+
 	// Get
 	int getID(void) const;
 	vector<string> getPathList(void) const;
 	vector<string> getNameList(void) const;
+	int getVolume(void);
 };

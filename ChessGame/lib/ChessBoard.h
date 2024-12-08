@@ -30,11 +30,6 @@ private:
     Sprite boardSprite;   // Sprite of chessBoard
     
     // Sound
-    /* 
-    * sounds[0] = move
-    * sounds[1] = check
-    * sounds[2] = checkmate
-    */
     vector<pair<SoundBuffer, Sound>> sounds; 
 
     vector<string> boardFiles; // Path list of chessBoard
@@ -107,6 +102,7 @@ public:
     void setGameOver(int val);
     void setStateOver(string state);
     size_t countPieces();
+    void setSoundVolume(float x);
 
     // Get
     vector<string>& getBoardList(void);
@@ -120,6 +116,8 @@ public:
     int getSoundIndex(void) const;
     Sprite getBoardSprite(void) const;
     Pieces* getPieceAtIndex(int row, int col);
+    float getSoundVolume(void);
+
     void playSound(int id);
 
     // Draw
