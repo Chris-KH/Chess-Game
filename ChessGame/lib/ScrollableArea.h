@@ -1,5 +1,6 @@
 ﻿#include "Button.h"
 #include "DropDownButton.h"
+#include "Slider.h"
 
 class ScrollableArea {
 private:
@@ -19,6 +20,7 @@ private:
     vector<Sprite*> extSprites;
     vector<DropDownButton*> extDropDownButs;
     vector<Text*> extTexts;
+    vector<Slider*> extSliders;
 
     // Các phần tử cố định
     vector<RectangleShape*> fixedExtRectShapes;
@@ -53,6 +55,7 @@ public:
     void addExternalSprite(Sprite* sprite);
     void addExternalDropDownButton(DropDownButton* item);
     void addExternalText(Text* item);
+    void addEXternalSlider(Slider* item);
 
     // Thêm các phần tử cố định
     // Bên trong

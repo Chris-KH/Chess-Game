@@ -112,6 +112,9 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
         sounds[i].second.setVolume(100.f);
     }
 
+    // Set initial sound
+    changeSound(1);
+
     // Player turn
     whiteTurn = true;
     fullMoveNumber = 1;

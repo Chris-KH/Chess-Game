@@ -70,6 +70,10 @@ void ScrollableArea::addExternalText(Text* item) {
     extTexts.push_back(item);
 }
 
+void ScrollableArea::addEXternalSlider(Slider* item) {
+    extSliders.push_back(item);
+}
+
 // Thêm các phần tử cố định
 // Bên trong
 // Bên ngoài
@@ -219,6 +223,10 @@ void ScrollableArea::handleEvent(Event& event, RenderWindow& window) {
             lastButton = -1;
         }
     }
+
+    for (int i = 0; i < (int)extSliders.size(); i++) {
+        extSliders[i]->handleEvent(event, window);
+    }
 }
 
 // Phát hiện phần tử được nhấn
@@ -281,10 +289,10 @@ void ScrollableArea::draw(RenderWindow& window) {
 
     window.setView(window.getDefaultView());
     // Vẽ các phần tử cố định
-    for (RectangleShape* rectShape : fixedExtRectShapes) {
+    for (RectangleShape*& rectShape : fixedExtRectShapes) {
         window.draw(*rectShape);
     }
-    for (Button* but : fixedExtButs) {
+    for (Button*& but : fixedExtButs) {
         but->drawText(window);
     }
 
@@ -308,27 +316,31 @@ void ScrollableArea::draw(RenderWindow& window) {
         but->draw(window);
     }
 
-    for (Button* but : extButs) {
+    for (Button*& but : extButs) {
         but->drawText(window);
     }
 
-    for (Sprite* sprite : extSprites) {
+    for (Sprite*& sprite : extSprites) {
         window.draw(*sprite);
     }
 
-    for (DropDownButton* but : extDropDownButs) {
+    for (DropDownButton*& but : extDropDownButs) {
         but->draw(window);
     }
 
-    for (Text* text : extTexts) {
+    for (Text*& text : extTexts) {
         window.draw(*text);
+    }
+
+    for (Slider*& slider : extSliders) {
+        slider->draw(window);
     }
 
     for (unique_ptr<DropDownButton>& but : dropDownButtonItems) {
         but->drawOption(window);
     }
 
-    for (DropDownButton* but : extDropDownButs) {
+    for (DropDownButton*& but : extDropDownButs) {
         but->drawOption(window);
     }
 

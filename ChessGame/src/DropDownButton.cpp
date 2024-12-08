@@ -36,15 +36,17 @@ bool DropDownButton::contain(float x, float y) {
 }
 
 int DropDownButton::eventOption(int x, int y) {
-	if (list[curBut]->contain(x, y)) return curBut;
+	// -1 : unchanged
+	// >= 0 : changed
+	if (list[0]->contain(x, y)) return -1;
 	for (int i = 0; i < (int)list.size(); i++) {
 		bool ok = false;
 		list[i]->move(0, (i + 1) * height);
 		if (list[i]->contain(x, y)) curBut = i, ok = true;
 		list[i]->move(0, -(i + 1) * height);
-		if (ok) break;
+		if (ok) return i;
 	}
-	return curBut;
+	return -1;
 }
 
 // Draw

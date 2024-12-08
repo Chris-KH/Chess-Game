@@ -252,6 +252,7 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
     vector<DropDownButton*> dropDownButtonList(4, nullptr);
     vector<Text*> textList(4, nullptr);
     vector<RectangleShape*> rectangleShapeList(1, nullptr);
+    vector<Slider*> sliderList(2, nullptr);
 
     // Sprites
     spriteList[0] = &previewBoard;
@@ -266,6 +267,9 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
     dropDownButtonList[3] = &music;
     // Rectange shapes
     rectangleShapeList[0] = &background;
+    // Sliders
+    sliderList[0] = &soundSlide;
+    sliderList[1] = &musicSlide;
 
     for (int i = 0; i < (int)spriteList.size(); i++) {
         scroll.addExternalSprite(spriteList[i]);
@@ -287,6 +291,10 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
         scroll.addFixedExternalButton(buttonList[i]);
     }
 
+    for (int i = 0; i < (int)sliderList.size(); i++) {
+        scroll.addEXternalSlider(sliderList[i]);
+    }
+
     // Poll events and handle them
     while (settingWD.isOpen()) {
         settingWD.requestFocus();
@@ -304,18 +312,12 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
                     setPiece(chessBoard.getPieceIndex(), pieceThemePath, piecePath, pieceTexture, reviewPiece);
             }
             scroll.handleEvent(event, settingWD);
-            
-            soundSlide.handleEvent(event, settingWD);
             chessBoard.setSoundVolume(soundSlide.getCurrentStep());
-
-            musicSlide.handleEvent(event, settingWD);
             backgroundMusic.setVolume(musicSlide.getCurrentStep());
         }
 
         settingWD.clear(Color(60, 60, 60, 255));
         scroll.draw(settingWD);
-        soundSlide.draw(settingWD);
-        musicSlide.draw(settingWD);
         settingWD.display();
     }
 }
@@ -366,7 +368,10 @@ void GUI::handlePressSetting(Event::MouseButtonEvent mouse, const View& view,
     selectedDropDownButton = nullptr;
     if (lastDropDownButton && lastDropDownButton->getClick()) {
         int optionVal = lastDropDownButton->eventOption(mouseView.x, mouseView.y);
-        if (lastDropDownButton->getName() == "Board") {
+        if (optionVal == -1) {
+            // Unchanged options
+        }
+        else if (lastDropDownButton->getName() == "Board") {
             chessBoard.changeBoard(optionVal);
         }
         else if (lastDropDownButton->getName() == "Pieces") {
