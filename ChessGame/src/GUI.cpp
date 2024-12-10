@@ -1,6 +1,5 @@
 ﻿#include"../lib/GUI.h"
 
-#include <SFML/Graphics.hpp>
 #include <stdexcept>
 
 using namespace sf;

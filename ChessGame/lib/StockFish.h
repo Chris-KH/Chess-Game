@@ -23,6 +23,9 @@ private:
 
     vector<string> moveHistory;
     vector<string> redoHistory;
+
+    int depth;
+    int timeLimit;
 public:
     Stockfish();
     ~Stockfish();
@@ -30,6 +33,7 @@ public:
     void sendCommand(const string& command);
     string getResponse();
     string calculateBestMove(int timeLimit = 1000);
+    string calculateBestMoveWithDepth(void);
     string calculateBestMoveWithDepth(int depth, int timeLimit = 1000);
     void setSkillLevel(int level);
     void newGame();
@@ -39,6 +43,8 @@ public:
     string getMoveHistory() const;
     void undoMove();
     void redoMove();
+    void setThread(int x);
     void setHashSize(int size);
-
+    void setDepth(int x);
+    void setTimeLimit(int x);
 };

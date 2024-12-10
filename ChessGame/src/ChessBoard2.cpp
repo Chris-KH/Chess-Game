@@ -734,6 +734,8 @@ bool ChessBoard::getAI() const {
 
 void ChessBoard::setAISkillLevel(int level) {
     AIDifficulty = level;
+    stockfish->setDepth(level);
+    stockfish->setTimeLimit(level);
 }
 
 void ChessBoard::setHumanColor(bool humanColor) {

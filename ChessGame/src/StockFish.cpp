@@ -92,6 +92,10 @@ string Stockfish::calculateBestMove(int timeLimit) {
     return bestMove;
 }
 
+string Stockfish::calculateBestMoveWithDepth(void) {
+    return calculateBestMoveWithDepth(depth, timeLimit);
+}
+
 string Stockfish::calculateBestMoveWithDepth(int depth, int timeLimit) {
     sendCommand("go depth " + to_string(depth) + " movetime " + to_string(timeLimit) + "\n");
     string bestMove = getResponse();
@@ -147,6 +151,29 @@ void Stockfish::redoMove() {
     sendCommand("position startpos moves " + getMoveHistory() + "\n");
 }
 
+void Stockfish::setThread(int x) {
+    int threadValue = x;
+    if (threadValue < 1) threadValue = 1;
+    if (threadValue > 1024) threadValue = 1024;
+    sendCommand("setoption name Threads value " + to_string(threadValue) + "\n");
+}
+
 void Stockfish::setHashSize(int size) {
+    if (size < 1) size = 1;
+    if (size > 2) size = max(size, 16);
+    if (size > 33554432) size = 33554432;
     sendCommand("setoption name Hash value " + to_string(size) + "\n");
+}
+
+void Stockfish::setDepth(int x) {
+    int depthValue = x;
+    if (depthValue < 1) depthValue = 1;
+    if (depthValue > 2) depthValue = 20;
+    depth = depthValue;
+}
+
+void Stockfish::setTimeLimit(int x) {
+    int timeLimitValue = x * 50 + 1; // Max time = 20 * 50 + 1 = 1001 ms
+    if (x > 2) timeLimitValue = max(timeLimitValue, 500);
+    timeLimit = timeLimitValue;
 }
