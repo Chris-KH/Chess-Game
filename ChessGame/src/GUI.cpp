@@ -566,7 +566,7 @@ bool GUI::chooseDifficulty(ChessBoard& chessBoard) {
     const int wdWidth = 500, wdHeight = 270;
     const int insHeight = 35;
     const int slideWidth = 400, slideHeight = 10;
-    const int numDiff = 20;
+    const int numDiff = 21;
     const int labelHeight = 25;
     const int buttonWidth = 100, buttonHeight = 40;
 
@@ -593,8 +593,8 @@ bool GUI::chooseDifficulty(ChessBoard& chessBoard) {
 
     string labels[numDiff];
     for (int i = 0; i < numDiff; i++) {
-        labels[i] = to_string(i + 1);
-        if (i < 9) labels[i] = '0' + labels[i];
+        labels[i] = to_string(i);
+        if (i < 10) labels[i] = '0' + labels[i];
     }
     Slider slider((wdWidth - slideWidth) / 2.f, slideY, slideWidth, slideHeight, numDiff);
     slider.setChangeKnobColor(true);
@@ -641,7 +641,7 @@ bool GUI::chooseDifficulty(ChessBoard& chessBoard) {
         AIDiffWD.display();
     }
 
-    chessBoard.setAISkillLevel(slider.getCurrentStep() + 1);
+    chessBoard.setAISkillLevel(slider.getCurrentStep());
 
     return true;
 }
