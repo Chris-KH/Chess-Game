@@ -588,6 +588,9 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         unsigned num = (row + lastRow) / 2;
         enPassantTargetSquare += char('a' + col);
         enPassantTargetSquare += char('8' - num);
+        if (justMovePiece) justMovePiece->setJustMove(false);
+        this->justMovePiece = board[row][col].get();
+        if (justMovePiece) justMovePiece->setJustMove(true);
     }
 
     //Lưu quân tốt này có thể bắt tốt qua đường bắt ở bên nào bên nào không
@@ -669,9 +672,7 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
     undoPress = false;
     undoStack.push_back(curMove);
     freeRedoStack();
-    if (justMovePiece) justMovePiece->setJustMove(false);
-    this->justMovePiece = board[row][col].get();
-    if (justMovePiece) justMovePiece->setJustMove(true);
+    
     board[row][col]->setAlreadyMove(board[row][col]->getAlreadyMove() + 1);
 
     alterTurn();
