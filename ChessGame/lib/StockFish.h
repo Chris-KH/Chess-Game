@@ -5,12 +5,12 @@
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/OpenGL.hpp>
-#include <bits/stdc++.h>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
 #include <stdexcept>
 #include <filesystem>
+#include <iostream>
 
 using namespace std;
 using namespace sf;

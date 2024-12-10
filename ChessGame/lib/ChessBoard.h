@@ -6,7 +6,11 @@
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/OpenGL.hpp>
-#include <bits/stdc++.h>
+#include <iostream>
+#include <memory>
+#include <vector>
+#include <cassert>
+#include <fstream>
 
 #include "GUI.h"
 #include "Move.h"

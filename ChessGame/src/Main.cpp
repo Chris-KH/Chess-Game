@@ -5,7 +5,6 @@
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/OpenGL.hpp>
-#include <bits/stdc++.h>
 
 using namespace std;
 using namespace sf;
@@ -67,14 +66,14 @@ int main() {
             }
             int gameOver = chessBoard.isOver();
 
-            if (chessBoard.getAI() && chessBoard.isAITurn() && chessBoard.getUndoPress() == false) {
+            if (gameOver == 0 && chessBoard.getAI() && chessBoard.isAITurn() && chessBoard.getUndoPress() == false) {
                 window.clear(Color(60, 60, 60, 255));
                 window.draw(background);
                 chessBoard.draw();
                 sideBoard.draw();
                 window.display();
 
-                string bestmove = stockfish.calculateBestMoveWithDepth(1, 50);
+                string bestmove = stockfish.calculateBestMoveWithDepth(1, 1);
                 tuple<int, int, int, int, char> movePos = chessBoard.processStockfishMove(bestmove);
                 int lastRow = get<0>(movePos);
                 int lastCol = get<1>(movePos);
@@ -99,6 +98,9 @@ int main() {
                     Sleep(200);
                     GUI::gameOver(chessBoard);
                 }
+
+                // Cập nhật turn's indicator
+                sideBoard.update(event);
             }
             window.clear(Color(60, 60, 60, 255));
             window.draw(background);

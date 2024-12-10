@@ -23,7 +23,7 @@ BGM::BGM(void) {
 	music.setVolume(50.f);
 
 	// Set initial song
-	change(1);
+	change(2);
 }
 
 void BGM::play(void) {
@@ -65,6 +65,6 @@ vector<string> BGM::getNameList(void) const {
 	return nameList;
 }
 
-int BGM::getVolume(void) {
+float BGM::getVolume(void) {
 	return music.getVolume();
 }
