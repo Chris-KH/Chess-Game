@@ -23,7 +23,7 @@ BGM::BGM(void) {
 	music.setVolume(50.f);
 
 	// Set initial song
-	change(1);
+	change(2);
 }
 
 void BGM::play(void) {

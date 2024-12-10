@@ -116,7 +116,7 @@ ChessBoard::ChessBoard(RenderWindow* win, Stockfish* stockfish, bool isAI) {
     changeSound(1);
 
     // Set initial move style = click
-    setEnableClick(true);
+    setEnableClick(false);
 
     // Player turn
     whiteTurn = true;
