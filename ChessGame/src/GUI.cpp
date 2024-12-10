@@ -257,7 +257,7 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
     vector<Button*> buttonList(2, nullptr);
     vector<Sprite*> spriteList(11, nullptr);
     vector<DropDownButton*> dropDownButtonList(5, nullptr);
-    vector<Text*> textList(4, nullptr);
+    vector<Text*> textList(5, nullptr);
     vector<RectangleShape*> rectangleShapeList(1, nullptr);
     vector<Slider*> sliderList(2, nullptr);
 
@@ -269,6 +269,7 @@ void GUI::settingChoice(ChessBoard &chessBoard, BGM& backgroundMusic) {
     textList[1] = &textPiece;
     textList[2] = &textSound;
     textList[3] = &textMusic;
+    textList[4] = &textMoveStyle;
     // Buttons
     buttonList[0] = &apply, buttonList[1] = &cancel;
     // Dropdown buttons
