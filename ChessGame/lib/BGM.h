@@ -35,5 +35,5 @@ public:
 	int getID(void) const;
 	vector<string> getPathList(void) const;
 	vector<string> getNameList(void) const;
-	int getVolume(void);
+	float getVolume(void);
 };

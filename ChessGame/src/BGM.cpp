@@ -65,6 +65,6 @@ vector<string> BGM::getNameList(void) const {
 	return nameList;
 }
 
-int BGM::getVolume(void) {
+float BGM::getVolume(void) {
 	return music.getVolume();
 }

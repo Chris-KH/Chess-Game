@@ -58,7 +58,7 @@ void DropDownButton::draw(RenderWindow &window) {
 }
 
 void DropDownButton::drawOption(RenderWindow& window) {
-	if (isClicked == true) {
+	if (isClicked == 1) {
 		for (int i = 0; i < (int)list.size(); i++) {
 			list[i]->move(0, (i + 1) * height); // (Free area = 20) + (Border = 6 / 2) -> 23
 			list[i]->drawText(window);
