@@ -40,7 +40,7 @@ public:
 	void setTextButton(string name, string text, string fontPath, float width, float height, float posX, float posY); // Set text with background rectangle
 	void setSpriteAndTextButton(string name, string imagePath, string content, string fontPath, float width, float height, float posX, float posY, float spriteWidth, float spriteHeight, float spriteX, float spriteY, float textWidth, float textHeight, float textX, float textY); // Set sprite, text, and a background rectangle
 	
-	void drawSprite(RenderWindow& window); // Draw sprite
+	void drawSprite(RenderWindow& window, bool isHighLight = false); // Draw sprite
 	void drawText(RenderWindow& window); // Draw text
 	void drawAll(RenderWindow& window); // Draw sprite, text, and rectangle
 	void move(float addX, float addY); // Shift from (posX, posY) to (posX + addX, posY + addY)
@@ -54,6 +54,8 @@ public:
 	void setX(float x);
 	void setY(float y);
 	void setTextContent(std::string content);
+
+	void reset();
 
 	bool getAvailable(void);
 	float getWidth() const;

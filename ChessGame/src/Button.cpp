@@ -89,11 +89,16 @@ void Button::setSpriteAndTextButton(string name, string imagePath, string conten
 	//text.setPosition(textX, textY);
 }
 
-void Button::drawSprite(RenderWindow& window) {
+void Button::drawSprite(RenderWindow& window, bool isHighLight) {
 	if (available) {
 		sprite.setColor(Color(255, 255, 255, 255));
 		rectangle.setFillColor(Color(255, 255, 255, 255));
 		rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64, 255));
+		if (isHighLight) {
+			rectangle.setOutlineThickness(5);
+			rectangle.setOutlineColor(Color::Red);
+
+		}
 	}
 	else {
 		sprite.setColor(Color(255, 255, 255, 63));
@@ -135,6 +140,12 @@ bool Button::contain(int x, int y) {
 
 bool Button::contain(float x, float y) {
 	return rectangle.getGlobalBounds().contains(x, y);
+}
+
+void Button::reset() {
+	rectangle.setOutlineThickness(-3);
+	rectangle.setFillColor(Color::White);
+	rectangle.setOutlineColor(Color(0xA6, 0x8A, 0x64));
 }
 
 void Button::setAvailable(bool available) { this->available = available; }

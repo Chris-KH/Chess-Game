@@ -605,10 +605,16 @@ bool GUI::chooseDifficulty(ChessBoard& chessBoard) {
     labelText.setPosition(leftSpace, labelY);
 
     Button applyButton;
-    applyButton.setTextButton("apply", "Apply", "../assets/fonts/CherryBombOne.ttf", buttonWidth, buttonHeight, (wdWidth - buttonWidth) / 2.f, applyButtonY);
+    applyButton.setTextButton("apply", "Apply", "../assets/fonts/CherryBombOne.ttf", buttonWidth, buttonHeight, 3 * (wdWidth - buttonWidth) / 4.f, applyButtonY);
     
-    RenderWindow AIDiffWD(VideoMode(wdWidth, wdHeight), "Choose difficulty", Style::Close | Style::Titlebar);
+    RenderWindow AIDiffWD(VideoMode(wdWidth, wdHeight), "Choose difficulty", Style::Titlebar);
     AIDiffWD.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
+    Button white, black;
+    white.setSpriteButton("White", "../assets/Neo Theme/white-king.png", 60, 60, (wdWidth - buttonWidth) / 8.f, applyButtonY - 10.f);
+    black.setSpriteButton("Black", "../assets/Neo Theme/black-king.png", 60, 60, (wdWidth - buttonWidth) / 8.f + 80.f, applyButtonY - 10.f);
+
+    bool humanColor = true;
 
     while (AIDiffWD.isOpen()) {
         AIDiffWD.requestFocus();
@@ -623,6 +629,12 @@ bool GUI::chooseDifficulty(ChessBoard& chessBoard) {
                 if (applyButton.contain(event.mouseButton.x, event.mouseButton.y)) {
                     AIDiffWD.close();
                 }
+                if (white.contain(event.mouseButton.x, event.mouseButton.y)) {
+                    humanColor = true;
+                }
+                if (black.contain(event.mouseButton.x, event.mouseButton.y)) {
+                    humanColor = false;
+                }
             }
             slider.handleEvent(event, AIDiffWD, AIDiffWD.getDefaultView());
         }
@@ -636,11 +648,20 @@ bool GUI::chooseDifficulty(ChessBoard& chessBoard) {
         labelText.setString("Difficulty: " + labels[slider.getCurrentStep()]);
         AIDiffWD.draw(labelText);
         applyButton.drawText(AIDiffWD);
+        if (humanColor == true) {
+            black.reset();
+        }
+        else {
+            white.reset();
+        }
+        white.drawSprite(AIDiffWD, humanColor);
+        black.drawSprite(AIDiffWD, !humanColor);
 
         AIDiffWD.display();
     }
 
     chessBoard.setAISkillLevel(slider.getCurrentStep());
+    chessBoard.setHumanColor(humanColor);
 
     return true;
 }
@@ -873,10 +894,10 @@ string GUI::loadGame(ChessBoard& chessBoard) {
 
 bool GUI::YesNo() {
     // Tạo cửa sổ với kích thước 300x200 và không có viền
-    RenderWindow window(VideoMode(300, 150), "Yes No", Style::None);
+    RenderWindow window(VideoMode(300, 150), "Yes or No", Style::Titlebar);
 
     // Đặt màu nền và kiểu chữ
-    Color backgroundColor = Color(160, 206, 235); // Sky blue
+    Color backgroundColor = Color(160, 160, 160); // Sky blue
     Font font;
     if (!font.loadFromFile("../assets/fonts/TimesNewRoman.ttf")) {
         // Thay "Arial.ttf" bằng đường dẫn đến file font
