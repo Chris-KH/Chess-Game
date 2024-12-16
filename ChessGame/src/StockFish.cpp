@@ -30,8 +30,13 @@ Stockfish::Stockfish() {
     siStartInfo.hStdInput = hStdinRead;
     siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
 
-    // Tạo một chuỗi char[] để lưu tên chương trình
+#ifdef _UNICODE
+    // Dùng wchar_t cho Visual Studio
     wchar_t program[] = L"stockfish.exe";
+#else
+    // Dùng char cho các môi trường khác như MinGW
+    char program[] = "stockfish.exe";
+#endif
 
     // Chạy Stockfish
     if (!CreateProcess(NULL, program, NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo)) {

@@ -6,6 +6,7 @@
 #include <SFML/Network.hpp>
 #include <SFML/OpenGL.hpp>
 #include <iostream>
+#include<memory>
 
 using namespace std;
 using namespace sf;

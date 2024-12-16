@@ -5,6 +5,8 @@
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/OpenGL.hpp>
+#include <math.h>
+#include <cmath>
 
 using namespace std;
 using namespace sf;

@@ -6,9 +6,13 @@
 #include <SFML/Network.hpp>
 #include <SFML/OpenGL.hpp>
 #include <filesystem>
+#include<memory>
 
 using namespace std;
 using namespace sf;
+
+class ChessBoard;
+class Pieces;
 
 #include "ChessBoard.h"
 #include "Pieces.h"

@@ -1,5 +1,6 @@
 #pragma once
 #include"../lib/Pieces.h"
+#include<memory>
 
 class Knight : public Pieces {
 public:

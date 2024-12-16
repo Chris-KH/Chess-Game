@@ -5,6 +5,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/OpenGL.hpp>
+#include <memory>
 
 using namespace std;
 using namespace sf;
