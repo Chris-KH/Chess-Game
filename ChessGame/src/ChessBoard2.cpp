@@ -647,7 +647,7 @@ void ChessBoard::makeMove(const int& lastRow, const int& lastCol, const int& row
         draw();    // Giả sử hàm này vẽ lại toàn bộ bàn cờ và quân cờ
         window->display();
         unique_ptr<Pieces> promotePiece = nullptr;
-        if (isAI && isAITurn()) {
+        if (isAI && promotionPiece != '0') {
             if (promotionPiece == 'q') promotePiece = make_unique<Queen>(board[row][col]->getColor(), col, row);
             else if (promotionPiece == 'r') promotePiece = make_unique<Rook>(board[row][col]->getColor(), col, row);
             else if (promotionPiece == 'n') promotePiece = make_unique<Knight>(board[row][col]->getColor(), col, row);

@@ -3,10 +3,10 @@ CXX = g++                          # Trình biên dịch C++
 CXXFLAGS = -Wall -std=c++20         # Các tùy chọn biên dịch
 
 # Đường dẫn tới thư mục chứa các tệp tiêu đề của Stockfish và SFML
-INCLUDES = -Ilib -I../lib -IC:/SFML-2.6.2/include
+INCLUDES = -Ilib -I../lib -IC:/SFML/include
 
 # Đường dẫn tới thư mục chứa các thư viện của SFML
-LDFLAGS = -LC:/SFML-a/lib
+LDFLAGS = -LC:/SFML/lib
 
 # Các thư viện cần thiết để liên kết với SFML (tệp .lib)
 LIBS = -lsfml-system -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network
