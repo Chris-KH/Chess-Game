@@ -1,4 +1,4 @@
-# CS160---Chess
+# ChessGame
 ## Description
 * **Why does this exist?:** This is the final project for the course **CS160** *(Faculty of Information Technology - University of Science - Viet Nam National University Ho Chi Minh City)*.
 * **Authors:** **Hoàng Tuấn Khoa (Chris KH)** and **Hoàng Đức Hưng Phát (Patrick Hwang)**
